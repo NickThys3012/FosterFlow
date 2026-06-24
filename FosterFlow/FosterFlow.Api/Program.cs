@@ -5,8 +5,11 @@ using FosterFlow.Infrastructure;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Layer registrations ───────────────────────────────────────────────
@@ -47,9 +50,21 @@ builder.Services
         };
     });
 
+var conStr = builder.Configuration.GetConnectionString("Database");
+if (string.IsNullOrEmpty(conStr))
+{
+    throw new InvalidOperationException(
+        "Could not find a connection string named 'DefaultConnection'.");
+}
+builder.Services.AddHealthChecks()
+    .AddSqlServer(conStr)
+    .AddDbContextCheck<AppDbContext>();;
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
+
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();  
 
 var app = builder.Build();
 await app.Services.SeedUsers();
@@ -63,6 +78,20 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
+
+     
+app.MapOpenApi();     
+app.MapScalarApiReference(); 
 
 app.MapControllers();
 app.MapFallbackToFile("index.html"); // Blazor client-side routing

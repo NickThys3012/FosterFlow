@@ -4,9 +4,11 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>810a5b7a-138d-4acd-9844-aa16fc85975e</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.9"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"/>
@@ -14,6 +16,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.9" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.16.5" />
     </ItemGroup>
 
     <ItemGroup>
