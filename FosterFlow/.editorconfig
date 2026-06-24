@@ -284,7 +284,6 @@ dotnet_diagnostic.CA1422.severity = error
 # Removed: CA1401, CA1417, CA1421 — no [DllImport] / P/Invoke declarations in codebase
 
 # Maintainability Rules
-dotnet_diagnostic.CA1501.severity = error
 dotnet_diagnostic.CA1502.severity = none        # cyclomatic complexity
 dotnet_diagnostic.CA1505.severity = none        # maintainability index
 dotnet_diagnostic.CA1506.severity = none        # coupling
@@ -462,7 +461,6 @@ dotnet_diagnostic.CA2224.severity = error
 dotnet_diagnostic.CA2227.severity = none        # doesn't work with public list in API class (DossierDienstDossierWijziging)
 dotnet_diagnostic.CA2229.severity = error       # RestException is [Serializable] with ISerializable
 # Removed: CA2231 — no struct types override Equals in codebase
-dotnet_diagnostic.CA2234.severity = error       # Uri-related method calls with string params in use cases
 dotnet_diagnostic.CA2235.severity = error       # SerializableException is [Serializable] with fields
 dotnet_diagnostic.CA2237.severity = error       # RestException implements ISerializable and has [Serializable]
 dotnet_diagnostic.CA2241.severity = error
@@ -514,7 +512,5 @@ dotnet_diagnostic.CA1515.severity = none
 # Migrations: class names and file names follow the FluentMigrator timestamp
 # convention and may contain underscores (e.g. M20240101_AddRegistrationTable).
 
-[{tests/**/*.cs,src/ScrambleCoin.Infrastructure/Migrations/*.cs}]
-dotnet_diagnostic.IDE1006.severity = none
-dotnet_diagnostic.CA1707.severity = none
-resharper_inconsistent_naming_highlighting = none
+[FosterFlow.Domain/Enums/*.cs]
+resharper_unused_member_global_highlighting = none
