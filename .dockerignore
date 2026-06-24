@@ -1,0 +1,35 @@
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# IDE / editor
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/*.suo
+
+# Version control
+.git/
+.gitignore
+**/.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# OS files
+**/.DS_Store
+
+# Docs / misc (not needed in the image)
+README.md
+**/*.md
+*.html
+
+# Local secrets / env
+**/appsettings.*.Local.json
+*.env
+.env
