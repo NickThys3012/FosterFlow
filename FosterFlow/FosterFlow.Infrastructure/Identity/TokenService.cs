@@ -77,13 +77,13 @@ public class TokenService
         }
 
         // Reuse detection: revoked token presented → revoke entire family
-        if (token.IsRevoked)
+        if (!token.IsRevoked)
         {
-            await RevokeAllUserTokensAsync(token.UserId);
-            return null;
+            return token.ExpiresAt < DateTime.UtcNow ? null : token;
         }
-
-        return token.ExpiresAt < DateTime.UtcNow ? null : token;
+        
+        await RevokeAllUserTokensAsync(token.UserId);
+        return null;
     }
 
     public async Task RevokeTokenAsync(

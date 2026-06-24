@@ -37,7 +37,7 @@ public class AuthMessageHandler : DelegatingHandler
         {
             return response;
         }
-        
+
         var retry = CloneRequest(request);
         AttachToken(retry);
         return await base.SendAsync(retry, cancellationToken);

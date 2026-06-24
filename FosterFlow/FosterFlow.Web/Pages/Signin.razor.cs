@@ -10,7 +10,9 @@ public partial class Signin : ComponentBase
 
     private string _email = "";
     private string? _error;
+    private string _firstName = "";
     private bool _loading;
+    private string _name = "";
     private string _password = "";
     private string _role = "";
 
@@ -28,7 +30,11 @@ public partial class Signin : ComponentBase
 
         var ok = await _auth.SigninAsync(new RegisterUserRequest
         {
-            Email = _email, Password = _password, Role = _role
+            Email = _email,
+            Password = _password,
+            Role = _role,
+            Name = _name,
+            FirstName = _firstName
         });
 
         if (!ok)

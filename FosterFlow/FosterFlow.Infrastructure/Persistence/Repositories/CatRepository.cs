@@ -32,11 +32,11 @@ public class CatRepository : ICatRepository
     }
     public async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        var cat =await _context.Cats.FirstOrDefaultAsync(c=>c.Id == id, ct);
+        var cat = await _context.Cats.FirstOrDefaultAsync(c => c.Id == id, ct);
         if (cat != null)
         {
             _context.Cats.Remove(cat);
-        } 
+        }
         await _context.SaveChangesAsync(ct);
     }
 }

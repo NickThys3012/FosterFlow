@@ -144,7 +144,7 @@ csharp_style_conditional_delegate_call = true:suggestion
 
 # Modifier preferences
 csharp_prefer_static_local_function = true:suggestion
-csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async
+csharp_preferred_modifier_order = public, private, protected, internal, file, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, required, volatile, async
 csharp_style_prefer_readonly_struct = true:suggestion
 csharp_style_prefer_readonly_struct_member = true:suggestion
 
@@ -236,57 +236,57 @@ dotnet_diagnostic.IDE1006.severity = error
 dotnet_diagnostic.CA1852.severity = silent
 
 # Design Rules
-dotnet_diagnostic.CA1000.severity = error       # no static members on generic types
-dotnet_diagnostic.CA1001.severity = error       # types owning disposable fields must be disposable
-dotnet_diagnostic.CA1002.severity = none        # doesn't work with public list in API class (DossierDienstDossierWijziging)
-dotnet_diagnostic.CA1008.severity = warning     # enums should have a zero value
-dotnet_diagnostic.CA1010.severity = error       # collections should implement generic interface
-dotnet_diagnostic.CA1012.severity = error       # abstract types should not have public constructors
-dotnet_diagnostic.CA1016.severity = error       # mark assemblies with AssemblyVersionAttribute
-dotnet_diagnostic.CA1018.severity = error       # mark attributes with AttributeUsageAttribute
-dotnet_diagnostic.CA1021.severity = error       # avoid out parameters (~7 occurrences in codebase)
-dotnet_diagnostic.CA1024.severity = none        # use properties when appropriate
-dotnet_diagnostic.CA1027.severity = error       # mark enums with FlagsAttribute
-dotnet_diagnostic.CA1028.severity = error       # enum storage should be Int32
-dotnet_diagnostic.CA1030.severity = error       # use events where appropriate
-dotnet_diagnostic.CA1031.severity = none        # too general exception catching
-dotnet_diagnostic.CA1032.severity = none        # exception constructors
-dotnet_diagnostic.CA1034.severity = none        # nested types — doesn't work with public list in API class
-dotnet_diagnostic.CA1040.severity = error       # avoid empty interfaces
-dotnet_diagnostic.CA1041.severity = error       # provide ObsoleteAttribute message
-dotnet_diagnostic.CA1045.severity = error       # do not pass types by reference (~7 occurrences in codebase)
-dotnet_diagnostic.CA1047.severity = error       # do not declare protected members in sealed classes
-dotnet_diagnostic.CA1050.severity = error       # declare types in namespaces
-dotnet_diagnostic.CA1052.severity = warning     # static holder types
-dotnet_diagnostic.CA1053.severity = error       # static holder types should not have default constructors
-dotnet_diagnostic.CA1055.severity = none        # strings instead of URI (too much work)
-dotnet_diagnostic.CA1056.severity = none        # strings instead of URI (too much work)
-dotnet_diagnostic.CA1058.severity = error       # types should not extend certain base types
-dotnet_diagnostic.CA1062.severity = none        # null validation in functions
-dotnet_diagnostic.CA1063.severity = error       # implement IDisposable correctly
-dotnet_diagnostic.CA1064.severity = error       # exceptions should be public
-dotnet_diagnostic.CA1065.severity = error       # do not raise exceptions in unexpected locations
-dotnet_diagnostic.CA1066.severity = error       # implement IEquatable when overriding Equals
-dotnet_diagnostic.CA1067.severity = error       # override Equals when implementing IEquatable
-dotnet_diagnostic.CA1068.severity = error       # CancellationToken parameters must come last
-dotnet_diagnostic.CA1069.severity = error       # enum values should not be duplicated
+dotnet_diagnostic.CA1000.severity = error # no static members on generic types
+dotnet_diagnostic.CA1001.severity = error # types owning disposable fields must be disposable
+dotnet_diagnostic.CA1002.severity = none # doesn't work with public list in API class (DossierDienstDossierWijziging)
+dotnet_diagnostic.CA1008.severity = warning # enums should have a zero value
+dotnet_diagnostic.CA1010.severity = error # collections should implement generic interface
+dotnet_diagnostic.CA1012.severity = error # abstract types should not have public constructors
+dotnet_diagnostic.CA1016.severity = error # mark assemblies with AssemblyVersionAttribute
+dotnet_diagnostic.CA1018.severity = error # mark attributes with AttributeUsageAttribute
+dotnet_diagnostic.CA1021.severity = error # avoid out parameters (~7 occurrences in codebase)
+dotnet_diagnostic.CA1024.severity = none # use properties when appropriate
+dotnet_diagnostic.CA1027.severity = error # mark enums with FlagsAttribute
+dotnet_diagnostic.CA1028.severity = error # enum storage should be Int32
+dotnet_diagnostic.CA1030.severity = error # use events where appropriate
+dotnet_diagnostic.CA1031.severity = none # too general exception catching
+dotnet_diagnostic.CA1032.severity = none # exception constructors
+dotnet_diagnostic.CA1034.severity = none # nested types — doesn't work with public list in API class
+dotnet_diagnostic.CA1040.severity = error # avoid empty interfaces
+dotnet_diagnostic.CA1041.severity = error # provide ObsoleteAttribute message
+dotnet_diagnostic.CA1045.severity = error # do not pass types by reference (~7 occurrences in codebase)
+dotnet_diagnostic.CA1047.severity = error # do not declare protected members in sealed classes
+dotnet_diagnostic.CA1050.severity = error # declare types in namespaces
+dotnet_diagnostic.CA1052.severity = warning # static holder types
+dotnet_diagnostic.CA1053.severity = error # static holder types should not have default constructors
+dotnet_diagnostic.CA1055.severity = none # strings instead of URI (too much work)
+dotnet_diagnostic.CA1056.severity = none # strings instead of URI (too much work)
+dotnet_diagnostic.CA1058.severity = error # types should not extend certain base types
+dotnet_diagnostic.CA1062.severity = none # null validation in functions
+dotnet_diagnostic.CA1063.severity = error # implement IDisposable correctly
+dotnet_diagnostic.CA1064.severity = error # exceptions should be public
+dotnet_diagnostic.CA1065.severity = error # do not raise exceptions in unexpected locations
+dotnet_diagnostic.CA1066.severity = error # implement IEquatable when overriding Equals
+dotnet_diagnostic.CA1067.severity = error # override Equals when implementing IEquatable
+dotnet_diagnostic.CA1068.severity = error # CancellationToken parameters must come last
+dotnet_diagnostic.CA1069.severity = error # enum values should not be duplicated
 
 # Naming Rules
-dotnet_diagnostic.CA1707.severity = none        # underscore naming is the project convention for tests and migrations
+dotnet_diagnostic.CA1707.severity = none # underscore naming is the project convention for tests and migrations
 
 # Portability and interoperability Rules
 dotnet_diagnostic.CA1200.severity = error
 dotnet_diagnostic.CA1416.severity = error
 dotnet_diagnostic.CA1418.severity = error
-dotnet_diagnostic.CA1419.severity = error       # RestException implements ISerializable without parameterless constructor
+dotnet_diagnostic.CA1419.severity = error # RestException implements ISerializable without parameterless constructor
 dotnet_diagnostic.CA1420.severity = error
 dotnet_diagnostic.CA1422.severity = error
 # Removed: CA1401, CA1417, CA1421 — no [DllImport] / P/Invoke declarations in codebase
 
 # Maintainability Rules
-dotnet_diagnostic.CA1502.severity = none        # cyclomatic complexity
-dotnet_diagnostic.CA1505.severity = none        # maintainability index
-dotnet_diagnostic.CA1506.severity = none        # coupling
+dotnet_diagnostic.CA1502.severity = none # cyclomatic complexity
+dotnet_diagnostic.CA1505.severity = none # maintainability index
+dotnet_diagnostic.CA1506.severity = none # coupling
 dotnet_diagnostic.CA1507.severity = error
 dotnet_diagnostic.CA1508.severity = error
 dotnet_diagnostic.CA1509.severity = error
@@ -308,7 +308,7 @@ dotnet_diagnostic.CA1805.severity = error
 dotnet_diagnostic.CA1806.severity = error
 dotnet_diagnostic.CA1810.severity = error
 dotnet_diagnostic.CA1812.severity = none
-dotnet_diagnostic.CA1819.severity = none        # properties can be arrays for DTOs
+dotnet_diagnostic.CA1819.severity = none # properties can be arrays for DTOs
 # Removed: CA1813 — all Attribute subclasses already sealed (NeverCopyAttribute, TimeZoneHeaderAttribute)
 # Removed: CA1814 — no multidimensional arrays in codebase
 # Removed: CA1815 — no public struct declarations in codebase
@@ -337,8 +337,8 @@ dotnet_diagnostic.CA1860.severity = suggestion
 
 # Reliability Rules
 dotnet_diagnostic.CA2002.severity = error
-dotnet_diagnostic.CA2007.severity = none        # review tim 20251106
-dotnet_diagnostic.CA2008.severity = warning     # Task Scheduler for ContinueWith: Todo: Imrane?
+dotnet_diagnostic.CA2007.severity = none # review tim 20251106
+dotnet_diagnostic.CA2008.severity = warning # Task Scheduler for ContinueWith: Todo: Imrane?
 dotnet_diagnostic.CA2009.severity = error
 dotnet_diagnostic.CA2011.severity = error
 dotnet_diagnostic.CA2012.severity = error
@@ -353,7 +353,7 @@ dotnet_diagnostic.CA2020.severity = error
 dotnet_diagnostic.CA2021.severity = error
 
 # Security Rules
-dotnet_diagnostic.CA2100.severity = warning     # review roel 20250114
+dotnet_diagnostic.CA2100.severity = warning # review roel 20250114
 dotnet_diagnostic.CA2109.severity = error
 dotnet_diagnostic.CA2119.severity = error
 dotnet_diagnostic.CA2153.severity = error
@@ -363,7 +363,7 @@ dotnet_diagnostic.CA2153.severity = error
 # Removed: CA2315 — no ObjectStateFormatter usage
 # Removed: CA2321–CA2322 — no JavaScriptSerializer usage
 # Removed: CA2326–CA2330 — no Newtonsoft TypeNameHandling patterns
-dotnet_diagnostic.CA2350.severity = error       # DataSet/DataTable actively used in DataSetHelper
+dotnet_diagnostic.CA2350.severity = error # DataSet/DataTable actively used in DataSetHelper
 dotnet_diagnostic.CA2351.severity = error
 dotnet_diagnostic.CA2352.severity = error
 dotnet_diagnostic.CA2353.severity = error
@@ -372,30 +372,30 @@ dotnet_diagnostic.CA2355.severity = error
 dotnet_diagnostic.CA2356.severity = error
 dotnet_diagnostic.CA2361.severity = error
 dotnet_diagnostic.CA2362.severity = error
-dotnet_diagnostic.CA3001.severity = error       # SQL database operations present
-dotnet_diagnostic.CA3002.severity = error       # MVC/Razor web app with Html.Raw usage
-dotnet_diagnostic.CA3003.severity = error       # File.Create/Directory.Create used
-dotnet_diagnostic.CA3004.severity = error       # Exception handling / info disclosure
+dotnet_diagnostic.CA3001.severity = error # SQL database operations present
+dotnet_diagnostic.CA3002.severity = error # MVC/Razor web app with Html.Raw usage
+dotnet_diagnostic.CA3003.severity = error # File.Create/Directory.Create used
+dotnet_diagnostic.CA3004.severity = error # Exception handling / info disclosure
 # Removed: CA3005 — no DirectoryEntry/DirectorySearcher (no LDAP) in codebase
 # Removed: CA3006 — no Process.Start with user input
-dotnet_diagnostic.CA3007.severity = error       # Web app with redirect flows
+dotnet_diagnostic.CA3007.severity = error # Web app with redirect flows
 # Removed: CA3008 — no XPathNavigator/SelectNodes usage in codebase
-dotnet_diagnostic.CA3009.severity = error       # XmlWriter usage in SerializationHelper
+dotnet_diagnostic.CA3009.severity = error # XmlWriter usage in SerializationHelper
 # Removed: CA3010 — no XamlReader usage
-dotnet_diagnostic.CA3011.severity = error       # Assembly.Load in Translations.cs
-dotnet_diagnostic.CA3012.severity = error       # Multiple Regex() constructors in production code
+dotnet_diagnostic.CA3011.severity = error # Assembly.Load in Translations.cs
+dotnet_diagnostic.CA3012.severity = error # Multiple Regex() constructors in production code
 # Removed: CA3061 — no XmlSchemaCollection usage
-dotnet_diagnostic.CA3075.severity = error       # XmlReaderSettings used in SetDossierXmlValidator
+dotnet_diagnostic.CA3075.severity = error # XmlReaderSettings used in SetDossierXmlValidator
 # Removed: CA3076 — no XslCompiledTransform/XsltSettings usage
-dotnet_diagnostic.CA3077.severity = error       # XmlDocument used in ServiceConfigurationBehavior
+dotnet_diagnostic.CA3077.severity = error # XmlDocument used in ServiceConfigurationBehavior
 dotnet_diagnostic.CA3147.severity = error
-dotnet_diagnostic.CA5350.severity = warning     # Weak Cryptographic Algorithms
+dotnet_diagnostic.CA5350.severity = warning # Weak Cryptographic Algorithms
 dotnet_diagnostic.CA5351.severity = error
 dotnet_diagnostic.CA5358.severity = error
 dotnet_diagnostic.CA5359.severity = error
 dotnet_diagnostic.CA5360.severity = error
 dotnet_diagnostic.CA5361.severity = error
-dotnet_diagnostic.CA5362.severity = none        # Potential reference loops in graph
+dotnet_diagnostic.CA5362.severity = none # Potential reference loops in graph
 dotnet_diagnostic.CA5363.severity = error
 dotnet_diagnostic.CA5364.severity = error
 dotnet_diagnostic.CA5365.severity = error
@@ -411,8 +411,8 @@ dotnet_diagnostic.CA5374.severity = error
 dotnet_diagnostic.CA5375.severity = error
 dotnet_diagnostic.CA5376.severity = error
 dotnet_diagnostic.CA5377.severity = error
-dotnet_diagnostic.CA5378.severity = error       # ServicePointManager.SecurityProtocol set in OpenIdAuthenticationHelper
-dotnet_diagnostic.CA5379.severity = warning     # Weak Cryptographic Algorithms
+dotnet_diagnostic.CA5378.severity = error # ServicePointManager.SecurityProtocol set in OpenIdAuthenticationHelper
+dotnet_diagnostic.CA5379.severity = warning # Weak Cryptographic Algorithms
 dotnet_diagnostic.CA5380.severity = error
 dotnet_diagnostic.CA5381.severity = error
 dotnet_diagnostic.CA5382.severity = error
@@ -424,7 +424,7 @@ dotnet_diagnostic.CA5387.severity = error
 dotnet_diagnostic.CA5388.severity = error
 dotnet_diagnostic.CA5389.severity = error
 dotnet_diagnostic.CA5390.severity = error
-dotnet_diagnostic.CA5391.severity = warning     # Antiforgery-tokens => Todo: Vincent?
+dotnet_diagnostic.CA5391.severity = warning # Antiforgery-tokens => Todo: Vincent?
 # Removed: CA5392 — no [DllImport] / P/Invoke declarations in codebase
 # Removed: CA5393 — no [DllImport] / P/Invoke declarations in codebase
 dotnet_diagnostic.CA5394.severity = error
@@ -434,7 +434,7 @@ dotnet_diagnostic.CA5397.severity = error
 dotnet_diagnostic.CA5398.severity = error
 dotnet_diagnostic.CA5399.severity = error
 dotnet_diagnostic.CA5400.severity = error
-dotnet_diagnostic.CA5401.severity = warning     # encryptor weakness
+dotnet_diagnostic.CA5401.severity = warning # encryptor weakness
 dotnet_diagnostic.CA5402.severity = error
 dotnet_diagnostic.CA5403.severity = error
 dotnet_diagnostic.CA5404.severity = error
@@ -444,25 +444,25 @@ dotnet_diagnostic.CA5405.severity = error
 dotnet_diagnostic.CA1801.severity = error
 dotnet_diagnostic.CA1816.severity = error
 dotnet_diagnostic.CA2200.severity = error
-dotnet_diagnostic.CA2201.severity = warning     # review roel 20250114
+dotnet_diagnostic.CA2201.severity = warning # review roel 20250114
 dotnet_diagnostic.CA2207.severity = error
-dotnet_diagnostic.CA2208.severity = warning     # review roel 20250114
+dotnet_diagnostic.CA2208.severity = warning # review roel 20250114
 dotnet_diagnostic.CA2211.severity = error
 dotnet_diagnostic.CA2213.severity = error
 dotnet_diagnostic.CA2214.severity = error
 dotnet_diagnostic.CA2215.severity = error
-dotnet_diagnostic.CA2216.severity = error       # RSAEncryptionHelper and DatabaseFixture implement IDisposable with finalizer
-dotnet_diagnostic.CA2217.severity = error       # [Flags] enums in use (Weekdays, ConnectionSettingTypeEnum, etc.)
+dotnet_diagnostic.CA2216.severity = error # RSAEncryptionHelper and DatabaseFixture implement IDisposable with finalizer
+dotnet_diagnostic.CA2217.severity = error # [Flags] enums in use (Weekdays, ConnectionSettingTypeEnum, etc.)
 dotnet_diagnostic.CA2218.severity = error
 dotnet_diagnostic.CA2219.severity = error
 # Removed: CA2225 — no operator overloads (+, -, *, /, etc.) in codebase
-dotnet_diagnostic.CA2226.severity = error       # Rrn record defines operator == and operator !=
+dotnet_diagnostic.CA2226.severity = error # Rrn record defines operator == and operator !=
 dotnet_diagnostic.CA2224.severity = error
-dotnet_diagnostic.CA2227.severity = none        # doesn't work with public list in API class (DossierDienstDossierWijziging)
-dotnet_diagnostic.CA2229.severity = error       # RestException is [Serializable] with ISerializable
+dotnet_diagnostic.CA2227.severity = none # doesn't work with public list in API class (DossierDienstDossierWijziging)
+dotnet_diagnostic.CA2229.severity = error # RestException is [Serializable] with ISerializable
 # Removed: CA2231 — no struct types override Equals in codebase
-dotnet_diagnostic.CA2235.severity = error       # SerializableException is [Serializable] with fields
-dotnet_diagnostic.CA2237.severity = error       # RestException implements ISerializable and has [Serializable]
+dotnet_diagnostic.CA2235.severity = error # SerializableException is [Serializable] with fields
+dotnet_diagnostic.CA2237.severity = error # RestException implements ISerializable and has [Serializable]
 dotnet_diagnostic.CA2241.severity = error
 dotnet_diagnostic.CA2242.severity = error
 dotnet_diagnostic.CA2243.severity = error
@@ -474,8 +474,8 @@ dotnet_diagnostic.CA2248.severity = error
 dotnet_diagnostic.CA2249.severity = error
 dotnet_diagnostic.CA2250.severity = error
 dotnet_diagnostic.CA2251.severity = error
-dotnet_diagnostic.CA2253.severity = error       # Structured logging: named placeholders should not be numeric
-dotnet_diagnostic.CA2254.severity = error       # Structured logging: template should be a static expression
+dotnet_diagnostic.CA2253.severity = error # Structured logging: named placeholders should not be numeric
+dotnet_diagnostic.CA2254.severity = error # Structured logging: template should be a static expression
 # Removed: CA2252 — no [RequiresPreviewFeatures] usage
 # Removed: CA2255 — no [ModuleInitializer] usage
 # Removed: CA2256–CA2258 — no [DynamicInterfaceCastableImplementation] usage
@@ -483,7 +483,7 @@ dotnet_diagnostic.CA2254.severity = error       # Structured logging: template s
 # Removed: CA2260 — no generic math interfaces (INumber<>, IAdditionOperators<>, etc.)
 # Removed: CA2261 — no ConfigureAwaitOptions usage
 # Removed: CA2262 — no SetMaxCapacity calls
-dotnet_diagnostic.CA2263.severity = warning     # review roel 20250114
+dotnet_diagnostic.CA2263.severity = warning # review roel 20250114
 dotnet_diagnostic.CA2264.severity = error
 
 # Test method naming convention
