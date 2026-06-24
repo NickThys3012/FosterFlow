@@ -13,7 +13,7 @@ public static class DependencyInjection
         IConfiguration config)
     {
         services.AddDbContext<AppDbContext>(opts =>
-            opts.UseSqlServer(config.GetConnectionString("Default")));
+            opts.UseSqlServer(config.GetConnectionString("Database")));
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
