@@ -1,5 +1,6 @@
 using FosterFlow.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 namespace FosterFlow.Infrastructure.Persistence;
 
 public static class IdentitySeed

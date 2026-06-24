@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using FosterFlow.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 namespace FosterFlow.Infrastructure.Identity;
 
@@ -81,7 +82,7 @@ public class TokenService
         {
             return token.ExpiresAt < DateTime.UtcNow ? null : token;
         }
-        
+
         await RevokeAllUserTokensAsync(token.UserId);
         return null;
     }

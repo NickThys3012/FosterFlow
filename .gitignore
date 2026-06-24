@@ -1,2 +1,5 @@
 
 .DS_Store
+
+# Local docker-compose secrets/config (commit .env.example instead)
+.env

@@ -58,7 +58,7 @@ if (string.IsNullOrEmpty(conStr))
 }
 builder.Services.AddHealthChecks()
     .AddSqlServer(conStr)
-    .AddDbContextCheck<AppDbContext>();;
+    .AddDbContextCheck<AppDbContext>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();

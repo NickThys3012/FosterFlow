@@ -2,6 +2,7 @@ using System.Security.Claims;
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Domain.Entities;
 using FosterFlow.Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.Http;
 namespace FosterFlow.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService

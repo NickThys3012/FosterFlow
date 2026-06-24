@@ -4,6 +4,8 @@ using FosterFlow.Infrastructure.Persistence;
 using FosterFlow.Infrastructure.Persistence.Repositories;
 using FosterFlow.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 namespace FosterFlow.Infrastructure;
 
 public static class DependencyInjection
