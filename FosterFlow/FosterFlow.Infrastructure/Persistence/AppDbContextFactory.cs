@@ -13,10 +13,12 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        var connectionString =
-            Environment.GetEnvironmentVariable("ConnectionStrings__Database")
-            ?? "Server=localhost;Database=FosterFlow;Trusted_Connection=False;TrustServerCertificate=True";
-
+        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__Database");
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException(
+                "Connection string not found. Set ConnectionStrings__Database (or pass --connection when running the migration bundle).");
+        }
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlServer(connectionString)
             .Options;
