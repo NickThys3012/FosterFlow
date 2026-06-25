@@ -29,6 +29,9 @@
         case UserRole.Foster:
             <FosterSigninForm />
             break;
+        case null:
+            <div>Make a selection between Shelter or <Foster></Foster></div>
+            break;
         case UserRole.Admin:
         default:
             <div>You're not allowed in here</div>

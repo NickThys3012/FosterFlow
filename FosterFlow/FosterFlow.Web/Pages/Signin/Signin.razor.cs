@@ -4,7 +4,7 @@ namespace FosterFlow.Web.Pages.Signin;
 
 public partial class Signin : ComponentBase
 {
-    private UserRole _role = UserRole.Foster;
+    private UserRole? _role;
     
     private void HandleRoleChange(UserRole role)
     {
