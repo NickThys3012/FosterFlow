@@ -22,7 +22,8 @@ dotnet run --project FosterFlow.Api                          # starts API + host
 - The **API is the startup project**. It references `FosterFlow.Web` and serves the WASM client via
   `UseBlazorFrameworkFiles()` + `MapFallbackToFile("index.html")`. Do not run `FosterFlow.Web` standalone.
 - Default URLs (Development): API `https://localhost:7214` / `http://localhost:5001`. The Blazor client
-  hard-codes the API base address `https://localhost:7214` in `FosterFlow.Web/Program.cs` — keep these in sync.
+  uses `builder.HostEnvironment.BaseAddress` for the API base address in `FosterFlow.Web/Program.cs`, so it
+  targets whatever origin served it (localhost in dev, the App Service URL in prod) — no host to keep in sync.
 - OpenAPI/Scalar docs are exposed at `/scalar`; health at `/health`.
 
 ## Configuration & database
