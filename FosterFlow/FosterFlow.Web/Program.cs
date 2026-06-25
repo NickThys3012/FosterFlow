@@ -18,8 +18,11 @@ builder.Services.AddAuthorizationCore();
 // ── HttpClient with auth handler ─────────────────────────────────────
 // IMPORTANT: Register AuthService before AuthMessageHandler
 // IMPORTANT: Use AddScoped for the base HttpClient so handler can resolve AuthService
+// The client is hosted by the API on the same origin, so target the host's own
+// base address. This resolves to https://localhost:7214 locally and to the App
+// Service URL in production — no hard-coded host that breaks once deployed.
 builder.Services.AddHttpClient("API",
-        client => client.BaseAddress = new Uri("https://localhost:7214"))
+        client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<AuthMessageHandler>();
 
 builder.Services.AddScoped<AuthService>();
