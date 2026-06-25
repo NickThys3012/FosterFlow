@@ -16,6 +16,9 @@ services:
       Jwt__Secret: "${JWT_SECRET}"
       Jwt__Issuer: "${JWT_ISSUER}"
       Jwt__Audience: "${JWT_AUDIENCE}"
+      # Stream structured logs to the Loki service (US-INF-4.2, #48).
+      Loki__Url: "http://loki:3100"
+      Loki__Environment: "development"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -75,6 +78,55 @@ services:
       - azurite-data:/data
     restart: unless-stopped
 
+  # ── Monitoring stack (US-INF-4.1/4.2/4.3 — #47 #48 #49) ──────────────
+  # Prometheus scrapes the API's /metrics endpoint; Loki ingests Serilog
+  # structured logs; Grafana visualises both via provisioned dashboards.
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: fosterflow-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: fosterflow-loki
+    command: "-config.file=/etc/loki/loki-config.yml"
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    volumes:
+      - ./monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki-data:/loki
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: fosterflow-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:-admin}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+    restart: unless-stopped
+
 volumes:
   sqlserver-data:
   azurite-data:
+  prometheus-data:
+  loki-data:
+  grafana-data:

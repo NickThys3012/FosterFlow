@@ -52,6 +52,13 @@ param jwtSecret string
 @description('Loki ingestion URL for monitoring (optional until ready).')
 param lokiUrl string = ''
 
+@description('Deploy the Grafana/Prometheus/Loki monitoring stack on ACI (US-INF-4.3, #49).')
+param deployMonitoring bool = false
+
+@description('Grafana admin password for the monitoring stack. Required when deployMonitoring is true.')
+@secure()
+param grafanaAdminPassword string = ''
+
 @description('App Service Plan name.')
 param appServicePlanName string = 'asp-${workload}-${environmentAbbreviation}-${regionAbbreviation}'
 
@@ -91,6 +98,8 @@ module resources 'resources.bicep' = {
     appServicePlanName: appServicePlanName
     appServiceName: appServiceName
     linuxFxVersion: linuxFxVersion
+    deployMonitoring: deployMonitoring
+    grafanaAdminPassword: grafanaAdminPassword
   }
 }
 
@@ -105,3 +114,6 @@ output sqlServerFqdn string = resources.outputs.sqlServerFqdn
 
 @description('Key Vault URI.')
 output keyVaultUri string = resources.outputs.keyVaultUri
+
+@description('Public Grafana URL (empty unless deployMonitoring is true).')
+output grafanaUrl string = resources.outputs.grafanaUrl

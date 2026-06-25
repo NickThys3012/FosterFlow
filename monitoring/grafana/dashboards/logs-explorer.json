@@ -1,0 +1,86 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["fosterflow", "logs"],
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "FosterFlow - Logs Explorer",
+  "uid": "fosterflow-logs-explorer",
+  "version": 1,
+  "templating": {
+    "list": [
+      {
+        "name": "level",
+        "label": "Log level",
+        "type": "custom",
+        "query": "All,Verbose,Debug,Information,Warning,Error,Fatal",
+        "current": { "text": "All", "value": "" },
+        "includeAll": false,
+        "options": [
+          { "text": "All", "value": "", "selected": true },
+          { "text": "Verbose", "value": "Verbose", "selected": false },
+          { "text": "Debug", "value": "Debug", "selected": false },
+          { "text": "Information", "value": "Information", "selected": false },
+          { "text": "Warning", "value": "Warning", "selected": false },
+          { "text": "Error", "value": "Error", "selected": false },
+          { "text": "Fatal", "value": "Fatal", "selected": false }
+        ]
+      },
+      {
+        "name": "search",
+        "label": "Search text",
+        "type": "textbox",
+        "query": "",
+        "current": { "text": "", "value": "" }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Log volume by level",
+      "datasource": { "type": "loki", "uid": "loki" },
+      "gridPos": { "h": 7, "w": 24, "x": 0, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "sum by (level) (count_over_time({app=\"fosterflow-api\"} | json | __error__=\"\" [1m]))",
+          "legendFormat": "{{level}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "logs",
+      "title": "Logs: {app=\"fosterflow-api\"}",
+      "datasource": { "type": "loki", "uid": "loki" },
+      "gridPos": { "h": 17, "w": 24, "x": 0, "y": 7 },
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "{app=\"fosterflow-api\"} | json | level =~ \"$level.*\" |~ \"(?i)$search\""
+        }
+      ]
+    }
+  ]
+}
