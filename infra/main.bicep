@@ -115,5 +115,8 @@ output sqlServerFqdn string = resources.outputs.sqlServerFqdn
 @description('Key Vault URI.')
 output keyVaultUri string = resources.outputs.keyVaultUri
 
+@description('Effective Loki ingestion URL wired into the App Service.')
+output lokiUrl string = resources.outputs.lokiUrl
+
 @description('Public Grafana URL (empty unless deployMonitoring is true).')
 output grafanaUrl string = resources.outputs.grafanaUrl

@@ -19,17 +19,18 @@
         "name": "level",
         "label": "Log level",
         "type": "custom",
-        "query": "All,Verbose,Debug,Information,Warning,Error,Fatal",
+        "description": "Values must match the Serilog Loki sink's lowercase 'level' label (Verbose=trace, Information=info, ...).",
+        "query": "All : ,Verbose : trace,Debug : debug,Information : info,Warning : warning,Error : error,Fatal : fatal",
         "current": { "text": "All", "value": "" },
         "includeAll": false,
         "options": [
           { "text": "All", "value": "", "selected": true },
-          { "text": "Verbose", "value": "Verbose", "selected": false },
-          { "text": "Debug", "value": "Debug", "selected": false },
-          { "text": "Information", "value": "Information", "selected": false },
-          { "text": "Warning", "value": "Warning", "selected": false },
-          { "text": "Error", "value": "Error", "selected": false },
-          { "text": "Fatal", "value": "Fatal", "selected": false }
+          { "text": "Verbose", "value": "trace", "selected": false },
+          { "text": "Debug", "value": "debug", "selected": false },
+          { "text": "Information", "value": "info", "selected": false },
+          { "text": "Warning", "value": "warning", "selected": false },
+          { "text": "Error", "value": "error", "selected": false },
+          { "text": "Fatal", "value": "fatal", "selected": false }
         ]
       },
       {

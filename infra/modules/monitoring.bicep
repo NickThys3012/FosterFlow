@@ -81,6 +81,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
           protocol: 'TCP'
           port: 3000
         }
+        {
+          // Loki ingestion endpoint must be reachable by the App Service (which runs
+          // outside this container group) so Serilog can push logs over the internet.
+          protocol: 'TCP'
+          port: 3100
+        }
       ]
     }
     volumes: [
@@ -204,8 +210,11 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
 @description('Public Grafana URL.')
 output grafanaUrl string = 'http://${containerGroup.properties.ipAddress.fqdn}:3000'
 
-@description('Loki ingestion URL reachable from inside the container group.')
+@description('Loki ingestion URL reachable from inside the container group (Grafana uses this).')
 output lokiInternalUrl string = 'http://localhost:3100'
+
+@description('Public Loki ingestion URL the App Service pushes logs to.')
+output lokiPublicUrl string = 'http://${containerGroup.properties.ipAddress.fqdn}:3100'
 
 @description('Storage account name backing the config share.')
 output storageAccountName string = storage.name

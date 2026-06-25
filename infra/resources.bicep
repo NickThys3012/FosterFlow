@@ -93,11 +93,18 @@ module keyVault 'modules/keyvault.bicep' = {
     sqlAdminLogin: sqlAdminLogin
     sqlAdminPassword: sqlAdminPassword
     jwtSecret: jwtSecret
-    lokiUrl: lokiUrl
+    lokiUrl: effectiveLokiUrl
   }
 }
 
 var publicUrl = 'https://${appServiceName}.azurewebsites.net'
+
+// When the monitoring stack is deployed but no explicit Loki URL was supplied, point the
+// App Service at the ACI Loki endpoint. The container group's public FQDN is deterministic
+// (<dnsNameLabel>.<region>.azurecontainer.io), so this needs no cross-module dependency.
+var effectiveLokiUrl = !empty(lokiUrl)
+  ? lokiUrl
+  : (deployMonitoring ? 'http://${monitoringDnsNameLabel}.${location}.azurecontainer.io:3100' : '')
 
 module monitoring 'modules/monitoring.bicep' = if (deployMonitoring) {
   name: 'monitoring'
@@ -121,7 +128,7 @@ module appService 'modules/appservice.bicep' = {
     keyVaultName: keyVault.outputs.name
     jwtIssuer: publicUrl
     jwtAudience: publicUrl
-    lokiConfigured: !empty(lokiUrl)
+    lokiConfigured: !empty(effectiveLokiUrl)
     tags: tags
   }
 }
@@ -137,6 +144,9 @@ output sqlServerFqdn string = sql.outputs.fullyQualifiedDomainName
 
 @description('Key Vault URI.')
 output keyVaultUri string = keyVault.outputs.vaultUri
+
+@description('Effective Loki ingestion URL wired into the App Service (empty if logging to Loki is disabled).')
+output lokiUrl string = effectiveLokiUrl
 
 @description('Public Grafana URL (empty unless deployMonitoring is true).')
 output grafanaUrl string = deployMonitoring ? monitoring!.outputs.grafanaUrl : ''
