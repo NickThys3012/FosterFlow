@@ -3,3 +3,6 @@
 
 # Local docker-compose secrets/config (commit .env.example instead)
 .env
+
+# Local Bicep parameter file with secrets
+infra/main.bicepparam
