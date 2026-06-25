@@ -143,10 +143,13 @@ CI/CD runs through three GitHub Actions workflows (`.github/workflows/`):
 | Workflow | File | Trigger | Purpose |
 |---|---|---|---|
 | **Build & Test** | `build.yml` | push to `develop`/`main`, PRs to `main` | `dotnet restore` → `build -c Release` → `test`, then publishes the API (Blazor WASM baked into `wwwroot`) as an artifact. |
-| **Docker Build & Push** | `docker-build.yml` | push to `main` | Builds the multi-stage image and pushes it to **GHCR** (`ghcr.io/<owner>/fosterflow`) tagged `latest` + git SHA. Uses the built-in `GITHUB_TOKEN` — no extra secrets. |
-| **Deploy** | `deploy.yml` | push to `main`, manual | Publishes API + Web and deploys to **Azure App Service** (`app-fosterflow-prod-swe`), then runs `/health` and `/` smoke checks. |
+| **Docker Build & Push** | `docker-build.yml` | after **Build & Test** succeeds on `main` | Builds the multi-stage image and pushes it to **GHCR** (`ghcr.io/<owner>/fosterflow`) tagged `latest` + git SHA. Uses the built-in `GITHUB_TOKEN` — no extra secrets. |
+| **Deploy** | `deploy.yml` | after **Docker Build & Push** succeeds on `main` | Publishes API + Web and deploys to **Azure App Service** (`app-fosterflow-prod-swe`), then runs `/health` and `/` smoke checks. |
 
-> Branch protection on `main` should require the **Build & Test** check so failing builds can't merge.
+> On a push to `main` these run **sequentially** via `workflow_run`
+> (Build & Test → Docker → Deploy); each stage only starts if the previous
+> succeeded, so prod is never released before build, tests and the image push pass.
+> Each can also be triggered manually (`workflow_dispatch`).
 
 **Required GitHub Secrets:**
 

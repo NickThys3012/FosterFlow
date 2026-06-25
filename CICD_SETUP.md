@@ -8,8 +8,18 @@ that can only be done outside the codebase.
 | Workflow | File | Trigger | Needs setup? |
 |---|---|---|---|
 | Build & Test | `.github/workflows/build.yml` | push `develop`/`main`, PRs to `main` | No (works out of the box) |
-| Docker Build & Push | `.github/workflows/docker-build.yml` | push `main` | Optional (GHCR visibility) |
-| Deploy to Azure | `.github/workflows/deploy.yml` | push `main`, manual | **Yes — secret required** |
+| Docker Build & Push | `.github/workflows/docker-build.yml` | after **Build & Test** succeeds on `main` | Optional (GHCR visibility) |
+| Deploy to Azure | `.github/workflows/deploy.yml` | after **Docker Build & Push** succeeds on `main` | **Yes — secret required** |
+
+> **Chained execution:** on a push to `main` the workflows run **sequentially** —
+> `Build & Test` → `Docker Build & Push` → `Deploy` — using GitHub's `workflow_run`
+> trigger. Each stage only starts if the previous one succeeded, so production is
+> never released before build, tests and the image push have all passed. Each can
+> still be run on its own via **Run workflow** (`workflow_dispatch`).
+>
+> ⚠️ `workflow_run` chaining only works once these workflow files exist on the
+> **default branch** (`main`). The chain won't trigger from a feature branch or PR —
+> merge to `main` first.
 
 ---
 
@@ -114,8 +124,10 @@ The Docker workflow pushes to `ghcr.io/nickthys3012/fosterflow` using the built-
 ## 5. First run & verification
 
 1. Merge/push these changes to `main`.
-2. Watch **Actions** tab — `Build & Test`, `Docker Build & Push`, and `Deploy to
-   Azure App Service` should all trigger.
+2. Watch the **Actions** tab — the workflows run **in sequence**:
+   `Build & Test` → (on success) `Docker Build & Push` → (on success) `Deploy to
+   Azure App Service`. If any stage fails, the chain stops and production is not
+   updated.
 3. Verify the deploy:
 
    ```bash

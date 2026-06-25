@@ -1,13 +1,16 @@
 # US-INF-2.3 (#43): Deploy to Azure App Service.
-# Builds and publishes the API (the Blazor WASM client is compiled into the
-# API's wwwroot automatically via UseBlazorFrameworkFiles()), deploys the
-# single published output to the App Service using a publish profile, then runs
-# health and smoke checks. Runs automatically on push to main; no manual
-# approval. App Service slots provide rollback to the previous version.
+# Runs only after "Docker Build & Push" succeeds on main (chained via
+# workflow_run), so production is updated only once build, test and image push
+# have all passed. Builds and publishes the API (the Blazor WASM client is
+# compiled into the API's wwwroot automatically), deploys the single published
+# output via a publish profile, then runs health and smoke checks. App Service
+# keeps the previous version for rollback.
 name: Deploy to Azure App Service
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Docker Build & Push"]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -29,6 +32,8 @@ jobs:
     name: Build, publish & deploy
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Only deploy on a manual run or when the upstream Docker workflow succeeded.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: production
       url: ${{ env.APP_URL }}
@@ -36,6 +41,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Deploy the exact commit that passed the upstream workflows.
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
