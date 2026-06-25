@@ -173,6 +173,10 @@ The Docker workflow pushes to `ghcr.io/nickthys3012/fosterflow` using the built-
 
 ## Notes
 
+- **Database migrations run automatically at startup:** the API calls
+  `MigrateDatabaseAsync()` before seeding, so a freshly provisioned Azure SQL
+  database gets its schema applied on first boot. No separate CI migration step or
+  DB firewall opening is needed (the App Service reaches SQL as an Azure service).
 - **Database connection at runtime:** the App Service supplies
   `ConnectionStrings__Database` from Key Vault (see `infra/`). The published app
   requires it to start — that is expected.

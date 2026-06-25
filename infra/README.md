@@ -72,10 +72,16 @@ az deployment sub create \
   --parameters sqlAdminPassword=$SQL_ADMIN_PASSWORD jwtSecret=$JWT_SECRET
 ```
 
-## After deployment — apply EF Core migrations (#38)
+## Database migrations (#38)
+
+Migrations are applied **automatically by the API at startup** (`MigrateDatabaseAsync()`
+in `Program.cs`), so a freshly provisioned database gets its schema on first boot — no
+manual step is required after a normal deploy.
+
+If you ever need to apply migrations manually (e.g. from a developer machine whose IP is
+whitelisted via `allowedClientIp`), run from the solution dir (`FosterFlow/FosterFlow`):
 
 ```bash
-# from the solution dir: FosterFlow/FosterFlow
 dotnet ef database update \
   --project FosterFlow.Infrastructure --startup-project FosterFlow.Api \
   --connection "$(az keyvault secret show --vault-name kv-fosterflow-prod-swe --name DbConnectionString --query value -o tsv)"
