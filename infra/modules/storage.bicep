@@ -45,7 +45,7 @@ resource catPhotos 'Microsoft.Storage/storageAccounts/blobServices/containers@20
 @description('Name of the created storage account.')
 output name string = storageAccount.name
 
-@description('Primary blob endpoint, e.g. https://stfosterflowprodweu.blob.core.windows.net/.')
+@description('Primary blob endpoint, e.g. https://stfosterflowprodswe.blob.core.windows.net/.')
 output blobEndpoint string = storageAccount.properties.primaryEndpoints.blob
 
 @description('Resource ID of the storage account.')

@@ -6,7 +6,7 @@ param location string
 param sqlServerName string
 
 @description('Database name.')
-param databaseName string = 'sqldb-fosterflow-prod-weu'
+param databaseName string = 'sqldb-fosterflow-prod-swe'
 
 @description('SQL administrator login.')
 param administratorLogin string
@@ -79,7 +79,7 @@ resource allowClientIp 'Microsoft.Sql/servers/firewallRules@2023-08-01-preview' 
   }
 }
 
-@description('Fully-qualified domain name, e.g. sql-fosterflow-prod-weu.database.windows.net.')
+@description('Fully-qualified domain name, e.g. sql-fosterflow-prod-swe.database.windows.net.')
 output fullyQualifiedDomainName string = sqlServer.properties.fullyQualifiedDomainName
 
 @description('Database name.')

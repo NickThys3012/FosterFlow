@@ -115,7 +115,7 @@ resource secretsUserAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
-@description('Default host name, e.g. app-fosterflow-prod-weu.azurewebsites.net.')
+@description('Default host name, e.g. app-fosterflow-prod-swe.azurewebsites.net.')
 output defaultHostName string = appService.properties.defaultHostName
 
 @description('App Service principal ID (system-assigned identity).')

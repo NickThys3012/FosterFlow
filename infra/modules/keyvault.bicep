@@ -96,5 +96,5 @@ resource lokiSecretValue 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (!e
 @description('Name of the created Key Vault.')
 output name string = keyVault.name
 
-@description('Vault URI, e.g. https://kv-fosterflow-prod-weu.vault.azure.net/.')
+@description('Vault URI, e.g. https://kv-fosterflow-prod-swe.vault.azure.net/.')
 output vaultUri string = keyVault.properties.vaultUri
