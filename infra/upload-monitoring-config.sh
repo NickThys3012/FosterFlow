@@ -34,12 +34,11 @@ sed -i.bak 's#/var/lib/grafana/dashboards#/mnt/config/grafana/dashboards#' \
   "$TMP/grafana/provisioning/dashboards/dashboards.yml"
 rm -f "$TMP/grafana/provisioning/dashboards/dashboards.yml.bak"
 
-# In a docker-compose network Grafana reaches Prometheus/Loki by service name, but
-# in an ACI container group all containers share one network namespace and talk over
-# localhost. Rewrite the datasource URLs for the cloud layout.
+# The datasource URLs use docker-compose service names (loki, prometheus). On ACI the
+# three containers share one network namespace, so they must talk over localhost instead.
 sed -i.bak \
-  -e 's#http://prometheus:9090#http://localhost:9090#' \
-  -e 's#http://loki:3100#http://localhost:3100#' \
+  -e 's#http://loki:3100#http://localhost:3100#g' \
+  -e 's#http://prometheus:9090#http://localhost:9090#g' \
   "$TMP/grafana/provisioning/datasources/datasources.yml"
 rm -f "$TMP/grafana/provisioning/datasources/datasources.yml.bak"
 
