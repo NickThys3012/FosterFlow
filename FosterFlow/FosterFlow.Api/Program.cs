@@ -67,6 +67,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();  
 
 var app = builder.Build();
+await app.Services.MigrateDatabaseAsync();
 await app.Services.SeedUsers();
 // ── Middleware pipeline ───────────────────────────────────────────────
 app.UseMiddleware<ExceptionHandlingMiddleware>(); // ← must be first
