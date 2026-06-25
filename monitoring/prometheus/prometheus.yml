@@ -1,0 +1,19 @@
+# Prometheus scrape configuration for FosterFlow (US-INF-4.1 / US-INF-4.3, #47 #49).
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: fosterflow
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: fosterflow-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['api:8080']
+        labels:
+          app: fosterflow-api
+          environment: production

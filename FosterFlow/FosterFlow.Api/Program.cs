@@ -1,6 +1,8 @@
 using System.Text;
 using FosterFlow.Api.Middleware;
+using FosterFlow.Api.Observability;
 using FosterFlow.Application;
+using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Infrastructure;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
@@ -9,95 +11,154 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using Scalar.AspNetCore;
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using Serilog.Sinks.Grafana.Loki;
 
-// ── Layer registrations ───────────────────────────────────────────────
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+// ── Bootstrap logger ──────────────────────────────────────────────────
+// A minimal logger that captures anything thrown while the host is being built,
+// before the fully configured Serilog pipeline takes over.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// ── Identity ──────────────────────────────────────────────────────────
-builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole>(opts =>
-    {
-        opts.Password.RequireDigit = true;
-        opts.Password.RequiredLength = 8;
-        opts.Password.RequireNonAlphanumeric = false;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-// ── JWT ───────────────────────────────────────────────────────────────
-builder.Services
-    .AddAuthentication(opts =>
+    // ── Structured logging (US-INF-4.2, #48) ──────────────────────────
+    builder.Host.UseSerilog((context, services, configuration) =>
     {
-        opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(opts =>
-    {
-        opts.TokenValidationParameters = new TokenValidationParameters
+        configuration
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext()
+            .Enrich.WithMachineName()
+            .Enrich.WithThreadId();
+
+        var lokiUrl = context.Configuration["Loki:Url"];
+        if (!string.IsNullOrWhiteSpace(lokiUrl))
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)),
-            ClockSkew = TimeSpan.Zero
-        };
+            var environment = context.Configuration["Loki:Environment"]
+                              ?? context.HostingEnvironment.EnvironmentName.ToLowerInvariant();
+
+            configuration.WriteTo.GrafanaLoki(
+                lokiUrl,
+                labels: new[]
+                {
+                    new LokiLabel { Key = "app", Value = "fosterflow-api" },
+                    new LokiLabel { Key = "environment", Value = environment }
+                });
+        }
     });
 
-var conStr = builder.Configuration.GetConnectionString("Database");
-if (string.IsNullOrEmpty(conStr))
-{
-    throw new InvalidOperationException(
-        "Could not find a connection string named 'DefaultConnection'.");
-}
-builder.Services.AddHealthChecks()
-    .AddSqlServer(conStr)
-    .AddDbContextCheck<AppDbContext>();
+    // ── Layer registrations ───────────────────────────────────────────
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddAuthorization();
-builder.Services.AddScoped<TokenService>();
+    // ── Metrics (US-INF-4.1, #47) ─────────────────────────────────────
+    builder.Services.AddSingleton<IBusinessMetrics, PrometheusBusinessMetrics>();
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();  
+    // ── Identity ──────────────────────────────────────────────────────
+    builder.Services
+        .AddIdentity<ApplicationUser, IdentityRole>(opts =>
+        {
+            opts.Password.RequireDigit = true;
+            opts.Password.RequiredLength = 8;
+            opts.Password.RequireNonAlphanumeric = false;
+        })
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
 
-var app = builder.Build();
-await app.Services.MigrateDatabaseAsync();
-await app.Services.SeedUsers();
-// ── Middleware pipeline ───────────────────────────────────────────────
-app.UseMiddleware<ExceptionHandlingMiddleware>(); // ← must be first
-app.UseHttpsRedirection();
+    // ── JWT ───────────────────────────────────────────────────────────
+    builder.Services
+        .AddAuthentication(opts =>
+        {
+            opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(opts =>
+        {
+            opts.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
-// Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
-// UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a
-// stable URL (e.g. _framework/blazor.webassembly.js) that maps to the
-// fingerprinted file. index.html references those stable names directly, so the
-// raw SPA fallback below works without any #[.{fingerprint}] placeholder resolution.
-app.MapStaticAssets();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    ResultStatusCodes =
+    var conStr = builder.Configuration.GetConnectionString("Database");
+    if (string.IsNullOrEmpty(conStr))
     {
-        [HealthStatus.Healthy] = StatusCodes.Status200OK,
-        [HealthStatus.Degraded] = StatusCodes.Status200OK,
-        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+        throw new InvalidOperationException(
+            "Could not find a connection string named 'DefaultConnection'.");
     }
-});
+    builder.Services.AddHealthChecks()
+        .AddSqlServer(conStr)
+        .AddDbContextCheck<AppDbContext>();
 
-     
-app.MapOpenApi();     
-app.MapScalarApiReference(); 
+    builder.Services.AddAuthorization();
+    builder.Services.AddScoped<TokenService>();
 
-app.MapControllers();
-app.MapFallbackToFile("index.html"); // Blazor client-side routing
+    builder.Services.AddControllers();
+    builder.Services.AddOpenApi();
 
-app.Run();
+    var app = builder.Build();
+    await app.Services.MigrateDatabaseAsync();
+    await app.Services.SeedUsers();
+    await app.Services.InitialiseBusinessMetricsAsync();
+
+    // ── Middleware pipeline ───────────────────────────────────────────
+    app.UseMiddleware<ExceptionHandlingMiddleware>(); // ← must be first
+    app.UseSerilogRequestLogging();                   // HTTP request logging (#48)
+    app.UseHttpsRedirection();
+
+    // Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
+    // UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a
+    // stable URL (e.g. _framework/blazor.webassembly.js) that maps to the
+    // fingerprinted file. index.html references those stable names directly, so the
+    // raw SPA fallback below works without any #[.{fingerprint}] placeholder resolution.
+    app.MapStaticAssets();
+
+    // Auto-track HTTP metrics: http_requests_received_total,
+    // http_request_duration_seconds, http_requests_in_progress (#47).
+    app.UseHttpMetrics();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapHealthChecks("/health", new HealthCheckOptions
+    {
+        ResultStatusCodes =
+        {
+            [HealthStatus.Healthy] = StatusCodes.Status200OK,
+            [HealthStatus.Degraded] = StatusCodes.Status200OK,
+            [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+        }
+    });
+
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+
+    app.MapControllers();
+    app.MapMetrics();                    // Prometheus scrape endpoint at /metrics (#47)
+    app.MapFallbackToFile("index.html"); // Blazor client-side routing
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "FosterFlow API terminated unexpectedly");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

@@ -34,6 +34,13 @@ param jwtSecret string
 @description('Loki ingestion URL for monitoring (optional until ready).')
 param lokiUrl string = ''
 
+@description('Deploy the Grafana/Prometheus/Loki monitoring stack on ACI (US-INF-4.3, #49).')
+param deployMonitoring bool = false
+
+@description('Grafana admin password for the monitoring stack.')
+@secure()
+param grafanaAdminPassword string = ''
+
 @description('App Service Plan name.')
 param appServicePlanName string
 
@@ -42,6 +49,15 @@ param appServiceName string
 
 @description('Linux runtime stack for the App Service.')
 param linuxFxVersion string = 'DOTNETCORE|10.0'
+
+@description('Container group name for the monitoring stack.')
+param monitoringContainerGroupName string = 'ci-fosterflow-monitoring'
+
+@description('DNS name label for the monitoring public IP (Grafana).')
+param monitoringDnsNameLabel string = 'fosterflow-grafana'
+
+@description('Storage account name backing the monitoring config share (globally unique).')
+param monitoringStorageAccountName string = 'stfosterflowmon'
 
 module storage 'modules/storage.bicep' = {
   name: 'storage'
@@ -83,6 +99,18 @@ module keyVault 'modules/keyvault.bicep' = {
 
 var publicUrl = 'https://${appServiceName}.azurewebsites.net'
 
+module monitoring 'modules/monitoring.bicep' = if (deployMonitoring) {
+  name: 'monitoring'
+  params: {
+    location: location
+    tags: tags
+    containerGroupName: monitoringContainerGroupName
+    dnsNameLabel: monitoringDnsNameLabel
+    storageAccountName: monitoringStorageAccountName
+    grafanaAdminPassword: grafanaAdminPassword
+  }
+}
+
 module appService 'modules/appservice.bicep' = {
   name: 'appservice'
   params: {
@@ -109,3 +137,6 @@ output sqlServerFqdn string = sql.outputs.fullyQualifiedDomainName
 
 @description('Key Vault URI.')
 output keyVaultUri string = keyVault.outputs.vaultUri
+
+@description('Public Grafana URL (empty unless deployMonitoring is true).')
+output grafanaUrl string = deployMonitoring ? monitoring!.outputs.grafanaUrl : ''

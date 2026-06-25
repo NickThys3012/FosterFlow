@@ -10,10 +10,12 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
 {
     private readonly IIdentityService _identityService;
     private readonly IUserRepository _userRepository;
-    public RegisterUserCommandHandler(IUserRepository userRepository, IIdentityService identityService)
+    private readonly IBusinessMetrics _metrics;
+    public RegisterUserCommandHandler(IUserRepository userRepository, IIdentityService identityService, IBusinessMetrics metrics)
     {
         _userRepository = userRepository;
         _identityService = identityService;
+        _metrics = metrics;
     }
 
     public async Task Handle(RegisterUserCommand cmd, CancellationToken cancellationToken)
@@ -26,6 +28,12 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
             ]);
         }
 
-        await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", Enum.Parse<UserRole>(cmd.Request.Role));
+        var role = Enum.Parse<UserRole>(cmd.Request.Role);
+        await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", role);
+
+        if (role == UserRole.Foster)
+        {
+            _metrics.IncrementActiveFosters();
+        }
     }
 }
