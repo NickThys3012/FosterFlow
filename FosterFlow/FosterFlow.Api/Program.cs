@@ -73,9 +73,12 @@ await app.Services.SeedUsers();
 app.UseMiddleware<ExceptionHandlingMiddleware>(); // ← must be first
 app.UseHttpsRedirection();
 
-// Serve the Blazor WASM app (hosted model)
-app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
+// Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
+// UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a
+// stable URL (e.g. _framework/blazor.webassembly.js) that maps to the
+// fingerprinted file. index.html references those stable names directly, so the
+// raw SPA fallback below works without any #[.{fingerprint}] placeholder resolution.
+app.MapStaticAssets();
 
 app.UseAuthentication();
 app.UseAuthorization();
