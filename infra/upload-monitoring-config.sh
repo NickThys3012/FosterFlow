@@ -34,6 +34,15 @@ sed -i.bak 's#/var/lib/grafana/dashboards#/mnt/config/grafana/dashboards#' \
   "$TMP/grafana/provisioning/dashboards/dashboards.yml"
 rm -f "$TMP/grafana/provisioning/dashboards/dashboards.yml.bak"
 
+# In a docker-compose network Grafana reaches Prometheus/Loki by service name, but
+# in an ACI container group all containers share one network namespace and talk over
+# localhost. Rewrite the datasource URLs for the cloud layout.
+sed -i.bak \
+  -e 's#http://prometheus:9090#http://localhost:9090#' \
+  -e 's#http://loki:3100#http://localhost:3100#' \
+  "$TMP/grafana/provisioning/datasources/datasources.yml"
+rm -f "$TMP/grafana/provisioning/datasources/datasources.yml.bak"
+
 KEY="$(az storage account keys list -n "$STORAGE_ACCOUNT" --query '[0].value' -o tsv)"
 
 echo "Uploading monitoring config to share '$SHARE_NAME' in '$STORAGE_ACCOUNT'..."
