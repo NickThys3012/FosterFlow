@@ -6,6 +6,7 @@ using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Infrastructure;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -141,7 +142,9 @@ try
             [HealthStatus.Healthy] = StatusCodes.Status200OK,
             [HealthStatus.Degraded] = StatusCodes.Status200OK,
             [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
-        }
+        },
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+        Predicate = _ => true,
     });
 
     app.MapOpenApi();
