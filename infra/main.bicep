@@ -3,7 +3,7 @@
 targetScope = 'subscription'
 
 @description('Azure region for the resource group and all resources.')
-param location string = 'westeurope'
+param location string = 'swedencentral'
 
 // ── Cloud Adoption Framework naming tokens ────────────────────────────
 // Pattern: <resource-type-abbreviation>-<workload>-<env>-<region>
@@ -14,8 +14,8 @@ param workload string = 'fosterflow'
 @description('Environment token used in resource names (e.g. prod, dev, test).')
 param environmentAbbreviation string = 'prod'
 
-@description('Region abbreviation used in resource names (e.g. weu for West Europe).')
-param regionAbbreviation string = 'weu'
+@description('Region abbreviation used in resource names (e.g. swe for Sweden Central).')
+param regionAbbreviation string = 'swe'
 
 @description('Resource group name.')
 param resourceGroupName string = 'rg-${workload}-${environmentAbbreviation}-${regionAbbreviation}'

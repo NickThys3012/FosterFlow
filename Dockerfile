@@ -29,7 +29,8 @@ RUN dotnet publish FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj \
 # separate deployment step instead of from application startup code.
 RUN dotnet tool install --global dotnet-ef --version 10.* \
     && export PATH="$PATH:/root/.dotnet/tools" \
-    && dotnet ef migrations bundle \
+    && ConnectionStrings__Database="Server=placeholder;Database=placeholder;Trusted_Connection=False;Encrypt=False;" \
+       dotnet ef migrations bundle \
         --project FosterFlow/FosterFlow.Infrastructure/FosterFlow.Infrastructure.csproj \
         --startup-project FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj \
         --configuration Release \

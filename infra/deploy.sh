@@ -8,7 +8,7 @@
 #   ./deploy.sh
 set -euo pipefail
 
-LOCATION="${LOCATION:-westeurope}"
+LOCATION="${LOCATION:-swedencentral}"
 DEPLOYMENT_NAME="fosterflow-$(date +%Y%m%d%H%M%S)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

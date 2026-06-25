@@ -1,0 +1,81 @@
+# US-INF-2.1 (#41): API Build & Test
+# Restores, builds and tests the solution on every push to develop/main and on
+# PRs to main, then publishes the API (with the Blazor WASM client baked into
+# wwwroot) as an artifact for the deploy workflow to consume.
+name: Build & Test
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  SOLUTION: FosterFlow/FosterFlow.sln
+  CONFIGURATION: Release
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION }} --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      - name: Test
+        run: >-
+          dotnet test ${{ env.SOLUTION }}
+          --configuration ${{ env.CONFIGURATION }}
+          --no-build
+          --verbosity normal
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ./TestResults/**/*.trx
+          if-no-files-found: ignore
+
+      # Publish the API (which compiles the Blazor WASM client into wwwroot)
+      # so the deploy workflow can reuse the exact same output.
+      - name: Publish
+        run: >-
+          dotnet publish FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj
+          --configuration ${{ env.CONFIGURATION }}
+          --no-build
+          --output ./publish
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fosterflow-api
+          path: ./publish
+          if-no-files-found: error
+          retention-days: 7

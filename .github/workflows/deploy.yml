@@ -1,0 +1,98 @@
+# US-INF-2.3 (#43): Deploy to Azure App Service.
+# Builds and publishes the API (the Blazor WASM client is compiled into the
+# API's wwwroot automatically via UseBlazorFrameworkFiles()), deploys the
+# single published output to the App Service using a publish profile, then runs
+# health and smoke checks. Runs automatically on push to main; no manual
+# approval. App Service slots provide rollback to the previous version.
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  CONFIGURATION: Release
+  AZURE_WEBAPP_NAME: app-fosterflow-prod-swe
+  APP_URL: https://app-fosterflow-prod-swe.azurewebsites.net
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+# Avoid overlapping deploys; cancel superseded runs.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build, publish & deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: ${{ env.APP_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore FosterFlow/FosterFlow.sln
+
+      - name: Build solution
+        run: dotnet build FosterFlow/FosterFlow.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      # Publishing the API also compiles the Blazor WASM client and copies its
+      # output into wwwroot, so this single artifact contains API + Web.
+      - name: Publish (API + Web)
+        run: >-
+          dotnet publish FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj
+          --configuration ${{ env.CONFIGURATION }}
+          --no-build
+          --output ./publish
+
+      - name: Deploy to Azure App Service
+        id: deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
+
+      - name: Health check
+        run: |
+          echo "Waiting for the app to warm up..."
+          for attempt in $(seq 1 10); do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "${APP_URL}/health" || echo "000")
+            echo "Attempt ${attempt}: /health -> ${status}"
+            if [ "${status}" = "200" ]; then
+              echo "Health check passed."
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::error::Health check failed after multiple attempts."
+          exit 1
+
+      - name: Smoke test (Blazor app)
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" "${APP_URL}/" || echo "000")
+          echo "GET / -> ${status}"
+          if [ "${status}" != "200" ]; then
+            echo "::error::Smoke test failed: root did not return 200."
+            exit 1
+          fi
+          echo "Smoke test passed."
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "### Deployment to ${AZURE_WEBAPP_NAME}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL: ${APP_URL}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Result: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"

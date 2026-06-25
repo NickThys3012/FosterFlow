@@ -138,22 +138,36 @@ The app is served at **https://localhost:7200** — this single URL serves both 
 
 ## ☁️ Deployment (Azure)
 
-The project deploys via GitHub Actions on push to `main`.
+CI/CD runs through three GitHub Actions workflows (`.github/workflows/`):
+
+| Workflow | File | Trigger | Purpose |
+|---|---|---|---|
+| **Build & Test** | `build.yml` | push to `develop`/`main`, PRs to `main` | `dotnet restore` → `build -c Release` → `test`, then publishes the API (Blazor WASM baked into `wwwroot`) as an artifact. |
+| **Docker Build & Push** | `docker-build.yml` | push to `main` | Builds the multi-stage image and pushes it to **GHCR** (`ghcr.io/<owner>/fosterflow`) tagged `latest` + git SHA. Uses the built-in `GITHUB_TOKEN` — no extra secrets. |
+| **Deploy** | `deploy.yml` | push to `main`, manual | Publishes API + Web and deploys to **Azure App Service** (`app-fosterflow-prod-swe`), then runs `/health` and `/` smoke checks. |
+
+> Branch protection on `main` should require the **Build & Test** check so failing builds can't merge.
 
 **Required GitHub Secrets:**
 
-| Secret | Description |
-|---|---|
-| `AZURE_WEBAPP_PUBLISH_PROFILE` | Publish profile from Azure App Service |
-| `ANTHROPIC_API_KEY` | Claude API key (stored in Azure Key Vault in production) |
-| `AZURE_BLOB_CONNECTION_STRING` | Azure Storage connection string |
-| `JWT_SECRET` | 32+ character signing secret |
+| Secret | Used by | Description |
+|---|---|---|
+| `AZURE_WEBAPP_PUBLISH_PROFILE` | `deploy.yml` | Publish profile downloaded from the Azure App Service (`app-fosterflow-prod-swe`). |
+
+> The image push uses the automatic `GITHUB_TOKEN`; runtime secrets (DB connection, JWT, blob storage) are
+> injected by the App Service from Key Vault — see `infra/`.
 
 To deploy manually:
 
 ```bash
-dotnet publish src/FinalTest.Api -c Release -o ./publish
-# Then zip and deploy to Azure App Service via Azure CLI or portal
+dotnet publish FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj -c Release -o ./publish
+# Publishing the API also compiles the Blazor WASM client into wwwroot.
+az webapp deploy --name app-fosterflow-prod-swe --resource-group rg-fosterflow-prod-swe \
+  --type zip --src-path ./publish
+
+# Run the container image locally:
+docker run -p 5000:8080 ghcr.io/<owner>/fosterflow:latest
+# http://localhost:5000/  -> Blazor app, http://localhost:5000/health -> API health
 ```
 
 Observability containers are deployed to Azure Container Instances — see `observability/azure-deploy-observability.sh`.
