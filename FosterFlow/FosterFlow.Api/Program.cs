@@ -103,7 +103,14 @@ try
     builder.Services.AddHealthChecks()
         .AddSqlServer(conStr)
         .AddDbContextCheck<AppDbContext>();
-
+    
+    builder.Services.AddHsts(options =>
+    {
+        options.MaxAge = TimeSpan.FromDays(365);  // 31536000 seconds — matches your AC
+        options.IncludeSubDomains = true;
+        options.Preload = false;  // Don't set true unless you're submitting to the HSTS preload list
+    });
+    
     builder.Services.AddAuthorization();
     builder.Services.AddScoped<TokenService>();
 
@@ -119,6 +126,7 @@ try
     app.UseMiddleware<ExceptionHandlingMiddleware>(); // ← must be first
     app.UseSerilogRequestLogging();                   // HTTP request logging (#48)
     app.UseHttpsRedirection();
+    app.UseHsts();  // Only sends the header over HTTPS — correct behaviour
 
     // Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
     // UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a
