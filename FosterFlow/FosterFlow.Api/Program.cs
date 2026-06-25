@@ -39,19 +39,20 @@ try
             .Enrich.WithThreadId();
 
         var lokiUrl = context.Configuration["Loki:Url"];
-        if (!string.IsNullOrWhiteSpace(lokiUrl))
+        if (string.IsNullOrWhiteSpace(lokiUrl))
         {
-            var environment = context.Configuration["Loki:Environment"]
-                              ?? context.HostingEnvironment.EnvironmentName.ToLowerInvariant();
-
-            configuration.WriteTo.GrafanaLoki(
-                lokiUrl,
-                labels: new[]
-                {
-                    new LokiLabel { Key = "app", Value = "fosterflow-api" },
-                    new LokiLabel { Key = "environment", Value = environment }
-                });
+            return;
         }
+        var environment = context.Configuration["Loki:Environment"]
+            ?? context.HostingEnvironment.EnvironmentName.ToLowerInvariant();
+
+        configuration.WriteTo.GrafanaLoki(
+            lokiUrl,
+            labels:
+            [
+                new LokiLabel { Key = "app", Value = "fosterflow-api" },
+                new LokiLabel { Key = "environment", Value = environment }
+            ]);
     });
 
     // ── Layer registrations ───────────────────────────────────────────

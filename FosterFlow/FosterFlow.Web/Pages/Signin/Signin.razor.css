@@ -1,0 +1,31 @@
+.onboard-hero {
+    background: linear-gradient(160deg, var(--ff-orange) 0%, #ff6b35 100%);
+    padding: 40px 22px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.onboard-hero::before {
+    content: '🐾';
+    position: absolute;
+    font-size: 8rem;
+    opacity: 0.08;
+    top: -10px;
+    right: -20px;
+    pointer-events: none;
+}
+
+.onboard-hero h2 { font-family: var(--ff-font-display); font-size: 1.8rem; color: #fff; line-height: 1.15; margin-bottom: 8px; }
+.onboard-hero p  { color: rgba(255, 255, 255, 0.82); font-size: 0.85rem; line-height: 1.55; }
+
+.onboard-body { padding: 28px 22px; background: var(--ff-cream); }
+
+.role-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+
