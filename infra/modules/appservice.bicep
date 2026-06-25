@@ -87,6 +87,10 @@ resource appService 'Microsoft.Web/sites@2023-12-01' = {
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: linuxFxVersion
+      // Hosted Blazor publish output contains two *.runtimeconfig.json files
+      // (API + WASM client), so Oryx can't auto-detect the entry DLL and would
+      // fall back to the default landing page. Pin the startup command.
+      appCommandLine: 'dotnet FosterFlow.Api.dll'
       alwaysOn: true
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
