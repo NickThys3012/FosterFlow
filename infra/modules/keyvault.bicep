@@ -93,6 +93,24 @@ resource lokiSecretValue 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (!e
   }
 }
 
+// US-INF-5.2 (#52): audit logging. Every secret read/write/delete on the vault is
+// captured as an AuditEvent and archived to the project storage account. Storage is the
+// cheapest sink (no Log Analytics workspace required); query via the Azure portal or by
+// reading the `insights-logs-auditevent` container.
+resource keyVaultAudit 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  scope: keyVault
+  name: 'kv-audit-to-storage'
+  properties: {
+    storageAccountId: storageAccount.id
+    logs: [
+      {
+        category: 'AuditEvent'
+        enabled: true
+      }
+    ]
+  }
+}
+
 @description('Name of the created Key Vault.')
 output name string = keyVault.name
 
