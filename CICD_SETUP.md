@@ -65,7 +65,35 @@ rm publish-profile.xml   # never commit the publish profile
 
 ---
 
-## 2. Create the `production` GitHub Environment (recommended)
+## 1b. Set the App Service startup command (required — fixes default landing page)
+
+A hosted Blazor publish produces **two** `*.runtimeconfig.json` files
+(`FosterFlow.Api` + `FosterFlow.Web`). App Service's Oryx can't auto-pick the entry
+DLL and falls back to its default landing page. Pin the startup command to
+`dotnet FosterFlow.Api.dll`.
+
+This is now baked into the Bicep (`infra/modules/appservice.bicep` →
+`appCommandLine`), so a fresh `infra` deploy sets it automatically. For the
+**existing** App Service, apply it once now:
+
+```bash
+az webapp config set \
+  --name app-fosterflow-prod-swe \
+  --resource-group rg-fosterflow-prod-swe \
+  --startup-file "dotnet FosterFlow.Api.dll"
+
+az webapp restart \
+  --name app-fosterflow-prod-swe \
+  --resource-group rg-fosterflow-prod-swe
+```
+
+Then re-check:
+
+```bash
+curl -i https://app-fosterflow-prod-swe.azurewebsites.net/health   # expect 200
+```
+
+
 
 `deploy.yml` references `environment: production`. Creating it lets you scope the
 secret, add protection rules, and see deployment history.
