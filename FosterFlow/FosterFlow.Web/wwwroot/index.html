@@ -11,16 +11,23 @@
     <link href="css/app.css" rel="stylesheet"/>
     <link href="favicon.png" rel="icon" type="image/png"/>
     <link href="FosterFlow.Web.styles.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/FosterFlow.css" />
     <script type="importmap"></script>
 </head>
 
 <body>
 <div id="app">
-    <svg class="loading-progress">
-        <circle cx="50%" cy="50%" r="40%"/>
-        <circle cx="50%" cy="50%" r="40%"/>
-    </svg>
-    <div class="loading-progress-text"></div>
+    <div class="loading-cat">
+        <div class="loading-cat-ring">
+            <svg class="loading-progress" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42"/>
+                <circle cx="50" cy="50" r="42"/>
+            </svg>
+            <div class="loading-cat-face">🐱</div>
+        </div>
+        <div class="loading-progress-text"></div>
+        <div class="loading-cat-paws"><span>🐾</span><span>🐾</span><span>🐾</span></div>
+    </div>
 </div>
 
 <div id="blazor-error-ui">

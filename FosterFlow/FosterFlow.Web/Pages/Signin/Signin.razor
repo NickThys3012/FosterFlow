@@ -1,0 +1,40 @@
+@page "/signin"
+@using FosterFlow.Domain.Enums
+@using FosterFlow.Web.Pages.Signin.Components
+
+<div class="onboard-hero">
+    <h2>
+        Every cat deserves
+        <br/>
+        <em>a temporary home</em>
+    </h2>
+    <p>
+        FosterFlow connects shelters with foster families - one match at a time.
+    </p>
+</div>
+<div class="onboard-body">
+    <div class="section-title">
+        I'm joining as a ...
+    </div>
+    <div class="role-cards">
+        <RoleCard Icon="🏠" Name="Shelter" Description="Post cats and find foster families" Selected="_role == UserRole.Shelter" CardClickedEvent="_ => HandleRoleChange(UserRole.Shelter)"></RoleCard>
+        <RoleCard Icon="🤝" Name="Foster" Description="Offer your home to cats in need" Selected="_role == UserRole.Foster" CardClickedEvent="_ => HandleRoleChange(UserRole.Foster)"></RoleCard>
+    </div>
+
+    @switch (_role)
+    {
+        case UserRole.Shelter:
+            <ShelterSigninForm />
+            break;
+        case UserRole.Foster:
+            <FosterSigninForm />
+            break;
+        case null:
+            <div>Make a selection between Shelter or Foster.</div>
+            break;
+        case UserRole.Admin:
+        default:
+            <div>You're not allowed in here</div>
+            break;
+    }
+    </div>
