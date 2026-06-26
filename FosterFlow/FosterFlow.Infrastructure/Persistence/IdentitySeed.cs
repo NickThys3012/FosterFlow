@@ -30,7 +30,14 @@ public static class IdentitySeed
         {
             var admin = new ApplicationUser
             {
-                UserName = "admin@fosterflow.dev", Email = "admin@fosterflow.dev", DisplayName = "Admin"
+                UserName = "admin@fosterflow.dev", 
+                Email = "admin@fosterflow.dev",
+                Name = "Admin",
+                PhoneNumber = "0000000000",
+                Street = "Street",
+                PostalCode = "12345",
+                City = "City",
+                Country = "Country"
             };
             await users.CreateAsync(admin, "Admin1234!");
             await users.AddToRoleAsync(admin, "Admin");
