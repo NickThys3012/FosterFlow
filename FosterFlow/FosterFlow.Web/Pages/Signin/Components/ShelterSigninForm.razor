@@ -17,7 +17,7 @@
         <FosterFlowInput Label="City" Placeholder="cloud city" @bind-Value="_model.City"/>
     </div>
     <FosterFlowInput Label="County" Placeholder="Endor" @bind-Value="_model.Country"/>
-    <button class="btn btn-full" type="submit" disabled="@_loading">
+    <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
         @(_loading ? "Creating my account ..." : "Create my account →")
     </button>
     @if (_serverError is not null)
