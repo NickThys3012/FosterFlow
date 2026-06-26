@@ -14,11 +14,12 @@ public class IdentityService : IIdentityService
         _userManager = userManager;
     }
 
-    public async Task RegisterAsync(string email, string password, string displayName, UserRole role)
+    public async Task RegisterShelterAsync(string email, string password, string name, string phone, string street, string postalCode, string city, string country)
     {
         var appUser = new ApplicationUser
         {
-            UserName = email, Email = email, DisplayName = displayName, Role = role
+            UserName = email, Email = email, Name = name, Role = UserRole.Shelter,
+            PhoneNumber = phone, Street = street, PostalCode = postalCode, City = city, Country = country
         };
 
         var result = await _userManager.CreateAsync(appUser, password);
@@ -27,6 +28,7 @@ public class IdentityService : IIdentityService
             throw new ProcessingException(nameof(ApplicationUser), appUser.Id);
         }
 
-        await _userManager.AddToRoleAsync(appUser, role.ToString());
+        await _userManager.AddToRoleAsync(appUser, appUser.Role.ToString());
+        
     }
 }

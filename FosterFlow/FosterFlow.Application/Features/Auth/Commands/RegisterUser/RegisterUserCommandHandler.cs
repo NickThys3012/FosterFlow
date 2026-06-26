@@ -29,7 +29,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
         }
 
         var role = Enum.Parse<UserRole>(cmd.Request.Role);
-        await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", role);
+        //await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", role);
 
         if (role == UserRole.Foster)
         {

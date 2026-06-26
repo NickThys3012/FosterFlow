@@ -15,6 +15,7 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
     private readonly Counter _matchesAccepted;
     private readonly Histogram _careBriefingDuration;
     private readonly Gauge _activeFosters;
+    private readonly Gauge _activeShelters;
 
     public PrometheusBusinessMetrics(IMetricFactory? factory = null)
     {
@@ -43,6 +44,10 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
         _activeFosters = factory.CreateGauge(
             "fosterflow_active_fosters",
             "Current number of active foster carers.");
+        
+        _activeShelters = factory.CreateGauge(
+            "fosterflow_active_shelters",
+            "Current number of active shelters.");
 
         // Touch each metric so it is published at zero before the first observation.
         _catListingsCreated.IncTo(0);
@@ -64,4 +69,6 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
     public void IncrementActiveFosters() => _activeFosters.Inc();
 
     public void DecrementActiveFosters() => _activeFosters.Dec();
+    public void IncrementActiveShelters() => _activeShelters.Inc();
+    public void DecrementActiveShelter() => _activeShelters.Dec();
 }

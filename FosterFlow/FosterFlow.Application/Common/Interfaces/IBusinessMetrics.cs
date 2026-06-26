@@ -27,4 +27,9 @@ public interface IBusinessMetrics
 
     /// <summary>Decrements <c>fosterflow_active_fosters</c> by one.</summary>
     void DecrementActiveFosters();
+    /// <summary>Increments <c>fosterflow_active_shelters</c> by one.</summary>
+    void IncrementActiveShelters();
+
+    /// <summary>Decrements <c>fosterflow_active_shelter</c> by one.</summary>
+    void DecrementActiveShelter();
 }

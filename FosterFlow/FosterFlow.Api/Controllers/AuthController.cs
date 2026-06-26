@@ -1,3 +1,4 @@
+using FosterFlow.Application.Features.Auth.Commands.RegisterShelter;
 using FosterFlow.Application.Features.Auth.Commands.RegisterUser;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Infrastructure.Identity;
@@ -58,6 +59,34 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(RegisterUserRequest request)
     {
         await _mediator.Send(new RegisterUserCommand(request));
+        var user = await _users.FindByEmailAsync(request.Email);
+
+        if (user is null)
+        {
+            return Unauthorized("Invalid credentials");
+        }
+        var valid = await _users.CheckPasswordAsync(user, request.Password);
+        if (!valid)
+        {
+            return Unauthorized("Invalid credentials");
+        }
+
+        var roles = await _users.GetRolesAsync(user);
+        var (accessToken, expiry) = _tokens.GenerateAccessToken(user, roles);
+        var (rawRefresh, _) = await _tokens.GenerateRefreshTokenAsync(user.Id);
+
+        SetRefreshCookie(rawRefresh);
+
+        return Ok(new LoginResponse
+        {
+            AccessToken = accessToken, Expiration = expiry, Email = user.Email!, Role = roles.FirstOrDefault() ?? "Foster"
+        });
+    }
+    
+    [HttpPost("RegisterShelter")]
+    public async Task<IActionResult> RegisterShelter(RegisterShelterRequest request)
+    {
+        await _mediator.Send(new RegisterShelterCommand(request));
         var user = await _users.FindByEmailAsync(request.Email);
 
         if (user is null)
