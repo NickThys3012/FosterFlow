@@ -11,6 +11,7 @@ public partial class RoleCard : ComponentBase
     [Parameter] public EventCallback<MouseEventArgs> CardClickedEvent { get; set; }
 
     private Task CardClicked(MouseEventArgs args)
-        => CardClickedEvent.InvokeAsync(args);
+    {
+        return CardClickedEvent.InvokeAsync(args);
+    }
 }
-

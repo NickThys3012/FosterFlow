@@ -1,0 +1,18 @@
+<div class="form-group">
+    <label class="form-label">
+        @Label
+        @if (Required) { <span class="required" aria-hidden="true">*</span> }
+        <InputText class="form-input"
+                   type="@Type"
+                   readonly="@ReadOnly"
+                   placeholder="@Placeholder"
+                   Value="@Value"
+                   ValueChanged="ValueChanged"
+                   ValueExpression="ValueExpression"
+                   @attributes="AdditionalAttributes"/>
+    </label>
+    @if (ValueExpression is not null)
+    {
+        <ValidationMessage For="ValueExpression"/>
+    }
+</div>

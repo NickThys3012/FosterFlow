@@ -1,5 +1,28 @@
-<h3>ShelterSigninForm</h3>
+@using Blazored.FluentValidation
+@using FosterFlow.Web.Components
+<EditForm Model="_model" OnValidSubmit="HandleLogin">
+    <FluentValidationValidator/>
+    <ValidationSummary/>
 
-@code {
-    
-}
+    <FosterFlowInput Label="Organisation name" Placeholder="FosterFlow" @bind-Value="_model.Name"/>
+    <div class="form-row">
+        <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>
+        <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
+    </div>
+
+    <FosterFlowInput Label="Contact phone" Type="tel" Placeholder="+32123456789" @bind-Value="_model.Phone"/>
+    <FosterFlowInput Label="Street and nr" Placeholder="street nr/box nr" @bind-Value="_model.Street"/>
+    <div class="form-row" style="grid-template-columns: 1fr 2fr">
+        <FosterFlowInput Label="Postal code" Placeholder="421" @bind-Value="_model.PostalCode"/>
+        <FosterFlowInput Label="City" Placeholder="cloud city" @bind-Value="_model.City"/>
+    </div>
+    <FosterFlowInput Label="Country" Placeholder="Endor" @bind-Value="_model.Country"/>
+    <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
+        @(_loading ? "Creating my account ..." : "Create my account →")
+    </button>
+    @if (_serverError is not null)
+    {
+        <p class="error">@_serverError</p>
+    }
+
+</EditForm>

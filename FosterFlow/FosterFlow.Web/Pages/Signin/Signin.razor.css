@@ -16,10 +16,24 @@
     pointer-events: none;
 }
 
-.onboard-hero h2 { font-family: var(--ff-font-display); font-size: 1.8rem; color: #fff; line-height: 1.15; margin-bottom: 8px; }
-.onboard-hero p  { color: rgba(255, 255, 255, 0.82); font-size: 0.85rem; line-height: 1.55; }
+.onboard-hero h2 {
+    font-family: var(--ff-font-display);
+    font-size: 1.8rem;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 8px;
+}
 
-.onboard-body { padding: 28px 22px; background: var(--ff-cream); }
+.onboard-hero p {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.85rem;
+    line-height: 1.55;
+}
+
+.onboard-body {
+    padding: 28px 22px;
+    background: var(--ff-cream);
+}
 
 .role-cards {
     display: grid;

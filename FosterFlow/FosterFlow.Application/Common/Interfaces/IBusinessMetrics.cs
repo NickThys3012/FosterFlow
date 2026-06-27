@@ -1,9 +1,9 @@
 namespace FosterFlow.Application.Common.Interfaces;
 
 /// <summary>
-/// Abstraction over the application's custom business metrics (US-INF-4.1, #47).
-/// Implemented in the API layer with prometheus-net so the Application layer stays
-/// free of infrastructure concerns.
+///     Abstraction over the application's custom business metrics (US-INF-4.1, #47).
+///     Implemented in the API layer with prometheus-net so the Application layer stays
+///     free of infrastructure concerns.
 /// </summary>
 public interface IBusinessMetrics
 {
@@ -27,4 +27,9 @@ public interface IBusinessMetrics
 
     /// <summary>Decrements <c>fosterflow_active_fosters</c> by one.</summary>
     void DecrementActiveFosters();
+    /// <summary>Increments <c>fosterflow_active_shelters</c> by one.</summary>
+    void IncrementActiveShelters();
+
+    /// <summary>Decrements <c>fosterflow_active_shelters</c> by one.</summary>
+    void DecrementActiveShelters();
 }

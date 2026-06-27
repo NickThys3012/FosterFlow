@@ -8,13 +8,11 @@ namespace FosterFlow.Application.Features.Auth.Commands.RegisterUser;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
 {
-    private readonly IIdentityService _identityService;
-    private readonly IUserRepository _userRepository;
     private readonly IBusinessMetrics _metrics;
-    public RegisterUserCommandHandler(IUserRepository userRepository, IIdentityService identityService, IBusinessMetrics metrics)
+    private readonly IUserRepository _userRepository;
+    public RegisterUserCommandHandler(IUserRepository userRepository, IBusinessMetrics metrics)
     {
         _userRepository = userRepository;
-        _identityService = identityService;
         _metrics = metrics;
     }
 
@@ -29,7 +27,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
         }
 
         var role = Enum.Parse<UserRole>(cmd.Request.Role);
-        await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", role);
+        //await _identityService.RegisterAsync(cmd.Request.Email, cmd.Request.Password, $"{cmd.Request.FirstName} {cmd.Request.Name}", role);
 
         if (role == UserRole.Foster)
         {

@@ -14,6 +14,21 @@
     background: var(--ff-orange-light);
 }
 
-.role-card .role-icon { font-size: 2rem; margin-bottom: 8px; }
-.role-card .role-name { font-family: var(--ff-font-display); font-size: 0.95rem; color: var(--ff-brown); font-weight: 600; }
-.role-card .role-desc { font-size: 0.68rem; color: var(--ff-brown-light); margin-top: 4px; line-height: 1.4; }
+.role-card .role-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.role-card .role-name {
+    font-family: var(--ff-font-display);
+    font-size: 0.95rem;
+    color: var(--ff-brown);
+    font-weight: 600;
+}
+
+.role-card .role-desc {
+    font-size: 0.68rem;
+    color: var(--ff-brown-light);
+    margin-top: 4px;
+    line-height: 1.4;
+}

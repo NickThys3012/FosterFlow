@@ -29,6 +29,6 @@ public class UserRepository : IUserRepository
     // ApplicationUser never leaves Infrastructure — only Domain.User crosses the boundary
     private static User MapToDomain(ApplicationUser appUser)
     {
-        return new User(Guid.Parse(appUser.Id), appUser.Email!, appUser.DisplayName, appUser.Role);
+        return new User(Guid.Parse(appUser.Id), appUser.Email!, appUser.Name, appUser.Role, appUser.Street, appUser.PostalCode, appUser.City, appUser.Country, appUser.FirstName);
     }
 }
