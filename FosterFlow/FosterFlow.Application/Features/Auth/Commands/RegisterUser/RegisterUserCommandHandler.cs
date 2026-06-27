@@ -8,13 +8,11 @@ namespace FosterFlow.Application.Features.Auth.Commands.RegisterUser;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
 {
-    private readonly IIdentityService _identityService;
     private readonly IBusinessMetrics _metrics;
     private readonly IUserRepository _userRepository;
-    public RegisterUserCommandHandler(IUserRepository userRepository, IIdentityService identityService, IBusinessMetrics metrics)
+    public RegisterUserCommandHandler(IUserRepository userRepository, IBusinessMetrics metrics)
     {
         _userRepository = userRepository;
-        _identityService = identityService;
         _metrics = metrics;
     }
 
