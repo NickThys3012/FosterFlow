@@ -10,13 +10,15 @@ public partial class ShelterSigninForm : ComponentBase
 
     private readonly RegisterShelterRequest _model = new();
     private readonly NavigationManager _nav;
-    private readonly RegisterShelterRequestValidator _validator = new();
+    private readonly FluentValidation.IValidator<RegisterShelterRequest> _validator;
     private bool _loading;
     private string? _serverError;
-    public ShelterSigninForm(AuthService auth, NavigationManager nav)
+
+    public ShelterSigninForm(AuthService auth, NavigationManager nav, FluentValidation.IValidator<RegisterShelterRequest> validator)
     {
         _auth = auth;
         _nav = nav;
+        _validator = validator;
     }
 
     // Re-evaluated on every render (i.e. after each field edit), so the submit
