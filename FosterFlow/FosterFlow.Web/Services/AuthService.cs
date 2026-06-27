@@ -66,11 +66,15 @@ public class AuthService
         {
             return false;
         }
-        var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
+var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
+if (data is null)
+{
+    return false;
+}
 
-        _storage.SetAccessToken(data.AccessToken);
-        _authState.NotifyLogin(data.AccessToken);
-        return true;
+_storage.SetAccessToken(data.AccessToken);
+_authState.NotifyLogin(data.AccessToken);
+return true;
     }
 
     public async Task<bool> RefreshAsync()

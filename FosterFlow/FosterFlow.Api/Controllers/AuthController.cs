@@ -107,7 +107,7 @@ public class AuthController : ControllerBase
 
         return Ok(new LoginResponse
         {
-            AccessToken = accessToken, Expiration = expiry, Email = user.Email!, Role = roles.FirstOrDefault() ?? "Foster"
+            AccessToken = accessToken, Expiration = expiry, Email = user.Email!, Role = roles.FirstOrDefault() ?? "Shelter"
         });
     }
 

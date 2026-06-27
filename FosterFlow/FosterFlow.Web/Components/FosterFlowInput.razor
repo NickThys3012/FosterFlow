@@ -1,6 +1,7 @@
 <div class="form-group">
     <label class="form-label">@Label
-        @if (Required) { <span>*</span> }</label>
+        @if (Required) { <span class="required" aria-hidden="true">*</span> }
+    </label>
     <InputText class="form-input"
                type="@Type"
                readonly="@ReadOnly"
