@@ -59,22 +59,23 @@ public class AuthService
         return true;
     }
 
-    public async Task<bool> RegisterShelterAsync(RegisterShelterRequest request)
+    public async Task<(bool Success, string? Error)> RegisterShelterAsync(RegisterShelterRequest request)
     {
         var res = await Http.PostAsJsonAsync("api/auth/RegisterShelter", request);
         if (!res.IsSuccessStatusCode)
         {
-            return false;
+            return (false, await ApiErrorHelper.GetFirstErrorAsync(res));
         }
-var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
-if (data is null)
-{
-    return false;
-}
 
-_storage.SetAccessToken(data.AccessToken);
-_authState.NotifyLogin(data.AccessToken);
-return true;
+        var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
+        if (data is null)
+        {
+            return (false, null);
+        }
+
+        _storage.SetAccessToken(data.AccessToken);
+        _authState.NotifyLogin(data.AccessToken);
+        return (true, null);
     }
 
     public async Task<bool> RefreshAsync()

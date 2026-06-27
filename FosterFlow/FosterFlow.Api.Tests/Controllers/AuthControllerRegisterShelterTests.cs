@@ -151,7 +151,7 @@ public class AuthControllerRegisterShelterTests
     }
 
     [Test]
-    public async Task RegisterShelter_WhenUserHasNoRoles_DefaultsRoleToFoster()
+    public async Task RegisterShelter_WhenUserHasNoRoles_DefaultsRoleToShelter()
     {
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
@@ -161,7 +161,7 @@ public class AuthControllerRegisterShelterTests
         var result = await _controller.RegisterShelter(request) as OkObjectResult;
         var body = result!.Value as LoginResponse;
 
-        Assert.That(body!.Role, Is.EqualTo("Foster"));
+        Assert.That(body!.Role, Is.EqualTo("Shelter"));
     }
 
     [Test]

@@ -30,6 +30,6 @@ public interface IBusinessMetrics
     /// <summary>Increments <c>fosterflow_active_shelters</c> by one.</summary>
     void IncrementActiveShelters();
 
-    /// <summary>Decrements <c>fosterflow_active_shelter</c> by one.</summary>
-    void DecrementActiveShelter();
+    /// <summary>Decrements <c>fosterflow_active_shelters</c> by one.</summary>
+    void DecrementActiveShelters();
 }

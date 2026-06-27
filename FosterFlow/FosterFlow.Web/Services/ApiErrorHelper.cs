@@ -1,11 +1,11 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 namespace FosterFlow.Web.Services;
 
 public static class ApiErrorHelper
 {
     /// <summary>
-    ///     Extracts the first validation error string from a 400 ProblemDetails response.
+    ///     Extracts the first validation error string from a ProblemDetails response
+    ///     (e.g. a 422 from the API with an <c>errors</c> dictionary).
     ///     Falls back to a generic message if the body cannot be parsed.
     /// </summary>
     public static async Task<string> GetFirstErrorAsync(HttpResponseMessage response)
@@ -15,13 +15,12 @@ public static class ApiErrorHelper
             var problem = await response.Content
                 .ReadFromJsonAsync<ProblemDetails>();
 
-            if (problem?.Extensions.TryGetValue("errors", out var errObj) == true
-                && errObj is JsonElement json)
+            if (problem?.Errors is { } errors)
             {
-                foreach (var prop in json.EnumerateObject())
-                foreach (var msg in prop.Value.EnumerateArray())
+                foreach (var messages in errors.Values)
+                foreach (var msg in messages)
                 {
-                    return msg.GetString() ?? "Validation error.";
+                    return msg;
                 }
             }
         }
@@ -33,8 +32,9 @@ public static class ApiErrorHelper
     }
 }
 
-// Minimal ProblemDetails record (avoids pulling in ASP.NET Core packages to WASM)
+// Minimal ProblemDetails record (avoids pulling in ASP.NET Core packages to WASM).
+// Matches the shape written by the API's ExceptionHandlingMiddleware: { title, status, errors }.
 public record ProblemDetails(
     string? Title,
     int? Status,
-    Dictionary<string, object?>? Extensions);
+    Dictionary<string, string[]>? Errors);

@@ -31,10 +31,10 @@ public partial class ShelterSigninForm : ComponentBase
         _loading = true;
         _serverError = null;
 
-        var success = await _auth.RegisterShelterAsync(_model);
+        var (success, error) = await _auth.RegisterShelterAsync(_model);
         if (!success)
         {
-            _serverError = "Something went wrong. Please try again.";
+            _serverError = error ?? "Something went wrong. Please try again.";
             _loading = false;
             return;
         }

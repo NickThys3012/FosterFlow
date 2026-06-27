@@ -53,6 +53,7 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
         _matchesCreated.IncTo(0);
         _matchesAccepted.IncTo(0);
         _activeFosters.Set(0);
+        _activeShelters.Set(0);
     }
 
     public void CatListingCreated()
@@ -93,7 +94,7 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
     {
         _activeShelters.Inc();
     }
-    public void DecrementActiveShelter()
+    public void DecrementActiveShelters()
     {
         _activeShelters.Dec();
     }
