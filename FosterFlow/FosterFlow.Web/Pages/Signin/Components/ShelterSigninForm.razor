@@ -2,8 +2,8 @@
 @using FosterFlow.Web.Components
 <EditForm Model="_model" OnValidSubmit="HandleLogin">
     <FluentValidationValidator/>
-    <ValidationSummary />          
-    
+    <ValidationSummary/>
+
     <FosterFlowInput Label="Organisation name" Placeholder="FosterFlow" @bind-Value="_model.Name"/>
     <div class="form-row">
         <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>

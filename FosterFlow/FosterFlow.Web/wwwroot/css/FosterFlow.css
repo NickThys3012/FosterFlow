@@ -251,6 +251,29 @@ small, .text-sm  { font-size: 0.78rem; color: var(--ff-brown-light); }
     box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.35);
 }
 
+.btn:disabled,
+.btn[disabled] {
+    background: var(--ff-border);
+    color: var(--ff-brown-light);
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-outline:disabled,
+.btn-outline[disabled] {
+    background: transparent;
+    border-color: var(--ff-border);
+    color: var(--ff-brown-light);
+}
+
+.btn-ghost:disabled,
+.btn-ghost[disabled] {
+    background: transparent;
+    color: var(--ff-brown-light);
+    border-color: var(--ff-border);
+}
+
 /* Variants */
 .btn-outline {
     background: transparent;
