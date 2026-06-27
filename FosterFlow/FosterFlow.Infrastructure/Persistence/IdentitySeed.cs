@@ -30,7 +30,7 @@ public static class IdentitySeed
         {
             var admin = new ApplicationUser
             {
-                UserName = "admin@fosterflow.dev", 
+                UserName = "admin@fosterflow.dev",
                 Email = "admin@fosterflow.dev",
                 Name = "Admin",
                 PhoneNumber = "0000000000",

@@ -1,21 +1,20 @@
 using FosterFlow.Application.Common.Interfaces;
 using Prometheus;
-
 namespace FosterFlow.Api.Observability;
 
 /// <summary>
-/// prometheus-net backed implementation of <see cref="IBusinessMetrics"/> (US-INF-4.1, #47).
-/// All metrics are created (and therefore published at their zero value) in the constructor so
-/// they appear on <c>/metrics</c> immediately, before any business event has occurred.
+///     prometheus-net backed implementation of <see cref="IBusinessMetrics" /> (US-INF-4.1, #47).
+///     All metrics are created (and therefore published at their zero value) in the constructor so
+///     they appear on <c>/metrics</c> immediately, before any business event has occurred.
 /// </summary>
 public sealed class PrometheusBusinessMetrics : IBusinessMetrics
 {
-    private readonly Counter _catListingsCreated;
-    private readonly Counter _matchesCreated;
-    private readonly Counter _matchesAccepted;
-    private readonly Histogram _careBriefingDuration;
     private readonly Gauge _activeFosters;
     private readonly Gauge _activeShelters;
+    private readonly Histogram _careBriefingDuration;
+    private readonly Counter _catListingsCreated;
+    private readonly Counter _matchesAccepted;
+    private readonly Counter _matchesCreated;
 
     public PrometheusBusinessMetrics(IMetricFactory? factory = null)
     {
@@ -44,7 +43,7 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
         _activeFosters = factory.CreateGauge(
             "fosterflow_active_fosters",
             "Current number of active foster carers.");
-        
+
         _activeShelters = factory.CreateGauge(
             "fosterflow_active_shelters",
             "Current number of active shelters.");
@@ -56,19 +55,46 @@ public sealed class PrometheusBusinessMetrics : IBusinessMetrics
         _activeFosters.Set(0);
     }
 
-    public void CatListingCreated() => _catListingsCreated.Inc();
+    public void CatListingCreated()
+    {
+        _catListingsCreated.Inc();
+    }
 
-    public void MatchCreated() => _matchesCreated.Inc();
+    public void MatchCreated()
+    {
+        _matchesCreated.Inc();
+    }
 
-    public void MatchAccepted() => _matchesAccepted.Inc();
+    public void MatchAccepted()
+    {
+        _matchesAccepted.Inc();
+    }
 
-    public void ObserveCareBriefingDuration(double seconds) => _careBriefingDuration.Observe(seconds);
+    public void ObserveCareBriefingDuration(double seconds)
+    {
+        _careBriefingDuration.Observe(seconds);
+    }
 
-    public void SetActiveFosters(int count) => _activeFosters.Set(count);
+    public void SetActiveFosters(int count)
+    {
+        _activeFosters.Set(count);
+    }
 
-    public void IncrementActiveFosters() => _activeFosters.Inc();
+    public void IncrementActiveFosters()
+    {
+        _activeFosters.Inc();
+    }
 
-    public void DecrementActiveFosters() => _activeFosters.Dec();
-    public void IncrementActiveShelters() => _activeShelters.Inc();
-    public void DecrementActiveShelter() => _activeShelters.Dec();
+    public void DecrementActiveFosters()
+    {
+        _activeFosters.Dec();
+    }
+    public void IncrementActiveShelters()
+    {
+        _activeShelters.Inc();
+    }
+    public void DecrementActiveShelter()
+    {
+        _activeShelters.Dec();
+    }
 }

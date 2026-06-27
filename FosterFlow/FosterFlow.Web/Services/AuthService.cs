@@ -58,7 +58,7 @@ public class AuthService
         _authState.NotifyLogin(data.AccessToken);
         return true;
     }
-    
+
     public async Task<bool> RegisterShelterAsync(RegisterShelterRequest request)
     {
         var res = await Http.PostAsJsonAsync("api/auth/RegisterShelter", request);
@@ -67,7 +67,7 @@ public class AuthService
             return false;
         }
         var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
-        
+
         _storage.SetAccessToken(data.AccessToken);
         _authState.NotifyLogin(data.AccessToken);
         return true;

@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
-
 namespace FosterFlow.Web.Components;
 
 public partial class FosterFlowInput : ComponentBase
@@ -18,4 +17,3 @@ public partial class FosterFlowInput : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 }
-

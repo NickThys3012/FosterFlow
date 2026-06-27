@@ -18,8 +18,15 @@ public class IdentityService : IIdentityService
     {
         var appUser = new ApplicationUser
         {
-            UserName = email, Email = email, Name = name, Role = UserRole.Shelter,
-            PhoneNumber = phone, Street = street, PostalCode = postalCode, City = city, Country = country
+            UserName = email,
+            Email = email,
+            Name = name,
+            Role = UserRole.Shelter,
+            PhoneNumber = phone,
+            Street = street,
+            PostalCode = postalCode,
+            City = city,
+            Country = country
         };
 
         var result = await _userManager.CreateAsync(appUser, password);
@@ -29,6 +36,5 @@ public class IdentityService : IIdentityService
         }
 
         await _userManager.AddToRoleAsync(appUser, appUser.Role.ToString());
-        
     }
 }

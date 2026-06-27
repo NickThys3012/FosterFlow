@@ -8,8 +8,8 @@ namespace FosterFlow.Application.Features.Auth.Commands.RegisterShelter;
 public class RegisterShelterCommandHandler : IRequestHandler<RegisterShelterCommand>
 {
     private readonly IIdentityService _identityService;
-    private readonly IUserRepository _userRepository;
     private readonly IBusinessMetrics _metrics;
+    private readonly IUserRepository _userRepository;
     public RegisterShelterCommandHandler(IIdentityService identityService, IUserRepository userRepository, IBusinessMetrics metrics)
     {
         _identityService = identityService;
@@ -28,7 +28,7 @@ public class RegisterShelterCommandHandler : IRequestHandler<RegisterShelterComm
 
         await _identityService.RegisterShelterAsync(request.Request.Email, request.Request.Password, request.Request.Name, request.Request.Phone, request.Request.Street, request.Request.PostalCode,
             request.Request.City, request.Request.Country);
-        
+
         _metrics.IncrementActiveShelters();
     }
 }

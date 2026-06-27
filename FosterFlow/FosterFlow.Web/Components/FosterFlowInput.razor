@@ -1,5 +1,6 @@
 <div class="form-group">
-    <label class="form-label">@Label @if (Required) {<span>*</span>}</label>
+    <label class="form-label">@Label
+        @if (Required) { <span>*</span> }</label>
     <InputText class="form-input"
                type="@Type"
                readonly="@ReadOnly"
@@ -7,9 +8,9 @@
                Value="@Value"
                ValueChanged="ValueChanged"
                ValueExpression="ValueExpression"
-               @attributes="AdditionalAttributes" />
+               @attributes="AdditionalAttributes"/>
     @if (ValueExpression is not null)
     {
-        <ValidationMessage For="ValueExpression" />
+        <ValidationMessage For="ValueExpression"/>
     }
 </div>

@@ -1,9 +1,9 @@
 namespace FosterFlow.Application.Common.Interfaces;
 
 /// <summary>
-/// Abstraction over the application's custom business metrics (US-INF-4.1, #47).
-/// Implemented in the API layer with prometheus-net so the Application layer stays
-/// free of infrastructure concerns.
+///     Abstraction over the application's custom business metrics (US-INF-4.1, #47).
+///     Implemented in the API layer with prometheus-net so the Application layer stays
+///     free of infrastructure concerns.
 /// </summary>
 public interface IBusinessMetrics
 {

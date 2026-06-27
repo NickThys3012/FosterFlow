@@ -1,4 +1,3 @@
-using FosterFlow.Domain.Enums;
 namespace FosterFlow.Application.Common.Interfaces;
 
 public interface IIdentityService

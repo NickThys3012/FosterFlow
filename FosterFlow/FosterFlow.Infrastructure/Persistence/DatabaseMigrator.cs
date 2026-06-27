@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace FosterFlow.Infrastructure.Persistence;
 
 public static class DatabaseMigrator

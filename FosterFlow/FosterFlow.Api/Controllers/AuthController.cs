@@ -82,7 +82,7 @@ public class AuthController : ControllerBase
             AccessToken = accessToken, Expiration = expiry, Email = user.Email!, Role = roles.FirstOrDefault() ?? "Foster"
         });
     }
-    
+
     [HttpPost("RegisterShelter")]
     public async Task<IActionResult> RegisterShelter(RegisterShelterRequest request)
     {
