@@ -11,14 +11,14 @@ public class RegisterFosterCommandHandler : IRequestHandler<RegisterFosterComman
     private readonly IIdentityService _identityService;
     private readonly IBusinessMetrics _metrics;
     private readonly IUserRepository _userRepository;
-    
+
     public RegisterFosterCommandHandler(IIdentityService identityService, IBusinessMetrics metrics, IUserRepository userRepository)
     {
         _identityService = identityService;
         _metrics = metrics;
         _userRepository = userRepository;
     }
-    
+
     public async Task Handle(RegisterFosterCommand request, CancellationToken cancellationToken)
     {
         var existing = await _userRepository.GetByEmailAsync(request.Cmd.Email);
@@ -30,7 +30,8 @@ public class RegisterFosterCommandHandler : IRequestHandler<RegisterFosterComman
         }
 
         await _identityService.RegisterFosterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.Name, request.Cmd.Phone!, request.Cmd.Street!, request.Cmd.PostalCode!,
-            request.Cmd.City!, request.Cmd.Country!, request.Cmd.ExperienceLevel, request.Cmd.HomeType, request.Cmd.HasKids, request.Cmd.HasDogs, request.Cmd.MaxCats,request.Cmd.AvailableFrom,request.Cmd.AvailableTo);
+            request.Cmd.City!, request.Cmd.Country!, request.Cmd.ExperienceLevel, request.Cmd.HomeType, request.Cmd.HasKids, request.Cmd.HasDogs, request.Cmd.MaxCats, request.Cmd.AvailableFrom,
+            request.Cmd.AvailableTo);
 
         _metrics.IncrementActiveFosters();
     }

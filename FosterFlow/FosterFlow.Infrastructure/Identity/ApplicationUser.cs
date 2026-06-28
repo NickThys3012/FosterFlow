@@ -17,7 +17,7 @@ public class ApplicationUser : IdentityUser
     public string PostalCode { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
-    
+
     // foster-only — null for shelters
     public ExperienceLevel? ExperienceLevel { get; set; }
     public HomeType? HomeType { get; set; }

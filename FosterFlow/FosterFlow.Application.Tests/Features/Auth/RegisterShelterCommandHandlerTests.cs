@@ -7,7 +7,6 @@ using FosterFlow.Domain.Enums;
 using FosterFlow.Domain.Interfaces.Repositories;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
 namespace FosterFlow.Application.Tests.Features.Auth;
 
 [TestFixture]

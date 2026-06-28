@@ -1,11 +1,11 @@
 using FosterFlow.Web.Shared;
 using Microsoft.AspNetCore.Components;
-
 namespace FosterFlow.Web.Components;
 
-public partial class FosterFlowSelect<@TValue> : ComponentBase
+public partial class FosterFlowSelect<TValue> : ComponentBase
 {
-       [Parameter] public TValue? Value { get; set; }
+    private bool _open;
+    [Parameter] public TValue? Value { get; set; }
     [Parameter] public EventCallback<TValue?> ValueChanged { get; set; }
     [Parameter] public string Label { get; set; } = string.Empty;
     [Parameter] public string Icon { get; set; } = "ti-chevron-down";
@@ -18,20 +18,24 @@ public partial class FosterFlowSelect<@TValue> : ComponentBase
     [Parameter] public List<FfDropdownOption> Options { get; set; } = new();
 
     private static string Id => $"dd-{Guid.NewGuid():N}";
-    private bool _open;
     private bool ShowError => !string.IsNullOrEmpty(ErrorMessage);
     private string ValidationCssClass => ShowError ? "modified invalid" : string.Empty;
 
     private string? SelectedLabel =>
         Options.FirstOrDefault(o => o.Value?.Equals(Value) ?? false)?.Label;
 
-    private void ToggleOpen() => _open = !_open;
+    private void ToggleOpen()
+    {
+        _open = !_open;
+    }
 
     private async Task SelectOption(FfDropdownOption opt)
     {
         _open = false;
         if (opt.Value is TValue typed)
+        {
             await ValueChanged.InvokeAsync(typed);
+        }
     }
 
     private async Task OnNativeChange(ChangeEventArgs e)
@@ -64,4 +68,3 @@ public partial class FosterFlowSelect<@TValue> : ComponentBase
         }
     }
 }
-
