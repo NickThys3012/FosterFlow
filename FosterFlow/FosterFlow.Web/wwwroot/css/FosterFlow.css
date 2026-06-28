@@ -268,7 +268,12 @@ small, .text-sm {
     margin-left: 8px;
     flex-shrink: 0;
 }
-
+.toggles-inline {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 14px 0 16px;
+}
 /* ── Buttons ──────────────────────────────────────────────── */
 .btn {
     display: inline-flex;

@@ -1,0 +1,55 @@
+/* ── Date Input ───────────────────────────────────────────── */
+.ff-input-wrap { position: relative; }
+
+.ff-input-wrap .ff-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--ff-brown-light);
+    pointer-events: none;
+}
+
+.ff-input-wrap .ff-icon-right {
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: var(--ff-brown-light);
+    pointer-events: none;
+}
+
+.ff-field {
+    width: 100%;
+    padding: 7px 32px 7px 32px;
+    border: 1.5px solid var(--ff-border);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: var(--ff-brown);
+    background: var(--ff-white);
+    font-family: var(--ff-font-body);
+    outline: none;
+    appearance: none;
+    transition: border-color var(--ff-transition), box-shadow var(--ff-transition);
+}
+
+.ff-field:focus {
+    border-color: var(--ff-orange);
+    box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.12);
+}
+
+.ff-field::placeholder { color: var(--ff-brown-light); }
+
+/* hide webkit's default calendar icon so ours shows through */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 32px;
+    height: 100%;
+    cursor: pointer;
+}
+
+input[type="date"] { cursor: pointer; }

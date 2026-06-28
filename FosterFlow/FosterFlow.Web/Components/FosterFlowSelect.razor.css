@@ -1,0 +1,36 @@
+/* ── Select / Dropdown ────────────────────────────────────── */
+select.ff-field { cursor: pointer; }
+
+.ff-dd-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-orange);
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 50;
+    overflow: hidden;
+    display: none;
+}
+
+.ff-dd-menu.open { display: block; }
+
+.ff-dd-trigger.open {
+    border-color: var(--ff-orange);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ff-dd-option {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: var(--ff-brown);
+    cursor: pointer;
+    transition: background var(--ff-transition);
+}
+
+.ff-dd-option:hover    { background: var(--ff-orange-light); }
+.ff-dd-option.selected { color: var(--ff-orange); font-weight: 600; }

@@ -1,0 +1,31 @@
+<div class="form-group">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="form-label" for="@Id">
+            @Label
+            @if (Required) { <span class="required">*</span> }
+        </label>
+    }
+
+    <div class="ff-input-wrap">
+        <i class="ti @Icon ff-icon" aria-hidden="true"></i>
+        <i class="ti ti-chevron-down ff-icon-right" aria-hidden="true"></i>
+        <input type="date"
+               id="@Id"
+               class="ff-field @CssClass"
+               value="@ValueStr"
+               min="@MinStr"
+               max="@MaxStr"
+               disabled="@Disabled"
+               @onchange="OnChange" />
+    </div>
+
+    @if (ShowError)
+    {
+        <span class="validation-message">@ErrorMessage</span>
+    }
+    @if (!string.IsNullOrEmpty(Hint) && !ShowError)
+    {
+        <span class="form-hint">@Hint</span>
+    }
+</div>

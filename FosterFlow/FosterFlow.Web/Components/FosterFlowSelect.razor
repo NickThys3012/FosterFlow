@@ -1,0 +1,67 @@
+@typeparam TValue
+
+<div class="form-group">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="form-label" for="@Id">
+            @Label
+            @if (Required) { <span class="required">*</span> }
+        </label>
+    }
+
+    <div class="ff-input-wrap">
+        <i class="ti @Icon ff-icon" aria-hidden="true"></i>
+        <i class="ti ti-chevron-down ff-icon-right" aria-hidden="true"></i>
+
+        @if (UseNativeSelect)
+        {
+            <select id="@Id"
+                    class="ff-field @ValidationCssClass"
+                    disabled="@Disabled"
+                    @onchange="OnNativeChange">
+                <option value="" disabled selected="@(Value == null)">@Placeholder</option>
+                @foreach (var opt in Options)
+                {
+                    <option value="@opt.Value?.ToString()"
+                            selected="@(opt.Value?.Equals(Value) ?? false)">
+                        @opt.Label
+                    </option>
+                }
+            </select>
+        }
+        else
+        {
+            <button type="button"
+                    id="@Id"
+                    class="ff-field ff-dd-trigger @(_open ? "open" : "") @ValidationCssClass"
+                    disabled="@Disabled"
+                    @onclick="ToggleOpen">
+                <span class="@(Value == null ? "placeholder" : "")">
+                    @(SelectedLabel ?? Placeholder)
+                </span>
+            </button>
+
+            @if (_open)
+            {
+                <div class="ff-dd-menu open">
+                    @foreach (var opt in Options)
+                    {
+                        <div class="ff-dd-option @(opt.Value?.Equals(Value) ?? false ? "selected" : "")"
+                             @onclick="() => SelectOption(opt)">
+                            @opt.Label
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    @if (ShowError)
+    {
+        <span class="validation-message">@ErrorMessage</span>
+    }
+    @if (!string.IsNullOrEmpty(Hint) && !ShowError)
+    {
+        <span class="form-hint">@Hint</span>
+    }
+</div>
