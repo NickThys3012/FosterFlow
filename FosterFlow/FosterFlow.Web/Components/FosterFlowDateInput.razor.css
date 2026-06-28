@@ -1,4 +1,3 @@
-/* ── Date Input ───────────────────────────────────────────── */
 .ff-input-wrap { position: relative; }
 
 .ff-input-wrap .ff-icon {
@@ -6,9 +5,11 @@
     left: 11px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 14px;
+    width: 15px;
+    height: 15px;
     color: var(--ff-brown-light);
     pointer-events: none;
+    z-index: 1;
 }
 
 .ff-input-wrap .ff-icon-right {
@@ -16,11 +17,14 @@
     right: 11px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 13px;
+    width: 13px;
+    height: 13px;
     color: var(--ff-brown-light);
     pointer-events: none;
+    z-index: 1;
 }
 
+/* Trigger button — mirrors the styled inputs/selects */
 .ff-field {
     width: 100%;
     padding: 7px 32px 7px 32px;
@@ -35,21 +39,137 @@
     transition: border-color var(--ff-transition), box-shadow var(--ff-transition);
 }
 
-.ff-field:focus {
+.ff-dd-trigger {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    cursor: pointer;
+    min-height: 35px;
+}
+
+.ff-dd-trigger:focus,
+.ff-dd-trigger.open {
     border-color: var(--ff-orange);
     box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.12);
 }
 
-.ff-field::placeholder { color: var(--ff-brown-light); }
-
-/* hide webkit's default calendar icon so ours shows through */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    position: absolute;
-    right: 0;
-    width: 32px;
-    height: 100%;
-    cursor: pointer;
+.ff-dd-trigger.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-input[type="date"] { cursor: pointer; }
+.ff-dd-trigger .placeholder { color: var(--ff-brown-light); }
+
+.ff-dd-trigger:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Backdrop to close on outside click */
+.ff-cal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 49;
+    background: transparent;
+}
+
+/* Calendar popup */
+.ff-cal {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 240px;
+    max-width: 100%;
+    margin-top: 2px;
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-orange);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(80, 50, 30, 0.16);
+    z-index: 50;
+    padding: 8px;
+}
+
+.ff-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.ff-cal-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ff-brown);
+    font-family: var(--ff-font-display, var(--ff-font-body));
+}
+
+.ff-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 8px;
+    background: var(--ff-cream, var(--ff-orange-light));
+    color: var(--ff-brown);
+    cursor: pointer;
+    transition: background var(--ff-transition);
+}
+
+.ff-cal-nav svg { width: 14px; height: 14px; }
+
+.ff-cal-nav:hover { background: var(--ff-orange-light); color: var(--ff-orange); }
+
+.ff-cal-weekdays,
+.ff-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.ff-cal-weekdays {
+    margin-bottom: 4px;
+}
+
+.ff-cal-weekdays span {
+    text-align: center;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ff-brown-light);
+    padding: 2px 0;
+}
+
+.ff-cal-day {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ff-brown);
+    font-size: 0.72rem;
+    font-family: var(--ff-font-body);
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--ff-transition), color var(--ff-transition);
+}
+
+.ff-cal-day:hover:not(.disabled) { background: var(--ff-orange-light); color: var(--ff-orange); }
+
+.ff-cal-day.muted { color: var(--ff-brown-light); opacity: 0.55; }
+
+.ff-cal-day.today { font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--ff-border); }
+
+.ff-cal-day.selected {
+    background: var(--ff-orange);
+    color: #fff;
+    font-weight: 600;
+}
+
+.ff-cal-day.disabled {
+    color: var(--ff-brown-light);
+    opacity: 0.35;
+    cursor: not-allowed;
+}

@@ -18,7 +18,7 @@ public class RegisterShelterCommandHandler : IRequestHandler<RegisterShelterComm
     }
     public async Task Handle(RegisterShelterCommand request, CancellationToken cancellationToken)
     {
-        var existing = await _userRepository.GetByEmailAsync(request.Request.Email);
+        var existing = await _userRepository.GetByEmailAsync(request.Cmd.Email);
         if (existing is not null)
         {
             throw new ValidationException([
@@ -26,8 +26,8 @@ public class RegisterShelterCommandHandler : IRequestHandler<RegisterShelterComm
             ]);
         }
 
-        await _identityService.RegisterShelterAsync(request.Request.Email, request.Request.Password, request.Request.Name, request.Request.Phone!, request.Request.Street!, request.Request.PostalCode!,
-            request.Request.City!, request.Request.Country!);
+        await _identityService.RegisterShelterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.Name, request.Cmd.Phone!, request.Cmd.Street!, request.Cmd.PostalCode!,
+            request.Cmd.City!, request.Cmd.Country!);
 
         _metrics.IncrementActiveShelters();
     }

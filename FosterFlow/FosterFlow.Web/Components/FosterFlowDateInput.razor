@@ -1,23 +1,76 @@
 <div class="form-group">
     @if (!string.IsNullOrEmpty(Label))
     {
-        <label class="form-label" for="@Id">
+        <label class="form-label" for="@_id">
             @Label
             @if (Required) { <span class="required">*</span> }
         </label>
     }
 
     <div class="ff-input-wrap">
-        <i class="ti @Icon ff-icon" aria-hidden="true"></i>
-        <i class="ti ti-chevron-down ff-icon-right" aria-hidden="true"></i>
-        <input type="date"
-               id="@Id"
-               class="ff-field @CssClass"
-               value="@ValueStr"
-               min="@MinStr"
-               max="@MaxStr"
-               disabled="@Disabled"
-               @onchange="OnChange" />
+        <svg class="ff-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+        </svg>
+        <svg class="ff-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+        </svg>
+
+        <button type="button"
+                id="@_id"
+                class="ff-field ff-dd-trigger @(_open ? "open" : "") @ValidationCssClass"
+                disabled="@Disabled"
+                @onclick="ToggleOpen">
+            <span class="@(Value is null ? "placeholder" : "")">
+                @(Value is null ? Placeholder : DisplayValue)
+            </span>
+        </button>
+
+        @if (_open)
+        {
+            <div class="ff-cal-backdrop" @onclick="Close"></div>
+            <div class="ff-cal open">
+                <div class="ff-cal-header">
+                    <button type="button" class="ff-cal-nav" @onclick="PrevMonth" aria-label="Previous month">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <span class="ff-cal-title">@MonthLabel</span>
+                    <button type="button" class="ff-cal-nav" @onclick="NextMonth" aria-label="Next month">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="ff-cal-weekdays">
+                    @foreach (var wd in WeekdayHeaders)
+                    {
+                        <span>@wd</span>
+                    }
+                </div>
+
+                <div class="ff-cal-grid">
+                    @foreach (var day in CalendarDays())
+                    {
+                        var d = day;
+                        <button type="button"
+                                class="@DayCssClass(d)"
+                                disabled="@IsDisabled(d)"
+                                @onclick="() => SelectDay(d)">
+                            @d.Day
+                        </button>
+                    }
+                </div>
+            </div>
+        }
     </div>
 
     @if (ShowError)

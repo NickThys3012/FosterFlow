@@ -51,7 +51,7 @@ public class RegisterShelterCommandHandlerTests
     public void Handle_WhenEmailAlreadyExists_ThrowsValidationException()
     {
         var command = ValidCommand();
-        _userRepository.GetByEmailAsync(command.Request.Email).Returns(ExistingUser(command.Request.Email));
+        _userRepository.GetByEmailAsync(command.Cmd.Email).Returns(ExistingUser(command.Cmd.Email));
 
         Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(command, CancellationToken.None));
     }
@@ -60,7 +60,7 @@ public class RegisterShelterCommandHandlerTests
     public void Handle_WhenEmailAlreadyExists_ReportsEmailError()
     {
         var command = ValidCommand();
-        _userRepository.GetByEmailAsync(command.Request.Email).Returns(ExistingUser(command.Request.Email));
+        _userRepository.GetByEmailAsync(command.Cmd.Email).Returns(ExistingUser(command.Cmd.Email));
 
         var ex = Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(command, CancellationToken.None));
         Assert.That(ex!.Errors, Does.ContainKey("Email"));
@@ -70,7 +70,7 @@ public class RegisterShelterCommandHandlerTests
     public async Task Handle_WhenEmailAlreadyExists_DoesNotCallIdentityService()
     {
         var command = ValidCommand();
-        _userRepository.GetByEmailAsync(command.Request.Email).Returns(ExistingUser(command.Request.Email));
+        _userRepository.GetByEmailAsync(command.Cmd.Email).Returns(ExistingUser(command.Cmd.Email));
 
         try
         {
@@ -89,7 +89,7 @@ public class RegisterShelterCommandHandlerTests
     public async Task Handle_WhenEmailAlreadyExists_DoesNotIncrementActiveShelters()
     {
         var command = ValidCommand();
-        _userRepository.GetByEmailAsync(command.Request.Email).Returns(ExistingUser(command.Request.Email));
+        _userRepository.GetByEmailAsync(command.Cmd.Email).Returns(ExistingUser(command.Cmd.Email));
 
         try
         {
@@ -110,7 +110,7 @@ public class RegisterShelterCommandHandlerTests
 
         await _handler.Handle(command, CancellationToken.None);
 
-        await _userRepository.Received(1).GetByEmailAsync(command.Request.Email);
+        await _userRepository.Received(1).GetByEmailAsync(command.Cmd.Email);
     }
 
     [Test]
@@ -121,14 +121,14 @@ public class RegisterShelterCommandHandlerTests
         await _handler.Handle(command, CancellationToken.None);
 
         await _identityService.Received(1).RegisterShelterAsync(
-            command.Request.Email,
-            command.Request.Password,
-            command.Request.Name,
-            command.Request.Phone!,
-            command.Request.Street!,
-            command.Request.PostalCode!,
-            command.Request.City!,
-            command.Request.Country!);
+            command.Cmd.Email,
+            command.Cmd.Password,
+            command.Cmd.Name,
+            command.Cmd.Phone!,
+            command.Cmd.Street!,
+            command.Cmd.PostalCode!,
+            command.Cmd.City!,
+            command.Cmd.Country!);
     }
 
     [Test]

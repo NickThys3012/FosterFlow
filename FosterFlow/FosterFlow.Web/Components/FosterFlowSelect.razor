@@ -10,7 +10,10 @@
     }
 
     <div class="ff-input-wrap">
-        <i class="ti @Icon ff-icon" aria-hidden="true"></i>
+        @if (!UseNativeSelect)
+        {
+            <i class="ti @Icon ff-icon" aria-hidden="true"></i>
+        }
         <i class="ti ti-chevron-down ff-icon-right" aria-hidden="true"></i>
 
         @if (UseNativeSelect)

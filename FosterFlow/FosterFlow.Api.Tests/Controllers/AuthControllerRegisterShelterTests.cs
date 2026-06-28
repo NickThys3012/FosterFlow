@@ -113,7 +113,7 @@ public class AuthControllerRegisterShelterTests
         await _controller.RegisterShelter(request);
 
         await _mediator.Received(1).Send(
-            Arg.Is<RegisterShelterCommand>(c => c.Request == request),
+            Arg.Is<RegisterShelterCommand>(c => c.Cmd == request),
             Arg.Any<CancellationToken>());
     }
 

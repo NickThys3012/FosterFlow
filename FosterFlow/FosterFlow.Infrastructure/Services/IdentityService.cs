@@ -37,4 +37,49 @@ public class IdentityService : IIdentityService
 
         await _userManager.AddToRoleAsync(appUser, appUser.Role.ToString());
     }
+    public async Task RegisterFosterAsync(
+        string email,
+        string password,
+        string name,
+        string phone,
+        string street,
+        string postalCode,
+        string city,
+        string country,
+        ExperienceLevel experienceLevel,
+        HomeType homeType,
+        bool hasKids,
+        bool hasDogs,
+        int maxCats,
+        DateOnly availableFrom,
+        DateOnly availableTo)
+    {
+        var appUser = new ApplicationUser
+        {
+            UserName = email,
+            Email = email,
+            Name = name,
+            Role = UserRole.Foster,
+            PhoneNumber = phone,
+            Street = street,
+            PostalCode = postalCode,
+            City = city,
+            Country = country,
+            ExperienceLevel = experienceLevel,
+            HomeType = homeType,
+            HasKids = hasKids,
+            HasDogs = hasDogs,
+            MaxCats = maxCats,
+            AvailableFrom = availableFrom,
+            AvailableTo = availableTo
+        };
+
+        var result = await _userManager.CreateAsync(appUser, password);
+        if (!result.Succeeded)
+        {
+            throw new ProcessingException(nameof(ApplicationUser), appUser.Id);
+        }
+
+        await _userManager.AddToRoleAsync(appUser, appUser.Role.ToString());
+    }
 }

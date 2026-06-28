@@ -36,10 +36,10 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
             .NotEmpty().WithMessage("Country is required.");
         
         RuleFor(x => x.ExperienceLevel)
-            .NotEmpty().WithMessage("Experience level is required.");
+            .IsInEnum().WithMessage("Experience level is required.");
         
         RuleFor(x => x.HomeType)
-            .NotEmpty().WithMessage("Home type is required.");
+            .IsInEnum().WithMessage("Home type is required.");
         
         RuleFor(x => x.MaxCats)
             .NotEmpty().WithMessage("Max cats is required.")
@@ -52,12 +52,6 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
         RuleFor(x => x.AvailableTo)
             .NotEmpty().WithMessage("Available to is required.")
             .GreaterThan(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Available to must be in the future.");
-        
-        RuleFor(x=>x.HasKids)
-            .NotEmpty().WithMessage("Has kids is required.");
-        
-        RuleFor(x => x.HasDogs)
-            .NotEmpty().WithMessage("Has dogs is required.");
         
     }
 }
