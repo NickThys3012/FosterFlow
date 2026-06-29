@@ -61,7 +61,8 @@ public partial class Login : ComponentBase
                 _nav.NavigateTo("/Foster/Dashboard");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                _serverError = "Your account role is not recognized. Please contact support.";
+                return;
         }
     }
 }
