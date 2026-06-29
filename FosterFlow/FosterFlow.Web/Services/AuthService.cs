@@ -28,7 +28,10 @@ public class AuthService
         var res = await Http.PostAsJsonAsync("api/auth/login", request);
         if (!res.IsSuccessStatusCode)
         {
-            return (false, await ApiErrorHelper.GetFirstErrorAsync(res), null);
+            var error = res.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                ? "Invalid email or password."
+                : await ApiErrorHelper.GetFirstErrorAsync(res);
+            return (false, error, null);
         }
 
         var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
@@ -37,9 +40,14 @@ public class AuthService
             return (false, null, null);
         }
 
+        if (!Enum.TryParse<UserRole>(data.Role, true, out var role))
+        {
+            return (false, "An unexpected error occurred. Please try again.", null);
+        }
+
         _storage.SetAccessToken(data.AccessToken);
         _authState.NotifyLogin(data.AccessToken);
-        return (true, null, data.Role.ToEnum(UserRole.Foster));
+        return (true, null, role);
     }
 
     public async Task<(bool Success, string? Error)> RegisterShelterAsync(RegisterShelterRequest request)
