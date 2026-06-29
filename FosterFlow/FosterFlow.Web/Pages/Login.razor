@@ -17,7 +17,7 @@
             <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
 
 
-            <a href="#" class="forgot-link">Forgot password?</a>
+            <a href="#" class="forgot-link" @onclick:preventDefault="true">Forgot password?</a>
 
             <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
                 @(_loading ? "Signing in ..." : "Sign in →")
