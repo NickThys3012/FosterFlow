@@ -1,3 +1,4 @@
+using FluentValidation;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -9,10 +10,10 @@ public partial class FosterSigninForm : ComponentBase
 
     private readonly RegisterFosterRequest _model = new();
     private readonly NavigationManager _nav;
-    private readonly FluentValidation.IValidator<RegisterFosterRequest> _validator;
+    private readonly IValidator<RegisterFosterRequest> _validator;
     private bool _loading;
     private string? _serverError;
-    public FosterSigninForm(AuthService auth, NavigationManager nav, FluentValidation.IValidator<RegisterFosterRequest> validator)
+    public FosterSigninForm(AuthService auth, NavigationManager nav, IValidator<RegisterFosterRequest> validator)
     {
         _auth = auth;
         _nav = nav;
@@ -60,5 +61,6 @@ public partial class FosterSigninForm : ComponentBase
         _loading = false;
         _serverError = null;
 
-        _nav.NavigateTo("/Foster/Dashboard");    }
+        _nav.NavigateTo("/Foster/Dashboard");
+    }
 }

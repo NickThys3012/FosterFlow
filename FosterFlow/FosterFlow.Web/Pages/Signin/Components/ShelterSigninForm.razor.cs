@@ -44,6 +44,5 @@ public partial class ShelterSigninForm : ComponentBase
         _serverError = null;
 
         _nav.NavigateTo("/Shelter/Dashboard");
-        
     }
 }

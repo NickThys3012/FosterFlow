@@ -4,6 +4,7 @@ namespace FosterFlow.Web.Components;
 
 public partial class FosterFlowSelect<TValue> : ComponentBase
 {
+
     private bool _open;
     [Parameter] public TValue? Value { get; set; }
     [Parameter] public EventCallback<TValue?> ValueChanged { get; set; }
@@ -16,9 +17,7 @@ public partial class FosterFlowSelect<TValue> : ComponentBase
     [Parameter] public string? Hint { get; set; }
     [Parameter] public string? ErrorMessage { get; set; }
     [Parameter] public List<FfDropdownOption> Options { get; set; } = new();
-
-    private readonly string _id = $"dd-{Guid.NewGuid():N}";
-    private string Id => _id;
+    private string Id { get; } = $"dd-{Guid.NewGuid():N}";
     private bool ShowError => !string.IsNullOrEmpty(ErrorMessage);
     private string ValidationCssClass => ShowError ? "modified invalid" : string.Empty;
 

@@ -9,14 +9,14 @@
             <h1 class="title">FosterFlow</h1>
             <p class="subtitle">Tinder for cat fostering</p>
         </div>
-    
+
         <EditForm Model="_model" OnValidSubmit="HandleLogin">
             <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>
             <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
-      
-            
-                <a href="#" class="forgot-link">Forgot password?</a>
-          
+
+
+            <a href="#" class="forgot-link">Forgot password?</a>
+
             <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
                 @(_loading ? "Signing in ..." : "Sign in →")
             </button>
@@ -25,8 +25,8 @@
                 <p class="error">@_serverError</p>
             }
 
-        </EditForm>    
-    
+        </EditForm>
+
         <div class="signup-link">
             New to FosterFlow? <a href="/signin">Create an account</a>
         </div>

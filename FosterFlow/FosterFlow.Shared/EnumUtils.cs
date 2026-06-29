@@ -12,5 +12,4 @@ public static class EnumUtils
         T result;
         return Enum.TryParse(value, true, out result) ? result : defaultValue;
     }
-
 }

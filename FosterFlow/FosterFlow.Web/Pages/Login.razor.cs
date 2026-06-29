@@ -14,17 +14,17 @@ public partial class Login : ComponentBase
     private readonly IValidator<LoginRequest> _validator;
     private bool _loading;
     private string? _serverError;
-    
+
     public Login(AuthService auth, NavigationManager nav, IValidator<LoginRequest> validator)
     {
         _auth = auth;
         _nav = nav;
         _validator = validator;
     }
-    
+
     private bool IsValid => _validator.Validate(_model).IsValid;
 
-    
+
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     private async Task HandleLogin()

@@ -28,13 +28,13 @@ public class AuthService
         var res = await Http.PostAsJsonAsync("api/auth/login", request);
         if (!res.IsSuccessStatusCode)
         {
-            return (false, await ApiErrorHelper.GetFirstErrorAsync(res),null);
+            return (false, await ApiErrorHelper.GetFirstErrorAsync(res), null);
         }
 
         var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
         if (data is null)
         {
-            return (false, null,null);
+            return (false, null, null);
         }
 
         _storage.SetAccessToken(data.AccessToken);
