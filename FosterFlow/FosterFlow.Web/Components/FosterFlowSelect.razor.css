@@ -19,6 +19,7 @@ select.ff-field:focus {
     box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.12);
     outline: none;
 }
+
 .ff-dd-menu {
     position: absolute;
     top: 100%;
@@ -34,7 +35,9 @@ select.ff-field:focus {
     display: none;
 }
 
-.ff-dd-menu.open { display: block; }
+.ff-dd-menu.open {
+    display: block;
+}
 
 .ff-dd-trigger.open {
     border-color: var(--ff-orange);
@@ -50,5 +53,11 @@ select.ff-field:focus {
     transition: background var(--ff-transition);
 }
 
-.ff-dd-option:hover    { background: var(--ff-orange-light); }
-.ff-dd-option.selected { color: var(--ff-orange); font-weight: 600; }
+.ff-dd-option:hover {
+    background: var(--ff-orange-light);
+}
+
+.ff-dd-option.selected {
+    color: var(--ff-orange);
+    font-weight: 600;
+}

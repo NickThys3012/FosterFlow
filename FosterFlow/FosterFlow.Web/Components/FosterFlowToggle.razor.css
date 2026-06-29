@@ -1,13 +1,22 @@
 .ff-toggle-row {
     display: flex;
     align-items: center;
-    gap: 8px;               /* label → toggle, tight */
-    padding: 0;             /* no vertical padding */
-    border-bottom: none;    /* remove divider for inline use */
+    gap: 8px; /* label → toggle, tight */
+    padding: 0; /* no vertical padding */
+    border-bottom: none; /* remove divider for inline use */
 }
 
-.ff-toggle-label { font-size: 0.82rem; color: var(--ff-brown); font-weight: 500; }
-.ff-toggle-sub   { font-size: 0.7rem;  color: var(--ff-brown-light); margin-top: 2px; }
+.ff-toggle-label {
+    font-size: 0.82rem;
+    color: var(--ff-brown);
+    font-weight: 500;
+}
+
+.ff-toggle-sub {
+    font-size: 0.7rem;
+    color: var(--ff-brown-light);
+    margin-top: 2px;
+}
 
 .ff-toggle {
     width: 34px;

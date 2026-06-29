@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-
 namespace FosterFlow.Web.Components;
 
 public partial class FosterFlowToggle : ComponentBase
@@ -13,7 +12,8 @@ public partial class FosterFlowToggle : ComponentBase
     private async Task Toggle()
     {
         if (!Disabled)
+        {
             await ValueChanged.InvokeAsync(!Value);
+        }
     }
 }
-

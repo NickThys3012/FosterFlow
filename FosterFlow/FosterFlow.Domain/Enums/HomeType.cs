@@ -2,7 +2,7 @@ namespace FosterFlow.Domain.Enums;
 
 public enum HomeType
 {
-    Appartment,
+    Apartment,
     House,
     Farm
 }

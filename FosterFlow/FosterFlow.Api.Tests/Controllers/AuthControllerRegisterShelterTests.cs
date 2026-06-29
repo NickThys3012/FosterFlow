@@ -1,10 +1,10 @@
+using FluentValidation.Results;
 using FosterFlow.Api.Controllers;
 using FosterFlow.Application.Common.Exceptions;
 using FosterFlow.Application.Features.Auth.Commands.RegisterShelter;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
 namespace FosterFlow.Api.Tests.Controllers;
 
 [TestFixture]
@@ -67,10 +66,7 @@ public class AuthControllerRegisterShelterTests
     {
         return new ApplicationUser
         {
-            Id = Guid.NewGuid().ToString(),
-            Email = email,
-            UserName = email,
-            Name = "Happy Paws Shelter"
+            Id = Guid.NewGuid().ToString(), Email = email, UserName = email, Name = "Happy Paws Shelter"
         };
     }
 
@@ -108,7 +104,10 @@ public class AuthControllerRegisterShelterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Shelter" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Shelter"
+        });
 
         await _controller.RegisterShelter(request);
 
@@ -123,7 +122,10 @@ public class AuthControllerRegisterShelterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Shelter" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Shelter"
+        });
 
         var result = await _controller.RegisterShelter(request);
 
@@ -136,7 +138,10 @@ public class AuthControllerRegisterShelterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Shelter" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Shelter"
+        });
 
         var result = await _controller.RegisterShelter(request) as OkObjectResult;
         var body = result!.Value as LoginResponse;
@@ -170,7 +175,10 @@ public class AuthControllerRegisterShelterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Shelter" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Shelter"
+        });
 
         await _controller.RegisterShelter(request);
 

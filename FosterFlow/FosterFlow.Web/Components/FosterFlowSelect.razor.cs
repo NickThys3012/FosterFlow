@@ -17,7 +17,8 @@ public partial class FosterFlowSelect<TValue> : ComponentBase
     [Parameter] public string? ErrorMessage { get; set; }
     [Parameter] public List<FfDropdownOption> Options { get; set; } = new();
 
-    private static string Id => $"dd-{Guid.NewGuid():N}";
+    private readonly string _id = $"dd-{Guid.NewGuid():N}";
+    private string Id => _id;
     private bool ShowError => !string.IsNullOrEmpty(ErrorMessage);
     private string ValidationCssClass => ShowError ? "modified invalid" : string.Empty;
 

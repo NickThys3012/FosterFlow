@@ -1,10 +1,10 @@
+using FluentValidation.Results;
 using FosterFlow.Api.Controllers;
 using FosterFlow.Application.Common.Exceptions;
+using FosterFlow.Application.Features.Auth.Commands.RegisterFoster;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
-using FluentValidation.Results;
-using FosterFlow.Application.Features.Auth.Commands.RegisterFoster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
 namespace FosterFlow.Api.Tests.Controllers;
 
 [TestFixture]
@@ -67,10 +66,7 @@ public class AuthControllerRegisterFosterTests
     {
         return new ApplicationUser
         {
-            Id = Guid.NewGuid().ToString(),
-            Email = email,
-            UserName = email,
-            Name = "Happy Paws Foster"
+            Id = Guid.NewGuid().ToString(), Email = email, UserName = email, Name = "Happy Paws Foster"
         };
     }
 
@@ -108,7 +104,10 @@ public class AuthControllerRegisterFosterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Foster" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Foster"
+        });
 
         await _controller.RegisterFoster(request);
 
@@ -123,7 +122,10 @@ public class AuthControllerRegisterFosterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Foster" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Foster"
+        });
 
         var result = await _controller.RegisterFoster(request);
 
@@ -136,7 +138,10 @@ public class AuthControllerRegisterFosterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Foster" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Foster"
+        });
 
         var result = await _controller.RegisterFoster(request) as OkObjectResult;
         var body = result!.Value as LoginResponse;
@@ -170,7 +175,10 @@ public class AuthControllerRegisterFosterTests
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
-        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string> { "Foster" });
+        _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
+        {
+            "Foster"
+        });
 
         await _controller.RegisterFoster(request);
 

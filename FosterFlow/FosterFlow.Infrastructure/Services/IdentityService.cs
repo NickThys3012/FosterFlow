@@ -40,6 +40,7 @@ public class IdentityService : IIdentityService
     public async Task RegisterFosterAsync(
         string email,
         string password,
+        string firstName,
         string name,
         string phone,
         string street,
@@ -58,6 +59,7 @@ public class IdentityService : IIdentityService
         {
             UserName = email,
             Email = email,
+            FirstName = firstName,
             Name = name,
             Role = UserRole.Foster,
             PhoneNumber = phone,

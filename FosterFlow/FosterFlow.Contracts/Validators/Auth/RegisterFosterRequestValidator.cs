@@ -6,6 +6,10 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
 {
     public RegisterFosterRequestValidator()
     {
+        RuleFor(x => x.FirstName)
+            .NotEmpty().WithMessage("First name is required.")
+            .MaximumLength(200).WithMessage("First name must be 200 characters or fewer.");
+        
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(200).WithMessage("Name must be 200 characters or fewer.");
@@ -34,24 +38,23 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
 
         RuleFor(x => x.Country)
             .NotEmpty().WithMessage("Country is required.");
-        
+
         RuleFor(x => x.ExperienceLevel)
             .IsInEnum().WithMessage("Experience level is required.");
-        
+
         RuleFor(x => x.HomeType)
             .IsInEnum().WithMessage("Home type is required.");
-        
+
         RuleFor(x => x.MaxCats)
             .NotEmpty().WithMessage("Max cats is required.")
             .GreaterThan(0).WithMessage("Max cats must be greater than 0.");
-        
+
         RuleFor(x => x.AvailableFrom)
             .NotEmpty().WithMessage("Available from is required.")
-            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Available from must be in the future.");
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today)).WithMessage("Available from must be today or later.");
         
         RuleFor(x => x.AvailableTo)
             .NotEmpty().WithMessage("Available to is required.")
-            .GreaterThan(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Available to must be in the future.");
-        
+            .GreaterThan(x => x.AvailableFrom).WithMessage("\"Available to\" must be after \"Available from\".");
     }
 }

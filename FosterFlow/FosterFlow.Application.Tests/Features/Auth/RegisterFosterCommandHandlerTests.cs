@@ -7,7 +7,6 @@ using FosterFlow.Domain.Enums;
 using FosterFlow.Domain.Interfaces.Repositories;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
 namespace FosterFlow.Application.Tests.Features.Auth;
 
 [TestFixture]
@@ -82,7 +81,7 @@ public class RegisterFosterCommandHandlerTests
         }
 
         await _identityService.DidNotReceiveWithAnyArgs().RegisterFosterAsync(
-            null!, null!, null!, null!, null!, null!, null!, null!, default!, default!, false, false, 0, default!, default!);
+            null!, null!, null!, null!, null!, null!, null!, null!, null!, default!, default!, false, false, 0, default!, default!);
     }
 
     [Test]
@@ -123,6 +122,7 @@ public class RegisterFosterCommandHandlerTests
         await _identityService.Received(1).RegisterFosterAsync(
             command.Cmd.Email,
             command.Cmd.Password,
+            command.Cmd.FirstName,
             command.Cmd.Name,
             command.Cmd.Phone,
             command.Cmd.Street,
@@ -153,7 +153,7 @@ public class RegisterFosterCommandHandlerTests
     {
         var command = ValidCommand();
         _identityService.RegisterFosterAsync(
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ExperienceLevel>(), Arg.Any<HomeType>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<int>(),
                 Arg.Any<DateOnly>(), Arg.Any<DateOnly>())
             .ThrowsAsync(new InvalidOperationException("identity failure"));
@@ -166,7 +166,7 @@ public class RegisterFosterCommandHandlerTests
     {
         var command = ValidCommand();
         _identityService.RegisterFosterAsync(
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ExperienceLevel>(), Arg.Any<HomeType>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<int>(),
                 Arg.Any<DateOnly>(), Arg.Any<DateOnly>())
             .ThrowsAsync(new InvalidOperationException("identity failure"));

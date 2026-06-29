@@ -9,14 +9,18 @@ public partial class FosterSigninForm : ComponentBase
 
     private readonly RegisterFosterRequest _model = new();
     private readonly NavigationManager _nav;
+    private readonly FluentValidation.IValidator<RegisterFosterRequest> _validator;
     private bool _loading;
     private string? _serverError;
-
-    public FosterSigninForm(AuthService auth, NavigationManager nav)
+    public FosterSigninForm(AuthService auth, NavigationManager nav, FluentValidation.IValidator<RegisterFosterRequest> validator)
     {
         _auth = auth;
         _nav = nav;
+        _validator = validator;
     }
+    // Re-evaluated on every render (i.e. after each field edit), so the submit
+    // button enables only once the model satisfies the FluentValidation rules.
+    private bool IsValid => _validator.Validate(_model).IsValid;
 
     // FosterFlowInput binds string only, so bridge to the int model field.
     private string MaxCatsInput

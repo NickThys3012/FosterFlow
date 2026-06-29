@@ -77,7 +77,7 @@ public class AuthService
         _authState.NotifyLogin(data.AccessToken);
         return (true, null);
     }
-    
+
     public async Task<(bool Success, string? Error)> RegisterFosterAsync(RegisterFosterRequest request)
     {
         var res = await Http.PostAsJsonAsync("api/auth/RegisterFoster", request);
