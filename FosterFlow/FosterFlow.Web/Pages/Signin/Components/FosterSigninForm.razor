@@ -1,5 +1,61 @@
-<h3>FosterSigninForm</h3>
+@using Blazored.FluentValidation
+@using FosterFlow.Domain.Enums
+@using FosterFlow.Web.Components
+@using FosterFlow.Web.Shared
+<EditForm Model="_model" OnValidSubmit="HandleLogin">
+    <FluentValidationValidator/>
+    <ValidationSummary/>
 
-@code {
+    <div class="form-row">
+        <FosterFlowInput Label="First name" Placeholder="Kitty" @bind-Value="_model.FirstName"/>
+        <FosterFlowInput Label="Name" Placeholder="Mittens" @bind-Value="_model.Name"/>
+    </div>
+    <div class="form-row">
+        <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>
+        <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
+    </div>
 
-}
+    <FosterFlowInput Label="Contact phone" Type="tel" Placeholder="+32123456789" @bind-Value="_model.Phone"/>
+    <FosterFlowInput Label="Street and nr" Placeholder="street nr/box nr" @bind-Value="_model.Street"/>
+    <div class="form-row" style="grid-template-columns: 1fr 2fr">
+        <FosterFlowInput Label="Postal code" Placeholder="421" @bind-Value="_model.PostalCode"/>
+        <FosterFlowInput Label="City" Placeholder="cloud city" @bind-Value="_model.City"/>
+    </div>
+    <FosterFlowInput Label="Country" Placeholder="Endor" @bind-Value="_model.Country"/>
+    <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr 1fr">
+
+        <FosterFlowSelect TValue="ExperienceLevel"
+                          @bind-Value="_model.ExperienceLevel"
+                          Label="Experience level"
+                          Icon="ti-heart"
+                          Options="FfDropdownOption.FromEnum<ExperienceLevel>()"/>
+        <FosterFlowSelect TValue="HomeType"
+                          @bind-Value="_model.HomeType"
+                          Label="Home type"
+                          Icon="ti-heart"
+                          Options="FfDropdownOption.FromEnum<HomeType>()"/>
+        <FosterFlowToggle @bind-Value="_model.HasKids" Label="Has kids"/>
+        <FosterFlowToggle @bind-Value="_model.HasDogs" Label="Has dogs"/>
+    </div>
+
+    <FosterFlowInput Label="Max cats willing to foster" Placeholder="1" Type="number" @bind-Value="MaxCatsInput"/>
+
+    <div class="form-row toggles-inline" style="grid-template-columns: 1fr 1fr">
+        <FosterFlowDateInput @bind-Value="AvailableFromInput"
+                             Label="Available from"
+                             Required="true"
+                             Min="@DateOnly.FromDateTime(DateTime.Today)"/>
+        <FosterFlowDateInput @bind-Value="AvailableToInput"
+                             Label="Available to"
+                             Required="true"
+                             Min="@DateOnly.FromDateTime(DateTime.Today)"/>
+    </div>
+    <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
+         @(_loading ? "Creating my account ..." : "Create my account →")
+    </button>
+    @if (_serverError is not null)
+    {
+        <p class="error">@_serverError</p>
+    }
+
+</EditForm>

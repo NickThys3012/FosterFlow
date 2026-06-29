@@ -1,7 +1,7 @@
 using FluentValidation.Results;
 using FosterFlow.Api.Controllers;
 using FosterFlow.Application.Common.Exceptions;
-using FosterFlow.Application.Features.Auth.Commands.RegisterShelter;
+using FosterFlow.Application.Features.Auth.Commands.RegisterFoster;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Infrastructure.Identity;
 using FosterFlow.Infrastructure.Persistence;
@@ -16,7 +16,7 @@ using NSubstitute.ExceptionExtensions;
 namespace FosterFlow.Api.Tests.Controllers;
 
 [TestFixture]
-public class AuthControllerRegisterShelterTests
+public class AuthControllerRegisterFosterTests
 {
     [SetUp]
     public void SetUp()
@@ -37,8 +37,8 @@ public class AuthControllerRegisterShelterTests
     [TearDown]
     public void TearDown()
     {
-        _users?.Dispose();
-        _dbContext?.Dispose();
+        _users.Dispose();
+        _dbContext.Dispose();
     }
 
     private ISender _mediator = null!;
@@ -47,11 +47,11 @@ public class AuthControllerRegisterShelterTests
     private AppDbContext _dbContext = null!;
     private AuthController _controller = null!;
 
-    private static RegisterShelterRequest ValidRequest(string email = "shelter@example.com")
+    private static RegisterFosterRequest ValidRequest(string email = "Foster@example.com")
     {
-        return new RegisterShelterRequest
+        return new RegisterFosterRequest
         {
-            Name = "Happy Paws Shelter",
+            Name = "Happy Paws Foster",
             Email = email,
             Password = "Passw0rd!",
             Phone = "+3212345678",
@@ -62,11 +62,11 @@ public class AuthControllerRegisterShelterTests
         };
     }
 
-    private static ApplicationUser ShelterUser(string email)
+    private static ApplicationUser FosterUser(string email)
     {
         return new ApplicationUser
         {
-            Id = Guid.NewGuid().ToString(), Email = email, UserName = email, Name = "Happy Paws Shelter"
+            Id = Guid.NewGuid().ToString(), Email = email, UserName = email, Name = "Happy Paws Foster"
         };
     }
 
@@ -99,136 +99,136 @@ public class AuthControllerRegisterShelterTests
     }
 
     [Test]
-    public async Task RegisterShelter_WithValidRequest_SendsRegisterShelterCommand()
+    public async Task RegisterFoster_WithValidRequest_SendsRegisterFosterCommand()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
         _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
         {
-            "Shelter"
+            "Foster"
         });
 
-        await _controller.RegisterShelter(request);
+        await _controller.RegisterFoster(request);
 
         await _mediator.Received(1).Send(
-            Arg.Is<RegisterShelterCommand>(c => c.Cmd == request),
+            Arg.Is<RegisterFosterCommand>(c => c.Cmd == request),
             Arg.Any<CancellationToken>());
     }
 
     [Test]
-    public async Task RegisterShelter_WithValidRequest_ReturnsOk()
+    public async Task RegisterFoster_WithValidRequest_ReturnsOk()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
         _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
         {
-            "Shelter"
+            "Foster"
         });
 
-        var result = await _controller.RegisterShelter(request);
+        var result = await _controller.RegisterFoster(request);
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
 
     [Test]
-    public async Task RegisterShelter_WithValidRequest_ReturnsLoginResponseWithTokenAndRole()
+    public async Task RegisterFoster_WithValidRequest_ReturnsLoginResponseWithTokenAndRole()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
         _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
         {
-            "Shelter"
+            "Foster"
         });
 
-        var result = await _controller.RegisterShelter(request) as OkObjectResult;
+        var result = await _controller.RegisterFoster(request) as OkObjectResult;
         var body = result!.Value as LoginResponse;
 
         Assert.That(body, Is.Not.Null);
         Assert.Multiple(() =>
         {
             Assert.That(body!.Email, Is.EqualTo(request.Email));
-            Assert.That(body.Role, Is.EqualTo("Shelter"));
+            Assert.That(body.Role, Is.EqualTo("Foster"));
             Assert.That(body.AccessToken, Is.Not.Empty);
         });
     }
 
     [Test]
-    public async Task RegisterShelter_WhenUserHasNoRoles_DefaultsRoleToShelter()
+    public async Task RegisterFoster_WhenUserHasNoRoles_DefaultsRoleToFoster()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
         _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>());
 
-        var result = await _controller.RegisterShelter(request) as OkObjectResult;
+        var result = await _controller.RegisterFoster(request) as OkObjectResult;
         var body = result!.Value as LoginResponse;
 
-        Assert.That(body!.Role, Is.EqualTo("Shelter"));
+        Assert.That(body!.Role, Is.EqualTo("Foster"));
     }
 
     [Test]
-    public async Task RegisterShelter_OnSuccess_SetsRefreshTokenCookie()
+    public async Task RegisterFoster_OnSuccess_SetsRefreshTokenCookie()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(true);
         _users.GetRolesAsync(Arg.Any<ApplicationUser>()).Returns(new List<string>
         {
-            "Shelter"
+            "Foster"
         });
 
-        await _controller.RegisterShelter(request);
+        await _controller.RegisterFoster(request);
 
         var setCookie = _controller.Response.Headers.SetCookie.ToString();
         Assert.That(setCookie, Does.Contain("refreshToken"));
     }
 
     [Test]
-    public async Task RegisterShelter_WhenUserNotFoundAfterRegistration_ReturnsUnauthorized()
+    public async Task RegisterFoster_WhenUserNotFoundAfterRegistration_ReturnsUnauthorized()
     {
         var request = ValidRequest();
         _users.FindByEmailAsync(request.Email).Returns((ApplicationUser?)null);
 
-        var result = await _controller.RegisterShelter(request);
+        var result = await _controller.RegisterFoster(request);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
     }
 
     [Test]
-    public async Task RegisterShelter_WhenPasswordCheckFails_ReturnsUnauthorized()
+    public async Task RegisterFoster_WhenPasswordCheckFails_ReturnsUnauthorized()
     {
         var request = ValidRequest();
-        _users.FindByEmailAsync(request.Email).Returns(ShelterUser(request.Email));
+        _users.FindByEmailAsync(request.Email).Returns(FosterUser(request.Email));
         _users.CheckPasswordAsync(Arg.Any<ApplicationUser>(), request.Password).Returns(false);
 
-        var result = await _controller.RegisterShelter(request);
+        var result = await _controller.RegisterFoster(request);
 
         Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
     }
 
     [Test]
-    public void RegisterShelter_WhenMediatorThrowsValidationException_PropagatesException()
+    public void RegisterFoster_WhenMediatorThrowsValidationException_PropagatesException()
     {
         var request = ValidRequest();
-        _mediator.Send(Arg.Any<RegisterShelterCommand>(), Arg.Any<CancellationToken>())
+        _mediator.Send(Arg.Any<RegisterFosterCommand>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new ValidationException([new ValidationFailure("Email", "Email already exists")]));
 
-        Assert.ThrowsAsync<ValidationException>(() => _controller.RegisterShelter(request));
+        Assert.ThrowsAsync<ValidationException>(() => _controller.RegisterFoster(request));
     }
 
     [Test]
-    public async Task RegisterShelter_WhenMediatorThrows_DoesNotLookUpUser()
+    public async Task RegisterFoster_WhenMediatorThrows_DoesNotLookUpUser()
     {
         var request = ValidRequest();
-        _mediator.Send(Arg.Any<RegisterShelterCommand>(), Arg.Any<CancellationToken>())
+        _mediator.Send(Arg.Any<RegisterFosterCommand>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new ValidationException([new ValidationFailure("Email", "Email already exists")]));
 
         try
         {
-            await _controller.RegisterShelter(request);
+            await _controller.RegisterFoster(request);
         }
         catch (ValidationException)
         {

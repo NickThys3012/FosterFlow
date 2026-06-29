@@ -1,3 +1,4 @@
+using FosterFlow.Domain.Enums;
 using FosterFlow.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@ public static class IdentitySeed
                 UserName = "admin@fosterflow.dev",
                 Email = "admin@fosterflow.dev",
                 Name = "Admin",
-                Role = FosterFlow.Domain.Enums.UserRole.Admin,
+                Role = UserRole.Admin,
                 PhoneNumber = "0000000000",
                 Street = "Street",
                 PostalCode = "12345",

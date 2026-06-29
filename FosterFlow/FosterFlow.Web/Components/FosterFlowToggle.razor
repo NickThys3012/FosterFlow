@@ -1,0 +1,20 @@
+ @* Usage: <FosterFlowToggle @bind-Value="isUrgent" Label="Mark as urgent" SubLabel="Shown to fosters" /> *@
+ 
+<div class="ff-toggle-row">
+    <div>
+        <div class="ff-toggle-label">@Label</div>
+        @if (!string.IsNullOrEmpty(SubLabel))
+        {
+            <div class="ff-toggle-sub">@SubLabel</div>
+        }
+    </div>
+    <button type="button"
+            class="ff-toggle @(Value ? "" : "off")"
+            role="switch"
+            aria-checked="@Value.ToString().ToLower()"
+            aria-label="@Label"
+            disabled="@Disabled"
+            @onclick="Toggle">
+        <span class="sr-only">@(Value ? "On" : "Off")</span>
+    </button>
+</div>

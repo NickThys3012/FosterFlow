@@ -15,7 +15,7 @@ public static class ApiErrorHelper
             var problem = await response.Content
                 .ReadFromJsonAsync<ProblemDetails>();
 
-            if (problem?.Errors is { } errors)
+            if (problem?.Errors is {} errors)
             {
                 foreach (var messages in errors.Values)
                 foreach (var msg in messages)

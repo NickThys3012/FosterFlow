@@ -1,6 +1,6 @@
 using FosterFlow.Application.Common.Exceptions;
 using FosterFlow.Application.Common.Interfaces;
-using FosterFlow.Application.Features.Auth.Commands.RegisterShelter;
+using FosterFlow.Application.Features.Auth.Commands.RegisterFoster;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Domain.Entities;
 using FosterFlow.Domain.Enums;
@@ -10,7 +10,7 @@ using NSubstitute.ExceptionExtensions;
 namespace FosterFlow.Application.Tests.Features.Auth;
 
 [TestFixture]
-public class RegisterShelterCommandHandlerTests
+public class RegisterFosterCommandHandlerTests
 {
     [SetUp]
     public void SetUp()
@@ -18,19 +18,19 @@ public class RegisterShelterCommandHandlerTests
         _userRepository = Substitute.For<IUserRepository>();
         _identityService = Substitute.For<IIdentityService>();
         _metrics = Substitute.For<IBusinessMetrics>();
-        _handler = new RegisterShelterCommandHandler(_identityService, _userRepository, _metrics);
+        _handler = new RegisterFosterCommandHandler(_identityService, _metrics, _userRepository);
     }
 
     private IUserRepository _userRepository = null!;
     private IIdentityService _identityService = null!;
     private IBusinessMetrics _metrics = null!;
-    private RegisterShelterCommandHandler _handler = null!;
+    private RegisterFosterCommandHandler _handler = null!;
 
-    private static RegisterShelterCommand ValidCommand(string email = "shelter@example.com")
+    private static RegisterFosterCommand ValidCommand(string email = "Foster@example.com")
     {
-        return new RegisterShelterCommand(new RegisterShelterRequest
+        return new RegisterFosterCommand(new RegisterFosterRequest
         {
-            Name = "Happy Paws Shelter",
+            Name = "Happy Paws Foster",
             Email = email,
             Password = "Passw0rd!",
             Phone = "+3212345678",
@@ -43,7 +43,7 @@ public class RegisterShelterCommandHandlerTests
 
     private static User ExistingUser(string email)
     {
-        return new User(Guid.NewGuid(), email, "Existing", UserRole.Shelter, "Street", "1000", "City", "Country", null);
+        return new User(Guid.NewGuid(), email, "Existing", UserRole.Foster, "Street", "1000", "City", "Country", null);
     }
 
     [Test]
@@ -80,12 +80,12 @@ public class RegisterShelterCommandHandlerTests
             // expected
         }
 
-        await _identityService.DidNotReceiveWithAnyArgs().RegisterShelterAsync(
-            default!, default!, default!, default!, default!, default!, default!, default!);
+        await _identityService.DidNotReceiveWithAnyArgs().RegisterFosterAsync(
+            null!, null!, null!, null!, null!, null!, null!, null!, null!, default!, default!, false, false, 0, default!, default!);
     }
 
     [Test]
-    public async Task Handle_WhenEmailAlreadyExists_DoesNotIncrementActiveShelters()
+    public async Task Handle_WhenEmailAlreadyExists_DoesNotIncrementActiveFosters()
     {
         var command = ValidCommand();
         _userRepository.GetByEmailAsync(command.Cmd.Email).Returns(ExistingUser(command.Cmd.Email));
@@ -99,7 +99,7 @@ public class RegisterShelterCommandHandlerTests
             // expected
         }
 
-        _metrics.DidNotReceive().IncrementActiveShelters();
+        _metrics.DidNotReceive().IncrementActiveFosters();
     }
 
     [Test]
@@ -113,52 +113,62 @@ public class RegisterShelterCommandHandlerTests
     }
 
     [Test]
-    public async Task Handle_WithNewEmail_CallsRegisterShelterAsyncWithAllRequestValues()
+    public async Task Handle_WithNewEmail_CallsRegisterFosterAsyncWithAllRequestValues()
     {
         var command = ValidCommand();
 
         await _handler.Handle(command, CancellationToken.None);
 
-        await _identityService.Received(1).RegisterShelterAsync(
+        await _identityService.Received(1).RegisterFosterAsync(
             command.Cmd.Email,
             command.Cmd.Password,
+            command.Cmd.FirstName,
             command.Cmd.Name,
-            command.Cmd.Phone!,
-            command.Cmd.Street!,
-            command.Cmd.PostalCode!,
-            command.Cmd.City!,
-            command.Cmd.Country!);
+            command.Cmd.Phone,
+            command.Cmd.Street,
+            command.Cmd.PostalCode,
+            command.Cmd.City,
+            command.Cmd.Country,
+            command.Cmd.ExperienceLevel,
+            command.Cmd.HomeType,
+            command.Cmd.HasKids,
+            command.Cmd.HasDogs,
+            command.Cmd.MaxCats,
+            command.Cmd.AvailableFrom,
+            command.Cmd.AvailableTo);
     }
 
     [Test]
-    public async Task Handle_WithNewEmail_IncrementsActiveSheltersExactlyOnce()
+    public async Task Handle_WithNewEmail_IncrementsActiveFostersExactlyOnce()
     {
         var command = ValidCommand();
 
         await _handler.Handle(command, CancellationToken.None);
 
-        _metrics.Received(1).IncrementActiveShelters();
+        _metrics.Received(1).IncrementActiveFosters();
     }
 
     [Test]
     public void Handle_WhenIdentityServiceThrows_PropagatesException()
     {
         var command = ValidCommand();
-        _identityService.RegisterShelterAsync(
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+        _identityService.RegisterFosterAsync(
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ExperienceLevel>(), Arg.Any<HomeType>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<int>(),
+                Arg.Any<DateOnly>(), Arg.Any<DateOnly>())
             .ThrowsAsync(new InvalidOperationException("identity failure"));
 
         Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
     }
 
     [Test]
-    public async Task Handle_WhenIdentityServiceThrows_DoesNotIncrementActiveShelters()
+    public async Task Handle_WhenIdentityServiceThrows_DoesNotIncrementActiveFosters()
     {
         var command = ValidCommand();
-        _identityService.RegisterShelterAsync(
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+        _identityService.RegisterFosterAsync(
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ExperienceLevel>(), Arg.Any<HomeType>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<int>(),
+                Arg.Any<DateOnly>(), Arg.Any<DateOnly>())
             .ThrowsAsync(new InvalidOperationException("identity failure"));
 
         try
@@ -170,6 +180,6 @@ public class RegisterShelterCommandHandlerTests
             // expected
         }
 
-        _metrics.DidNotReceive().IncrementActiveShelters();
+        _metrics.DidNotReceive().IncrementActiveFosters();
     }
 }

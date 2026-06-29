@@ -78,6 +78,25 @@ public class AuthService
         return (true, null);
     }
 
+    public async Task<(bool Success, string? Error)> RegisterFosterAsync(RegisterFosterRequest request)
+    {
+        var res = await Http.PostAsJsonAsync("api/auth/RegisterFoster", request);
+        if (!res.IsSuccessStatusCode)
+        {
+            return (false, await ApiErrorHelper.GetFirstErrorAsync(res));
+        }
+
+        var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
+        if (data is null)
+        {
+            return (false, null);
+        }
+
+        _storage.SetAccessToken(data.AccessToken);
+        _authState.NotifyLogin(data.AccessToken);
+        return (true, null);
+    }
+
     public async Task<bool> RefreshAsync()
     {
         // Cookie is sent automatically by the browser

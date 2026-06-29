@@ -1,5 +1,5 @@
+using FluentValidation;
 using FosterFlow.Contracts.DTOs.Auth;
-using FosterFlow.Contracts.Validators.Auth;
 using FosterFlow.Web.Services;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages.Signin.Components;
@@ -10,11 +10,11 @@ public partial class ShelterSigninForm : ComponentBase
 
     private readonly RegisterShelterRequest _model = new();
     private readonly NavigationManager _nav;
-    private readonly FluentValidation.IValidator<RegisterShelterRequest> _validator;
+    private readonly IValidator<RegisterShelterRequest> _validator;
     private bool _loading;
     private string? _serverError;
 
-    public ShelterSigninForm(AuthService auth, NavigationManager nav, FluentValidation.IValidator<RegisterShelterRequest> validator)
+    public ShelterSigninForm(AuthService auth, NavigationManager nav, IValidator<RegisterShelterRequest> validator)
     {
         _auth = auth;
         _nav = nav;

@@ -1,0 +1,63 @@
+select.ff-field {
+    cursor: pointer;
+    /* kill ALL system chrome including the up/down spinner */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* your own chevron */
+    border-color: var(--ff-border); /* was defaulting to browser black */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b89a8a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    background-color: var(--ff-white);
+    padding-right: 32px;
+    padding-left: 12px;
+}
+
+select.ff-field:focus {
+    border-color: var(--ff-orange);
+    box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.12);
+    outline: none;
+}
+
+.ff-dd-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-orange);
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 50;
+    overflow: hidden;
+    display: none;
+}
+
+.ff-dd-menu.open {
+    display: block;
+}
+
+.ff-dd-trigger.open {
+    border-color: var(--ff-orange);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ff-dd-option {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: var(--ff-brown);
+    cursor: pointer;
+    transition: background var(--ff-transition);
+}
+
+.ff-dd-option:hover {
+    background: var(--ff-orange-light);
+}
+
+.ff-dd-option.selected {
+    color: var(--ff-orange);
+    font-weight: 600;
+}

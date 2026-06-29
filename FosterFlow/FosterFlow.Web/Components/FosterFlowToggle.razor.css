@@ -1,0 +1,63 @@
+.ff-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* label → toggle, tight */
+    padding: 0; /* no vertical padding */
+    border-bottom: none; /* remove divider for inline use */
+}
+
+.ff-toggle-label {
+    font-size: 0.82rem;
+    color: var(--ff-brown);
+    font-weight: 500;
+}
+
+.ff-toggle-sub {
+    font-size: 0.7rem;
+    color: var(--ff-brown-light);
+    margin-top: 2px;
+}
+
+.ff-toggle {
+    width: 34px;
+    height: 19px;
+    background: var(--ff-orange);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: background var(--ff-transition);
+    padding: 0;
+}
+
+.ff-toggle::after {
+    content: '';
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    background: #fff;
+    border-radius: 50%;
+    top: 3px;
+    right: 3px;
+    transition: right var(--ff-transition), left var(--ff-transition);
+}
+
+.ff-toggle.off {
+    background: var(--ff-border);
+}
+
+.ff-toggle.off::after {
+    right: auto;
+    left: 3px;
+}
+
+.ff-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.35);
+}
+
+.ff-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
