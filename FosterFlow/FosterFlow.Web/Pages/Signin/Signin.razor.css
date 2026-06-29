@@ -42,4 +42,16 @@
     margin-bottom: 22px;
 }
 
+.signin-prompt {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ff-brown-light);
+    margin-top: 14px;
+}
+
+.signin-prompt a {
+    color: var(--ff-orange);
+    font-weight: 600;
+}
+
 

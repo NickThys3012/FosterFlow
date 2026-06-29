@@ -1,4 +1,6 @@
+using FluentValidation;
 using FosterFlow.Contracts.DTOs.Auth;
+using FosterFlow.Domain.Enums;
 using FosterFlow.Web.Services;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages;
@@ -6,37 +8,61 @@ namespace FosterFlow.Web.Pages;
 public partial class Login : ComponentBase
 {
     private readonly AuthService _auth;
+
+    private readonly LoginRequest _model = new();
     private readonly NavigationManager _nav;
-
-    private string _email = "";
-    private string? _error;
+    private readonly IValidator<LoginRequest> _validator;
     private bool _loading;
-    private string _password = "";
+    private string? _serverError;
 
-    public Login(AuthService auth, NavigationManager nav)
+    public Login(AuthService auth, NavigationManager nav, IValidator<LoginRequest> validator)
     {
         _auth = auth;
         _nav = nav;
+        _validator = validator;
     }
+
+    private bool IsValid => _validator.Validate(_model).IsValid;
+
+
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     private async Task HandleLogin()
     {
+        // EditForm only calls this when FluentValidation passes
         _loading = true;
-        _error = null;
+        _serverError = null;
 
-        var ok = await _auth.LoginAsync(new LoginRequest
+        var (success, error, role) = await _auth.LoginAsync(_model);
+        if (!success)
         {
-            Email = _email, Password = _password
-        });
-
-        if (!ok)
-        {
-            _error = "Invalid email or password.";
+            _serverError = error ?? "Something went wrong. Please try again.";
             _loading = false;
             return;
         }
+        _loading = false;
+        _serverError = null;
+        
+        if (role is null)
+        {
+            _serverError = "Something went wrong. Please try again.";
+            return;
+        }
 
-        _nav.NavigateTo(ReturnUrl ?? "/");
+        switch (role)
+        {
+            case UserRole.Admin:
+                _nav.NavigateTo("/Admin/Dashboard");
+                break;
+            case UserRole.Shelter:
+                _nav.NavigateTo("/Shelter/Dashboard");
+                break;
+            case UserRole.Foster:
+                _nav.NavigateTo("/Foster/Dashboard");
+                break;
+            default:
+                _serverError = "Your account role is not recognized. Please contact support.";
+                return;
+        }
     }
 }

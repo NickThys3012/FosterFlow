@@ -1,21 +1,36 @@
 @* FosterFlow.Client/Pages/Login.razor *@
 @page "/login"
+@using FosterFlow.Web.Components
 
-<h2>Sign In</h2>
+<div class="login-container">
+    <div class="login-card">
+        <div class="header">
+            <div class="logo">🐾</div>
+            <h1 class="title">FosterFlow</h1>
+            <p class="subtitle">Tinder for cat fostering</p>
+        </div>
 
-<div class="login-form">
-    <label>Email</label>
-    <input type="email" @bind="_email"/>
+        <EditForm Model="_model" OnValidSubmit="HandleLogin">
+            <FluentValidationValidator/>
 
-    <label>Password</label>
-    <input type="password" @bind="_password"/>
+            <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>
+            <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
 
-    <button @onclick="HandleLogin" disabled="@_loading">
-        @(_loading ? "Signing in..." : "Sign In")
-    </button>
 
-    @if (_error is not null)
-    {
-        <p class="error">@_error</p>
-    }
+            <a href="#" class="forgot-link" @onclick:preventDefault="true">Forgot password?</a>
+
+            <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
+                @(_loading ? "Signing in ..." : "Sign in →")
+            </button>
+            @if (_serverError is not null)
+            {
+                <p class="error">@_serverError</p>
+            }
+
+        </EditForm>
+
+        <div class="signup-link">
+            New to FosterFlow? <a href="/signin">Create an account</a>
+        </div>
+    </div>
 </div>

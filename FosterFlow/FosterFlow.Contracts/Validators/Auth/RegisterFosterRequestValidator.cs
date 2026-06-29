@@ -9,7 +9,7 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")
             .MaximumLength(200).WithMessage("First name must be 200 characters or fewer.");
-        
+
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(200).WithMessage("Name must be 200 characters or fewer.");
@@ -52,7 +52,7 @@ public class RegisterFosterRequestValidator : AbstractValidator<RegisterFosterRe
         RuleFor(x => x.AvailableFrom)
             .NotEmpty().WithMessage("Available from is required.")
             .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today)).WithMessage("Available from must be today or later.");
-        
+
         RuleFor(x => x.AvailableTo)
             .NotEmpty().WithMessage("Available to is required.")
             .GreaterThan(x => x.AvailableFrom).WithMessage("\"Available to\" must be after \"Available from\".");

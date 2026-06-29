@@ -1,5 +1,7 @@
 using System.Net.Http.Json;
 using FosterFlow.Contracts.DTOs.Auth;
+using FosterFlow.Domain.Enums;
+using FosterFlow.Shared;
 using FosterFlow.Web.Authentication;
 namespace FosterFlow.Web.Services;
 
@@ -21,42 +23,31 @@ public class AuthService
     private HttpClient Http => _httpFactory.CreateClient("API");
 
 
-    public async Task<bool> LoginAsync(LoginRequest request)
+    public async Task<(bool Success, string? Error, UserRole? Role)> LoginAsync(LoginRequest request)
     {
         var res = await Http.PostAsJsonAsync("api/auth/login", request);
         if (!res.IsSuccessStatusCode)
         {
-            return false;
+            var error = res.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                ? "Invalid email or password."
+                : await ApiErrorHelper.GetFirstErrorAsync(res);
+            return (false, error, null);
         }
 
         var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
         if (data is null)
         {
-            return false;
+            return (false, null, null);
+        }
+
+        if (!Enum.TryParse<UserRole>(data.Role, true, out var role))
+        {
+            return (false, "An unexpected error occurred. Please try again.", null);
         }
 
         _storage.SetAccessToken(data.AccessToken);
         _authState.NotifyLogin(data.AccessToken);
-        return true;
-    }
-
-    public async Task<bool> SigninAsync(RegisterUserRequest request)
-    {
-        var res = await Http.PostAsJsonAsync("api/auth/signin", request);
-        if (!res.IsSuccessStatusCode)
-        {
-            return false;
-        }
-
-        var data = await res.Content.ReadFromJsonAsync<LoginResponse>();
-        if (data is null)
-        {
-            return false;
-        }
-
-        _storage.SetAccessToken(data.AccessToken);
-        _authState.NotifyLogin(data.AccessToken);
-        return true;
+        return (true, null, role);
     }
 
     public async Task<(bool Success, string? Error)> RegisterShelterAsync(RegisterShelterRequest request)

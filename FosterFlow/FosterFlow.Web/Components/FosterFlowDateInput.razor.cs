@@ -107,7 +107,7 @@ public partial class FosterFlowDateInput : ComponentBase
 
     private bool IsDisabled(DateOnly d)
     {
-        return (Min.HasValue && d < Min.Value) || (Max.HasValue && d > Max.Value);
+        return Min.HasValue && d < Min.Value || Max.HasValue && d > Max.Value;
     }
 
     private string DayCssClass(DateOnly d)
