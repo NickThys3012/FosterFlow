@@ -42,6 +42,12 @@ public partial class Login : ComponentBase
         }
         _loading = false;
         _serverError = null;
+        
+        if (role is null)
+        {
+            _serverError = "Something went wrong. Please try again.";
+            return;
+        }
 
         switch (role)
         {
@@ -53,8 +59,6 @@ public partial class Login : ComponentBase
                 break;
             case UserRole.Foster:
                 _nav.NavigateTo("/Foster/Dashboard");
-                break;
-            case null:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

@@ -11,6 +11,8 @@
         </div>
 
         <EditForm Model="_model" OnValidSubmit="HandleLogin">
+            <FluentValidationValidator/>
+
             <FosterFlowInput Label="Email" Placeholder="info@fosterflow.be" @bind-Value="_model.Email"/>
             <FosterFlowInput Label="Password" Type="password" Placeholder="*********" @bind-Value="_model.Password"/>
 
