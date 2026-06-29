@@ -1,0 +1,100 @@
+.ff-tag-input {
+    display: grid;
+    gap: 6px;
+}
+
+.ff-tag-input__field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 48px;
+    padding: 8px 10px;
+    border: 1.5px solid var(--ff-border);
+    border-radius: var(--ff-radius);
+    background: var(--ff-white);
+}
+
+.ff-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: var(--ff-radius-pill);
+    background: var(--ff-orange-light);
+    color: var(--ff-orange-dark);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+}
+
+.ff-tag-chip__remove {
+    border: none;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    line-height: 1;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.ff-tag-input__add {
+    border: 1.5px dashed var(--ff-orange-mid);
+    background: transparent;
+    color: var(--ff-orange);
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-radius: var(--ff-radius-pill);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: border-color var(--ff-transition), background var(--ff-transition);
+}
+
+.ff-tag-input__add:hover,
+.ff-tag-input__add:focus-visible {
+    border-color: var(--ff-orange);
+    background: var(--ff-orange-light);
+    outline: none;
+}
+
+.ff-tag-input__composer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    flex: 1 1 220px;
+}
+
+.ff-tag-input__box {
+    min-width: 140px;
+    flex: 1 1 160px;
+    border: 1.5px solid var(--ff-orange-mid);
+    border-radius: var(--ff-radius-pill);
+    padding: 6px 12px;
+    font-family: var(--ff-font-body);
+    font-size: 0.78rem;
+    color: var(--ff-brown);
+    background: var(--ff-white);
+    outline: none;
+}
+
+.ff-tag-input__box:focus {
+    border-color: var(--ff-orange);
+    box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.12);
+}
+
+.ff-tag-input__action {
+    border: none;
+    border-radius: var(--ff-radius-pill);
+    padding: 6px 12px;
+    background: var(--ff-orange);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ff-tag-input__action.ghost {
+    background: transparent;
+    color: var(--ff-brown-mid);
+    border: 1.5px solid var(--ff-border);
+}

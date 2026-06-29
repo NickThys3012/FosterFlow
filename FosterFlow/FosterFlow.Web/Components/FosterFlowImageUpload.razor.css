@@ -1,0 +1,93 @@
+.ff-photo-upload {
+    position: relative;
+    margin-bottom: 16px;
+    min-height: 164px;
+    border: 2px dashed #ffc8a8;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fff7f1 0%, #fff3ea 100%);
+    overflow: hidden;
+    transition: border-color var(--ff-transition), transform var(--ff-transition), box-shadow var(--ff-transition);
+    box-shadow: inset 0 0 0 1px rgba(255, 140, 90, 0.04);
+}
+
+.ff-photo-upload__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+    display: block;
+}
+
+.ff-photo-upload__empty {
+    height: 100%;
+    min-height: 164px;
+    display: grid;
+    place-items: center;
+    gap: 5px;
+    text-align: center;
+    padding: 20px;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+}
+
+.ff-photo-upload__preview {
+    width: 100%;
+    height: 100%;
+    min-height: 164px;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.ff-photo-upload__icon {
+    font-size: 2.3rem;
+    line-height: 1;
+}
+
+.ff-photo-upload__empty p {
+    font-family: var(--ff-font-display);
+    font-size: 1rem;
+    color: var(--ff-brown);
+}
+
+.ff-photo-upload__empty span {
+    font-size: 0.78rem;
+    color: var(--ff-brown-light);
+}
+
+.ff-photo-upload:hover {
+    border-color: #ffb387;
+    box-shadow: 0 14px 28px rgba(61, 42, 30, 0.08);
+    transform: translateY(-1px);
+}
+
+.ff-photo-upload:focus-within {
+    border-color: var(--ff-orange);
+    box-shadow: 0 0 0 4px rgba(255, 140, 90, 0.12);
+}
+
+.ff-photo-upload__status {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    background: rgba(61, 42, 30, 0.82);
+    color: var(--ff-white);
+    border-radius: var(--ff-radius-pill);
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    z-index: 2;
+}
+
+.ff-photo-upload__error {
+    background: var(--ff-red-light);
+    color: var(--ff-red);
+    border-radius: var(--ff-radius);
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    margin-top: 10px;
+}

@@ -31,6 +31,7 @@ builder.Services.AddHttpClient("API",
     .AddHttpMessageHandler<AuthMessageHandler>();
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ImageUploadService>();
 builder.Services.AddTransient<AuthMessageHandler>();
 
 // Inject the named client as the default HttpClient

@@ -8,6 +8,7 @@ public partial class FosterFlowToggle : ComponentBase
     [Parameter] public string Label { get; set; } = string.Empty;
     [Parameter] public string? SubLabel { get; set; }
     [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ShowDivider { get; set; }
 
     private async Task Toggle()
     {

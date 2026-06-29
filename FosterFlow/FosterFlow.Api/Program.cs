@@ -134,6 +134,7 @@ try
     app.UseSerilogRequestLogging();                   // HTTP request logging (#48)
     app.UseHttpsRedirection();
     app.UseHsts(); // Only sends the header over HTTPS — correct behaviour
+    app.UseStaticFiles();
 
     // Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
     // UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a

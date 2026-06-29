@@ -1,0 +1,72 @@
+.body-pad {
+    min-height: 100%;
+    display: grid;
+    justify-content: center;
+    padding: 18px 0 28px;
+}
+
+.listing-shell {
+    width: min(100%, 920px);
+    margin: 0 auto;
+}
+
+.listing-card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--ff-white);
+    border: 1px solid var(--ff-border);
+    box-shadow: 0 18px 40px rgba(61, 42, 30, 0.08);
+}
+
+.listing-card__header {
+    height: 48px;
+    background: linear-gradient(90deg, #ff8b54, #ff915f);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px 0 16px;
+}
+
+.listing-card__brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ff-white);
+    font-family: var(--ff-font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.listing-card__brand-icon {
+    font-size: 0.95rem;
+}
+
+.listing-card__brand-name {
+    letter-spacing: 0.01em;
+}
+
+.listing-card__back {
+    color: var(--ff-white);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    padding: 6px 14px;
+}
+
+.listing-card__body {
+    padding: 24px 24px 22px;
+    display: grid;
+}
+
+.listing-card__submit {
+    margin-top: 8px;
+    height: 42px;
+}
+
+@media (max-width: 640px) {
+    .listing-card__body {
+        padding: 16px;
+    }
+}
