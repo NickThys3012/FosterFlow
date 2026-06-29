@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\FosterFlow.Contracts\FosterFlow.Contracts.csproj"/>
+        <ProjectReference Include="..\FosterFlow.Shared\FosterFlow.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -59,6 +59,6 @@ public partial class FosterSigninForm : ComponentBase
         }
         _loading = false;
         _serverError = null;
-        _nav.NavigateTo(ReturnUrl ?? "/");
-    }
+
+        _nav.NavigateTo("/Foster/Dashboard");    }
 }

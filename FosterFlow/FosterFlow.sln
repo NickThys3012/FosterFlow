@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FosterFlow.Application.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FosterFlow.Api.Tests", "FosterFlow.Api.Tests\FosterFlow.Api.Tests.csproj", "{7A6F6725-8CD1-4344-A585-F046FB0022CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FosterFlow.Shared", "FosterFlow.Shared\FosterFlow.Shared.csproj", "{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,7 @@ Global
 		{65F2C605-61E7-41A4-B454-E1E9B1CEBF8B} = {797B040C-EBC5-4D4C-8C4F-82086D4A9970}
 		{CA45967E-E756-4385-8381-6B5277F2AAC1} = {797B040C-EBC5-4D4C-8C4F-82086D4A9970}
 		{7A6F6725-8CD1-4344-A585-F046FB0022CA} = {797B040C-EBC5-4D4C-8C4F-82086D4A9970}
+		{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F} = {C541AA20-26FE-4EB8-A961-1ADC22128764}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0B570222-0280-4B7C-B666-3CAFE2EF26CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -75,5 +78,9 @@ Global
 		{7A6F6725-8CD1-4344-A585-F046FB0022CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A6F6725-8CD1-4344-A585-F046FB0022CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A6F6725-8CD1-4344-A585-F046FB0022CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7F16D8D-DA0B-47BA-A4FE-50F6835F7E1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
