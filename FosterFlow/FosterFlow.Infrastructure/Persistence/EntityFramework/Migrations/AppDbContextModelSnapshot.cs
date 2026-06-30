@@ -28,16 +28,14 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Age")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<bool>("DogFriendly")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FosterDuration")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("FosterDuration")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsUrgent")
                         .HasColumnType("bit");

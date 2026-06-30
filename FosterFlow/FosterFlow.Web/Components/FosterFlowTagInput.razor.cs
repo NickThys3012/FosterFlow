@@ -12,6 +12,7 @@ public partial class FosterFlowTagInput : ComponentBase
     [Parameter] public string? Label { get; set; }
     [Parameter] public string? Hint { get; set; }
     [Parameter] public string Placeholder { get; set; } = "New tag";
+    [Parameter] public int MaxTags { get; set; } = 6;
 
     private void BeginAdd()
     {
@@ -27,7 +28,7 @@ public partial class FosterFlowTagInput : ComponentBase
             return;
         }
 
-        if (Values.Any(tag => string.Equals(tag, value, StringComparison.OrdinalIgnoreCase)))
+        if (Values.Count >= MaxTags || Values.Any(tag => string.Equals(tag, value, StringComparison.OrdinalIgnoreCase)))
         {
             CancelAdd();
             return;

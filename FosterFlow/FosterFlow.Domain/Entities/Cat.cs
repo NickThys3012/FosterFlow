@@ -5,7 +5,7 @@ namespace FosterFlow.Domain.Entities;
 public class Cat
 {
     public Cat() {}
-    public Cat(string name, bool dogFriendly, bool isUrgent, Sex sex, Guid shelterId, string age, List<string> temperamentTags, string photoUrl, string fosterDuration, string medicalNeeds)
+    public Cat(string name, bool dogFriendly, bool isUrgent, Sex sex, Guid shelterId, int age, List<string> temperamentTags, string photoUrl, int fosterDuration, string medicalNeeds)
     {
         Name = name;
         DogFriendly = dogFriendly;
@@ -17,6 +17,7 @@ public class Cat
         PhotoUrl = photoUrl;
         FosterDuration = fosterDuration;
         MedicalNeeds = medicalNeeds;
+        Status = CatStatus.UpForFostering;
     }
 
     public CatStatus Status { get; set; }
@@ -25,11 +26,11 @@ public class Cat
     public bool DogFriendly { get; set; }
     public bool IsUrgent { get; set; }
     public Sex Sex { get; set; }
-    public string FosterDuration { get; set; } = string.Empty;
+    public int FosterDuration { get; set; }
     public string MedicalNeeds { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
-    public string Age { get; set; } = string.Empty;
+    public int Age { get; set; }
     public List<string> TemperamentTags { get; set; } = [];
 
-    public string ShelterId { get; set; }
+    public string ShelterId { get; set; } = string.Empty;
 }

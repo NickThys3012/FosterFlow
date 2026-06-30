@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class AdCat : Migration
+    public partial class AddCat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,12 +15,12 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                 name: "BirthDate",
                 table: "Cats");
 
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AddColumn<int>(
                 name: "Age",
                 table: "Cats",
-                type: "nvarchar(max)",
+                type: "int",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: 0);
 
             migrationBuilder.AddColumn<bool>(
                 name: "DogFriendly",
@@ -29,12 +29,12 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AddColumn<int>(
                 name: "FosterDuration",
                 table: "Cats",
-                type: "nvarchar(max)",
+                type: "int",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: 0);
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsUrgent",

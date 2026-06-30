@@ -11,27 +11,23 @@ public class CreateCatRequestValidator : AbstractValidator<CreateCatRequest>
             .MaximumLength(100).WithMessage("Name must be 100 characters or fewer.");
 
         RuleFor(x => x.Age)
-            .NotEmpty().WithMessage("Age is required.");
+            .NotEmpty().WithMessage("Age is required.")
+            .GreaterThanOrEqualTo(0).WithMessage("Age must be greater than or equal to 0 months.");
 
         RuleFor(x => x.Sex)
             .IsInEnum().WithMessage("Sex is required.");
 
         RuleFor(x => x.FosterDuration)
-            .NotEmpty().WithMessage("Foster duration is required.");
+            .NotEmpty().WithMessage("Foster duration is required.")
+            .GreaterThanOrEqualTo(0).WithMessage("Foster duration must be greater than or equal to 0 weeks.");
 
         RuleFor(x => x.PhotoUrl)
             .NotEmpty().WithMessage("Photo is required.");
 
         RuleFor(x => x.TemperamentTags)
-            .NotEmpty().WithMessage("At least one temperament tag is required.");
-
+            .Must(tags => tags is null || tags.Count <= 6)
+            .WithMessage("Temperament tags cannot exceed 6.");
         RuleFor(x => x.MedicalNeeds)
             .MaximumLength(500).WithMessage("Medical needs must be 500 characters or fewer.");
-
-        RuleFor(x => x.IsUrgent)
-            .NotNull().WithMessage("Is urgent is required.");
-
-        RuleFor(x => x.DogFriendly)
-            .NotNull().WithMessage("Dog friendly home is required.");
     }
 }

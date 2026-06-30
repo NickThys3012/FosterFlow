@@ -29,10 +29,10 @@ public class CatService
         var data = await res.Content.ReadFromJsonAsync<CreateCatResponse>();
         if (data is null)
         {
-            return (false, null, null);
+            return (false, "The server did not return a cat id.", null);
         }
 
 
-        return (true, null, null);
+        return (true, null, data.Id);
     }
 }

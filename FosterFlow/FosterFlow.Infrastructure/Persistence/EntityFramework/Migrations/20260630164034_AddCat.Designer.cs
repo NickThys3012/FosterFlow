@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260630151854_AdCat")]
-    partial class AdCat
+    [Migration("20260630164034_AddCat")]
+    partial class AddCat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,16 +31,14 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Age")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<bool>("DogFriendly")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FosterDuration")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("FosterDuration")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsUrgent")
                         .HasColumnType("bit");
