@@ -123,11 +123,11 @@ public class RegisterShelterCommandHandlerTests
             command.Cmd.Email,
             command.Cmd.Password,
             command.Cmd.Name,
-            command.Cmd.Phone!,
-            command.Cmd.Street!,
-            command.Cmd.PostalCode!,
-            command.Cmd.City!,
-            command.Cmd.Country!);
+            command.Cmd.Phone,
+            command.Cmd.Street,
+            command.Cmd.PostalCode,
+            command.Cmd.City,
+            command.Cmd.Country);
     }
 
     [Test]

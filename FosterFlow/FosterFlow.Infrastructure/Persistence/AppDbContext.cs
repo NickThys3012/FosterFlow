@@ -21,7 +21,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(t => t.UserId);
         });
 
-        
+
         builder.Entity<Cat>(e =>
         {
             e.HasOne<ApplicationUser>()

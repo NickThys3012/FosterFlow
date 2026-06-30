@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-
 namespace FosterFlow.Web.Components;
 
 public partial class FosterFlowTagInput : ComponentBase
 {
-    private bool _isAdding;
     private string _draft = string.Empty;
+    private bool _isAdding;
 
-    [Parameter] public List<string> Values { get; set; } = new();
+    [Parameter] public List<string> Values { get; set; } = [];
     [Parameter] public EventCallback<List<string>> ValuesChanged { get; set; }
     [Parameter] public string? Label { get; set; }
     [Parameter] public string? Hint { get; set; }
@@ -51,13 +50,14 @@ public partial class FosterFlowTagInput : ComponentBase
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter")
+        switch (e.Key)
         {
-            await AddTag();
-        }
-        else if (e.Key == "Escape")
-        {
-            CancelAdd();
+            case "Enter":
+                await AddTag();
+                break;
+            case "Escape":
+                CancelAdd();
+                break;
         }
     }
 

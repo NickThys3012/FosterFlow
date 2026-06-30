@@ -1,19 +1,18 @@
 using FluentValidation;
 using FosterFlow.Contracts.DTOs.Cats;
-using Microsoft.AspNetCore.Components;
 using FosterFlow.Web.Services.HttpServices;
-
+using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages.Shelter;
 
 public partial class CreateCatListing : ComponentBase
 {
-    private readonly CreateCatRequest _model = new();
     private readonly CatService _cat;
+    private readonly CreateCatRequest _model = new();
     private readonly NavigationManager _nav;
 
-    
+
     private readonly IValidator<CreateCatRequest> _validator;
-    
+
     private bool _loading;
     private string? _serverError;
     public CreateCatListing(IValidator<CreateCatRequest> validator, NavigationManager nav, CatService cat)
@@ -34,7 +33,7 @@ public partial class CreateCatListing : ComponentBase
         _loading = true;
         _serverError = null;
 
-        var (success, error,catId) = await _cat.CreateCatAsync(_model);
+        var (success, error, _) = await _cat.CreateCatAsync(_model);
         if (!success)
         {
             _serverError = error ?? "Something went wrong. Please try again.";
@@ -44,6 +43,6 @@ public partial class CreateCatListing : ComponentBase
         _loading = false;
         _serverError = null;
 
-        _nav.NavigateTo("/Shelter/Dashboard");    
+        _nav.NavigateTo("/Shelter/Dashboard");
     }
 }

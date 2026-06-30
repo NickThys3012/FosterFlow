@@ -29,8 +29,8 @@ public class RegisterFosterCommandHandler : IRequestHandler<RegisterFosterComman
             ]);
         }
 
-        await _identityService.RegisterFosterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.FirstName, request.Cmd.Name, request.Cmd.Phone!, request.Cmd.Street!, request.Cmd.PostalCode!,
-            request.Cmd.City!, request.Cmd.Country!, request.Cmd.ExperienceLevel, request.Cmd.HomeType, request.Cmd.HasKids, request.Cmd.HasDogs, request.Cmd.MaxCats, request.Cmd.AvailableFrom,
+        await _identityService.RegisterFosterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.FirstName, request.Cmd.Name, request.Cmd.Phone, request.Cmd.Street, request.Cmd.PostalCode,
+            request.Cmd.City, request.Cmd.Country, request.Cmd.ExperienceLevel, request.Cmd.HomeType, request.Cmd.HasKids, request.Cmd.HasDogs, request.Cmd.MaxCats, request.Cmd.AvailableFrom,
             request.Cmd.AvailableTo);
 
         _metrics.IncrementActiveFosters();

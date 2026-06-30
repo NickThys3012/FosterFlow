@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using FosterFlow.Contracts.DTOs.Cats;
 namespace FosterFlow.Web.Services.HttpServices;
@@ -19,7 +20,7 @@ public class CatService
         var res = await Http.PostAsJsonAsync("api/cats", request);
         if (!res.IsSuccessStatusCode)
         {
-            var error = res.StatusCode == System.Net.HttpStatusCode.Unauthorized
+            var error = res.StatusCode == HttpStatusCode.Unauthorized
                 ? "You are not authorized to create cat listings."
                 : await ApiErrorHelper.GetFirstErrorAsync(res);
             return (false, error, null);
@@ -34,5 +35,4 @@ public class CatService
 
         return (true, null, null);
     }
-
 }

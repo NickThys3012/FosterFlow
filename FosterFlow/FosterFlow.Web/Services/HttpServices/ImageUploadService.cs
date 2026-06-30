@@ -1,8 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components.Forms;
-
-namespace FosterFlow.Web.Services;
+namespace FosterFlow.Web.Services.HttpServices;
 
 public class ImageUploadService
 {
@@ -18,7 +17,7 @@ public class ImageUploadService
     public async Task<(bool Success, string? Error, string? Url)> UploadAsync(IBrowserFile file, long maxAllowedSize)
     {
         using var content = new MultipartFormDataContent();
-        using var stream = file.OpenReadStream(maxAllowedSize);
+        await using var stream = file.OpenReadStream(maxAllowedSize);
         using var fileContent = new StreamContent(stream);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
         content.Add(fileContent, "file", file.Name);

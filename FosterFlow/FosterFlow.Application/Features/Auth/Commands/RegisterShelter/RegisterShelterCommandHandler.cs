@@ -26,8 +26,8 @@ public class RegisterShelterCommandHandler : IRequestHandler<RegisterShelterComm
             ]);
         }
 
-        await _identityService.RegisterShelterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.Name, request.Cmd.Phone!, request.Cmd.Street!, request.Cmd.PostalCode!,
-            request.Cmd.City!, request.Cmd.Country!);
+        await _identityService.RegisterShelterAsync(request.Cmd.Email, request.Cmd.Password, request.Cmd.Name, request.Cmd.Phone, request.Cmd.Street, request.Cmd.PostalCode,
+            request.Cmd.City, request.Cmd.Country);
 
         _metrics.IncrementActiveShelters();
     }

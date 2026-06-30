@@ -1,7 +1,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using FosterFlow.Application.Common.Interfaces;
-
 namespace FosterFlow.Infrastructure.Services;
 
 public sealed class BlobFileStorageService : IFileStorageService
@@ -36,7 +35,7 @@ public sealed class BlobFileStorageService : IFileStorageService
                     ContentType = contentType
                 }
             },
-            cancellationToken: ct);
+            ct);
 
         return blobClient.Uri.ToString();
     }

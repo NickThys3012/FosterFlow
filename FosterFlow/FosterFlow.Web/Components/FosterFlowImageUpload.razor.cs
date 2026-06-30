@@ -1,7 +1,7 @@
+using FosterFlow.Web.Services;
+using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using FosterFlow.Web.Services;
-
 namespace FosterFlow.Web.Components;
 
 public partial class FosterFlowImageUpload : ComponentBase

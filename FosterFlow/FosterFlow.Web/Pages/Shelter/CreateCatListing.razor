@@ -18,10 +18,10 @@
         <div class="listing-card__body">
             <EditForm Model="_model" OnValidSubmit="HandleCreateCat">
                 <FluentValidationValidator/>
-                <ValidationSummary/> 
+                <ValidationSummary/>
                 <FosterFlowImageUpload @bind-PhotoUrl="_model.PhotoUrl"
-                                                              Title="Tap to upload a photo of the cat"
-                                                              Hint="JPG, PNG up to 10MB"/>
+                                       Title="Tap to upload a photo of the cat"
+                                       Hint="JPG, PNG up to 10MB"/>
 
                 <div class="form-row">
                     <FosterFlowInput Label="Cat's name" Placeholder="Luna" @bind-Value="_model.Name"/>
@@ -42,17 +42,21 @@
                                     Label="Temperament tags"
                                     Hint="Help fosters understand the cat's personality"/>
 
-                <FosterFlowInput Label="Medical needs" Placeholder="Daily eye drops · Neutered" @bind-Value="_model.MedicalNeeds"/>
-                <FosterFlowToggle Label="⚡ Mark as urgent" SubLabel="This cat is at risk and needs a foster immediately" @bind-Value="_model.IsUrgent" ShowDivider="true"/>
-                <FosterFlowToggle Label="🐶 Dog-friendly home OK" SubLabel="Foster can have dogs in the home" @bind-Value="_model.DogFriendly"/>
+                <FosterFlowInput Label="Medical needs" Placeholder="Daily eye drops · Neutered"
+                                 @bind-Value="_model.MedicalNeeds"/>
+                <FosterFlowToggle Label="⚡ Mark as urgent" SubLabel="This cat is at risk and needs a foster immediately"
+                                  @bind-Value="_model.IsUrgent" ShowDivider="true"/>
+                <FosterFlowToggle Label="🐶 Dog-friendly home OK" SubLabel="Foster can have dogs in the home"
+                                  @bind-Value="_model.DogFriendly"/>
                 <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
-                    Post listing →</button>
+                    Post listing →
+                </button>
                 @if (_serverError is not null)
                 {
                     <p class="error">@_serverError</p>
                 }
 
             </EditForm>
-            </div>
+        </div>
     </div>
 </div>

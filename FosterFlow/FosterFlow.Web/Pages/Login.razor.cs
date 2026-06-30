@@ -42,7 +42,7 @@ public partial class Login : ComponentBase
         }
         _loading = false;
         _serverError = null;
-        
+
         if (role is null)
         {
             _serverError = "Something went wrong. Please try again.";

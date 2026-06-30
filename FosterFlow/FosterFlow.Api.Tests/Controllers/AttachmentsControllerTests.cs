@@ -3,7 +3,6 @@ using FosterFlow.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-
 namespace FosterFlow.Api.Tests.Controllers;
 
 [TestFixture]
@@ -29,11 +28,13 @@ public class AttachmentsControllerTests
 
     private static FormFile CreatePhotoFile(string fileName, string contentType)
     {
-        var stream = new MemoryStream(new byte[] { 1, 2, 3, 4 });
+        var stream = new MemoryStream(new byte[]
+        {
+            1, 2, 3, 4
+        });
         return new FormFile(stream, 0, stream.Length, "file", fileName)
         {
-            Headers = new HeaderDictionary(),
-            ContentType = contentType
+            Headers = new HeaderDictionary(), ContentType = contentType
         };
     }
 }
