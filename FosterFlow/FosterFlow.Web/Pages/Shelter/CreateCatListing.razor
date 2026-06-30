@@ -45,7 +45,8 @@
                 <FosterFlowInput Label="Medical needs" Placeholder="Daily eye drops · Neutered"
                                  @bind-Value="_model.MedicalNeeds"/>
                 <FosterFlowToggle Label="⚡ Mark as urgent" SubLabel="This cat is at risk and needs a foster immediately"
-                                  @bind-Value="_model.IsUrgent" ShowDivider="true"/>
+                                  @bind-Value="_model.IsUrgent" ShowDivider="true"
+                                  ShowWarningWhenTrue="true" Warning="This cat will be highlighted as needing immediate foster placement"/>
                 <FosterFlowToggle Label="🐶 Dog-friendly home OK" SubLabel="Foster can have dogs in the home"
                                   @bind-Value="_model.DogFriendly"/>
                 <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">

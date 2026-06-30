@@ -6,7 +6,10 @@
         @if (!string.IsNullOrEmpty(SubLabel))
         {
             <div class="ff-toggle-sub">@SubLabel</div>
-        }
+        }@if (ShowWarningWhenTrue && Value)
+         {
+             <div class="ff-toggle-sub" style="color:  var(--ff-red);">@Warning</div>
+         }
     </div>
     <button type="button"
             class="ff-toggle @(Value ? "" : "off")"
