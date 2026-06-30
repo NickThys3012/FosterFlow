@@ -3,6 +3,7 @@ using FosterFlow.Domain.Interfaces.Repositories;
 using FosterFlow.Infrastructure.Persistence;
 using FosterFlow.Infrastructure.Persistence.Repositories;
 using FosterFlow.Infrastructure.Services;
+using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,5 +25,14 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IIdentityService, IdentityService>();
+
+        var blobConnectionString = config.GetConnectionString("BlobStorage");
+        if (string.IsNullOrWhiteSpace(blobConnectionString))
+        {
+            throw new InvalidOperationException("Could not find a connection string named 'BlobStorage'.");
+        }
+
+        services.AddSingleton(new BlobServiceClient(blobConnectionString));
+        services.AddScoped<IFileStorageService, BlobFileStorageService>();
     }
 }

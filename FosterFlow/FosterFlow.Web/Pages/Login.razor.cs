@@ -1,7 +1,7 @@
 using FluentValidation;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Domain.Enums;
-using FosterFlow.Web.Services;
+using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages;
 

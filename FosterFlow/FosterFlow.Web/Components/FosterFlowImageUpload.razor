@@ -5,7 +5,7 @@
                accept="@Accept"
                aria-label="Upload cat photo"/>
 
-    @if (PhotoUrl is null)
+    @if (string.IsNullOrWhiteSpace(PhotoUrl))
     {
         <div class="ff-photo-upload__empty">
             <div class="ff-photo-upload__icon">📸</div>

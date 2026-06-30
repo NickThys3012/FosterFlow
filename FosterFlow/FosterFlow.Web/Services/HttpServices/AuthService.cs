@@ -1,9 +1,8 @@
 using System.Net.Http.Json;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Domain.Enums;
-using FosterFlow.Shared;
 using FosterFlow.Web.Authentication;
-namespace FosterFlow.Web.Services;
+namespace FosterFlow.Web.Services.HttpServices;
 
 public class AuthService
 {

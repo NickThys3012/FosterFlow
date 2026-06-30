@@ -24,7 +24,7 @@ public class GetCatQueryHandler : IRequestHandler<GetCatQuery, CatDto>
 
         return new CatDto
         {
-            BirthDate = cat.BirthDate, Name = cat.Name, Status = cat.Status, Id = cat.Id
+            Name = cat.Name, Status = cat.Status, Id = cat.Id
         };
     }
 }

@@ -1,3 +1,4 @@
+using FosterFlow.Domain.Entities;
 using FosterFlow.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 namespace FosterFlow.Infrastructure.Identity;
@@ -26,4 +27,5 @@ public class ApplicationUser : IdentityUser
     public int? MaxCats { get; set; }
     public DateOnly? AvailableFrom { get; set; }
     public DateOnly? AvailableTo { get; set; }
+    public ICollection<Cat> Cats { get; set; } = new List<Cat>();
 }

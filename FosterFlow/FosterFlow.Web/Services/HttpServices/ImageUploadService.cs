@@ -23,7 +23,7 @@ public class ImageUploadService
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
         content.Add(fileContent, "file", file.Name);
 
-        var response = await Http.PostAsync("api/cats/photo", content);
+        var response = await Http.PostAsync("api/attachments/photo", content);
         if (!response.IsSuccessStatusCode)
         {
             return (false, await ApiErrorHelper.GetFirstErrorAsync(response), null);

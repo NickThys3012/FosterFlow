@@ -60,11 +60,6 @@
     display: grid;
 }
 
-.listing-card__submit {
-    margin-top: 8px;
-    height: 42px;
-}
-
 @media (max-width: 640px) {
     .listing-card__body {
         padding: 16px;
