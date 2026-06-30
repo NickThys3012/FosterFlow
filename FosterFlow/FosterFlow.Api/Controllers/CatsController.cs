@@ -1,6 +1,6 @@
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
-using FosterFlow.Application.Features.Cats.Queries.GetCats;
+using FosterFlow.Application.Features.Cats.Queries.GetAllCats;
 using FosterFlow.Contracts.DTOs.Cats;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,18 +20,17 @@ public class CatsController : ControllerBase
         _currentUserService = currentUserService;
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(Guid id, CancellationToken ct)
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        return Ok(await _mediator.Send(new GetCatQuery(id), ct));
+        return Ok(await _mediator.Send(new GetAllCatsQuery(), ct));
     }
-
     [HttpPost]
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)
     {
         var id = await _mediator.Send(new CreateCatCommand(request, _currentUserService.UserId), ct);
-        return CreatedAtAction(nameof(Get), new
+        return CreatedAtAction("GetAll", new
         {
             id
         }, new

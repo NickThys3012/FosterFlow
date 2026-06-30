@@ -1,0 +1,23 @@
+
+.stat-card {
+    background: var(--ff-white);
+    border-radius: var(--ff-radius-md);
+    padding: 14px 12px;
+    text-align: center;
+    border: 1.5px solid var(--ff-border);
+    box-shadow: var(--ff-shadow);
+}
+
+.stat-num {
+    font-family: var(--ff-font-display);
+    font-size: 1.6rem;
+    color: var(--ff-orange);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    color: var(--ff-brown-light);
+    margin-top: 3px;
+    font-weight: 500;
+}

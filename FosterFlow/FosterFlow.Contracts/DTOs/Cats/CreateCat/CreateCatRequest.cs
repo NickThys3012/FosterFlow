@@ -8,15 +8,15 @@ public class CreateCatRequest
     public bool IsUrgent { get; set; }
     public Sex Sex { get; set; }
     /// <summary>
-    /// Foster duration in weeks
+    ///     Foster duration in weeks
     /// </summary>
     public int FosterDuration { get; set; }
     public string MedicalNeeds { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
     /// <summary>
-    /// Age in months
+    ///     Age in months
     /// </summary>
-    public int Age { get; set; } 
+    public int Age { get; set; }
     public List<string> TemperamentTags { get; set; } =
     [
         "Shy", "Indoor", "Kid-friendly"

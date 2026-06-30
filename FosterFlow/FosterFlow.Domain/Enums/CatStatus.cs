@@ -4,7 +4,7 @@ public enum CatStatus
 {
     Initial,
     UpForFostering,
-    MatchFound,
-    Fostered,
+    Pending,
+    Matched,
     Deceased
 }

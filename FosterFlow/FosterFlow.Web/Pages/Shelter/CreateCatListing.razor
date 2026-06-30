@@ -35,7 +35,7 @@
                                       Label="Sex"
                                       Icon="ti-heart"
                                       Options="FfDropdownOption.FromEnum<Sex>()"/>
-                    <FosterFlowInput Label="Foster duration (weeks)" Placeholder="3"  @bind-Value="FosterDurationInput"/>
+                    <FosterFlowInput Label="Foster duration (weeks)" Placeholder="3" @bind-Value="FosterDurationInput"/>
                 </div>
 
                 <FosterFlowTagInput @bind-Values="_model.TemperamentTags"
@@ -46,7 +46,8 @@
                                  @bind-Value="_model.MedicalNeeds"/>
                 <FosterFlowToggle Label="⚡ Mark as urgent" SubLabel="This cat is at risk and needs a foster immediately"
                                   @bind-Value="_model.IsUrgent" ShowDivider="true"
-                                  ShowWarningWhenTrue="true" Warning="This cat will be highlighted as needing immediate foster placement"/>
+                                  ShowWarningWhenTrue="true"
+                                  Warning="This cat will be highlighted as needing immediate foster placement"/>
                 <FosterFlowToggle Label="🐶 Dog-friendly home OK" SubLabel="Foster can have dogs in the home"
                                   @bind-Value="_model.DogFriendly"/>
                 <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">

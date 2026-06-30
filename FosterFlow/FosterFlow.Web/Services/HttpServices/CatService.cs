@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.GetAllCats;
 namespace FosterFlow.Web.Services.HttpServices;
 
 public class CatService
@@ -14,7 +15,17 @@ public class CatService
     }
     private HttpClient Http => _httpFactory.CreateClient("API");
 
+    public async Task<GetAllCatsResponse?> GetAllCatsAsync()
+    {
+        var res = await Http.GetAsync("api/cats");
+        if (!res.IsSuccessStatusCode)
+        {
+            return null;
+        }
 
+        var data = await res.Content.ReadFromJsonAsync<GetAllCatsResponse>();
+        return data;
+    }
     public async Task<(bool Success, string? Error, Guid? catId)> CreateCatAsync(CreateCatRequest request)
     {
         var res = await Http.PostAsJsonAsync("api/cats", request);
