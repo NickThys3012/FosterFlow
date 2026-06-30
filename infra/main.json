@@ -1,0 +1,1589 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.40.2.10011",
+      "templateHash": "14986195494538166529"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "swedencentral",
+      "metadata": {
+        "description": "Azure region for the resource group and all resources."
+      }
+    },
+    "workload": {
+      "type": "string",
+      "defaultValue": "fosterflow",
+      "metadata": {
+        "description": "Workload / application name used in resource names."
+      }
+    },
+    "environmentAbbreviation": {
+      "type": "string",
+      "defaultValue": "prod",
+      "metadata": {
+        "description": "Environment token used in resource names (e.g. prod, dev, test)."
+      }
+    },
+    "regionAbbreviation": {
+      "type": "string",
+      "defaultValue": "swe",
+      "metadata": {
+        "description": "Region abbreviation used in resource names (e.g. swe for Sweden Central)."
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "[format('rg-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "Resource group name."
+      }
+    },
+    "environmentName": {
+      "type": "string",
+      "defaultValue": "production",
+      "metadata": {
+        "description": "Deployment environment tag value."
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "defaultValue": "[format('st{0}{1}{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "Storage account name (globally unique, 3-24 lowercase alphanumeric, no hyphens)."
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "defaultValue": "[format('kv-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "Key Vault name (globally unique, 3-24 chars)."
+      }
+    },
+    "sqlServerName": {
+      "type": "string",
+      "defaultValue": "[format('sql-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "SQL logical server name (globally unique, lowercase)."
+      }
+    },
+    "sqlDatabaseName": {
+      "type": "string",
+      "defaultValue": "[format('sqldb-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "SQL database name."
+      }
+    },
+    "sqlAdminLogin": {
+      "type": "string",
+      "defaultValue": "fosterflowadmin",
+      "metadata": {
+        "description": "SQL administrator login."
+      }
+    },
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SQL administrator password. Provide securely at deploy time."
+      }
+    },
+    "allowedClientIp": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional local client IP to whitelist on the SQL firewall (for migrations/SSMS)."
+      }
+    },
+    "jwtSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "JWT signing secret (32+ chars). Provide securely at deploy time."
+      }
+    },
+    "lokiUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Loki ingestion URL for monitoring (optional until ready)."
+      }
+    },
+    "deployMonitoring": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Deploy the Grafana/Prometheus/Loki monitoring stack on a Linux VM (#49)."
+      }
+    },
+    "grafanaAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Grafana admin password for the monitoring stack. Required when deployMonitoring is true."
+      }
+    },
+    "monitoringAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "VM admin password for the monitoring VM. Required when deployMonitoring is true."
+      }
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "[format('asp-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "App Service Plan name."
+      }
+    },
+    "appServiceName": {
+      "type": "string",
+      "defaultValue": "[format('app-{0}-{1}-{2}', parameters('workload'), parameters('environmentAbbreviation'), parameters('regionAbbreviation'))]",
+      "metadata": {
+        "description": "App Service / web app name (becomes <name>.azurewebsites.net)."
+      }
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "DOTNETCORE|10.0",
+      "metadata": {
+        "description": "Linux runtime stack for the App Service. Repo targets .NET 10."
+      }
+    }
+  },
+  "variables": {
+    "tags": {
+      "project": "fosterflow",
+      "environment": "[parameters('environmentName')]",
+      "hackathon": "2026"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2023-07-01",
+      "name": "[parameters('resourceGroupName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "fosterflow-resources",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('storageAccountName')]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "sqlServerName": {
+            "value": "[parameters('sqlServerName')]"
+          },
+          "sqlDatabaseName": {
+            "value": "[parameters('sqlDatabaseName')]"
+          },
+          "sqlAdminLogin": {
+            "value": "[parameters('sqlAdminLogin')]"
+          },
+          "sqlAdminPassword": {
+            "value": "[parameters('sqlAdminPassword')]"
+          },
+          "allowedClientIp": {
+            "value": "[parameters('allowedClientIp')]"
+          },
+          "jwtSecret": {
+            "value": "[parameters('jwtSecret')]"
+          },
+          "lokiUrl": {
+            "value": "[parameters('lokiUrl')]"
+          },
+          "appServicePlanName": {
+            "value": "[parameters('appServicePlanName')]"
+          },
+          "appServiceName": {
+            "value": "[parameters('appServiceName')]"
+          },
+          "linuxFxVersion": {
+            "value": "[parameters('linuxFxVersion')]"
+          },
+          "deployMonitoring": {
+            "value": "[parameters('deployMonitoring')]"
+          },
+          "grafanaAdminPassword": {
+            "value": "[parameters('grafanaAdminPassword')]"
+          },
+          "monitoringAdminPassword": {
+            "value": "[parameters('monitoringAdminPassword')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.40.2.10011",
+              "templateHash": "8569617789165036306"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure region for all resources."
+              }
+            },
+            "tags": {
+              "type": "object",
+              "metadata": {
+                "description": "Tags applied to every resource."
+              }
+            },
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "Storage account name (globally unique)."
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Key Vault name (globally unique)."
+              }
+            },
+            "sqlServerName": {
+              "type": "string",
+              "metadata": {
+                "description": "SQL logical server name (globally unique)."
+              }
+            },
+            "sqlDatabaseName": {
+              "type": "string",
+              "metadata": {
+                "description": "SQL database name."
+              }
+            },
+            "sqlAdminLogin": {
+              "type": "string",
+              "metadata": {
+                "description": "SQL administrator login."
+              }
+            },
+            "sqlAdminPassword": {
+              "type": "securestring",
+              "metadata": {
+                "description": "SQL administrator password."
+              }
+            },
+            "allowedClientIp": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Optional local client IP to whitelist on the SQL firewall."
+              }
+            },
+            "jwtSecret": {
+              "type": "securestring",
+              "metadata": {
+                "description": "JWT signing secret (32+ chars)."
+              }
+            },
+            "lokiUrl": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Loki ingestion URL for monitoring (optional until ready)."
+              }
+            },
+            "deployMonitoring": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "Deploy the Grafana/Prometheus/Loki monitoring stack on a Linux VM (#49)."
+              }
+            },
+            "grafanaAdminPassword": {
+              "type": "securestring",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Grafana admin password for the monitoring stack."
+              }
+            },
+            "monitoringAdminPassword": {
+              "type": "securestring",
+              "defaultValue": "",
+              "metadata": {
+                "description": "VM admin password for the monitoring VM. Required when deployMonitoring is true."
+              }
+            },
+            "appServicePlanName": {
+              "type": "string",
+              "metadata": {
+                "description": "App Service Plan name."
+              }
+            },
+            "appServiceName": {
+              "type": "string",
+              "metadata": {
+                "description": "App Service / web app name."
+              }
+            },
+            "linuxFxVersion": {
+              "type": "string",
+              "defaultValue": "DOTNETCORE|10.0",
+              "metadata": {
+                "description": "Linux runtime stack for the App Service."
+              }
+            },
+            "monitoringVmName": {
+              "type": "string",
+              "defaultValue": "vm-fosterflow-monitoring",
+              "metadata": {
+                "description": "VM name for the monitoring stack."
+              }
+            },
+            "monitoringDnsNameLabel": {
+              "type": "string",
+              "defaultValue": "fosterflow-grafana",
+              "metadata": {
+                "description": "DNS name label for the monitoring public IP (Grafana)."
+              }
+            },
+            "monitoringStorageAccountName": {
+              "type": "string",
+              "defaultValue": "stfosterflowmon",
+              "metadata": {
+                "description": "Storage account name backing the monitoring config share (globally unique)."
+              }
+            }
+          },
+          "variables": {
+            "publicUrl": "[format('https://{0}.azurewebsites.net', parameters('appServiceName'))]",
+            "effectiveLokiUrl": "[if(not(empty(parameters('lokiUrl'))), parameters('lokiUrl'), if(parameters('deployMonitoring'), format('http://{0}.{1}.cloudapp.azure.com:3100', parameters('monitoringDnsNameLabel'), parameters('location')), ''))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "storage",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "storageAccountName": {
+                    "value": "[parameters('storageAccountName')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.40.2.10011",
+                      "templateHash": "13596902320229267547"
+                    }
+                  },
+                  "parameters": {
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure region for the storage account."
+                      }
+                    },
+                    "storageAccountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Globally-unique storage account name (3-24 lowercase alphanumeric)."
+                      }
+                    },
+                    "containerName": {
+                      "type": "string",
+                      "defaultValue": "cat-photos",
+                      "metadata": {
+                        "description": "Blob container that holds cat photos."
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "metadata": {
+                        "description": "Tags applied to every resource."
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Storage/storageAccounts",
+                      "apiVersion": "2023-05-01",
+                      "name": "[parameters('storageAccountName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "sku": {
+                        "name": "Standard_LRS"
+                      },
+                      "kind": "StorageV2",
+                      "properties": {
+                        "accessTier": "Hot",
+                        "allowBlobPublicAccess": false,
+                        "supportsHttpsTrafficOnly": true,
+                        "minimumTlsVersion": "TLS1_2"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Storage/storageAccounts/blobServices",
+                      "apiVersion": "2023-05-01",
+                      "name": "[format('{0}/{1}', parameters('storageAccountName'), 'default')]",
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                      "apiVersion": "2023-05-01",
+                      "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', parameters('containerName'))]",
+                      "properties": {
+                        "publicAccess": "None"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the created storage account."
+                      },
+                      "value": "[parameters('storageAccountName')]"
+                    },
+                    "blobEndpoint": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Primary blob endpoint, e.g. https://stfosterflowprodswe.blob.core.windows.net/."
+                      },
+                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').primaryEndpoints.blob]"
+                    },
+                    "id": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Resource ID of the storage account."
+                      },
+                      "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "sql",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "sqlServerName": {
+                    "value": "[parameters('sqlServerName')]"
+                  },
+                  "databaseName": {
+                    "value": "[parameters('sqlDatabaseName')]"
+                  },
+                  "administratorLogin": {
+                    "value": "[parameters('sqlAdminLogin')]"
+                  },
+                  "administratorLoginPassword": {
+                    "value": "[parameters('sqlAdminPassword')]"
+                  },
+                  "allowedClientIp": {
+                    "value": "[parameters('allowedClientIp')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.40.2.10011",
+                      "templateHash": "13060634094135186527"
+                    }
+                  },
+                  "parameters": {
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure region for the SQL server and database."
+                      }
+                    },
+                    "sqlServerName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Globally-unique logical SQL server name (without the .database.windows.net suffix)."
+                      }
+                    },
+                    "databaseName": {
+                      "type": "string",
+                      "defaultValue": "sqldb-fosterflow-prod-swe",
+                      "metadata": {
+                        "description": "Database name."
+                      }
+                    },
+                    "administratorLogin": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "SQL administrator login."
+                      }
+                    },
+                    "administratorLoginPassword": {
+                      "type": "securestring",
+                      "metadata": {
+                        "description": "SQL administrator password."
+                      }
+                    },
+                    "allowedClientIp": {
+                      "type": "string",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Optional client IP to whitelist for local connections. Leave empty to skip."
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "metadata": {
+                        "description": "Tags applied to every resource."
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Sql/servers",
+                      "apiVersion": "2023-08-01-preview",
+                      "name": "[parameters('sqlServerName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "administratorLogin": "[parameters('administratorLogin')]",
+                        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                        "version": "12.0",
+                        "minimalTlsVersion": "1.2",
+                        "publicNetworkAccess": "Enabled"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Sql/servers/databases",
+                      "apiVersion": "2023-08-01-preview",
+                      "name": "[format('{0}/{1}', parameters('sqlServerName'), parameters('databaseName'))]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "sku": {
+                        "name": "Basic",
+                        "tier": "Basic"
+                      },
+                      "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "requestedBackupStorageRedundancy": "Local"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies",
+                      "apiVersion": "2023-08-01-preview",
+                      "name": "[format('{0}/{1}/{2}', parameters('sqlServerName'), parameters('databaseName'), 'default')]",
+                      "properties": {
+                        "retentionDays": 7
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlServerName'), parameters('databaseName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Sql/servers/firewallRules",
+                      "apiVersion": "2023-08-01-preview",
+                      "name": "[format('{0}/{1}', parameters('sqlServerName'), 'AllowAllWindowsAzureIps')]",
+                      "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+                      ]
+                    },
+                    {
+                      "condition": "[not(empty(parameters('allowedClientIp')))]",
+                      "type": "Microsoft.Sql/servers/firewallRules",
+                      "apiVersion": "2023-08-01-preview",
+                      "name": "[format('{0}/{1}', parameters('sqlServerName'), 'AllowLocalClientIp')]",
+                      "properties": {
+                        "startIpAddress": "[parameters('allowedClientIp')]",
+                        "endIpAddress": "[parameters('allowedClientIp')]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "fullyQualifiedDomainName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Fully-qualified domain name, e.g. sql-fosterflow-prod-swe.database.windows.net."
+                      },
+                      "value": "[reference(resourceId('Microsoft.Sql/servers', parameters('sqlServerName')), '2023-08-01-preview').fullyQualifiedDomainName]"
+                    },
+                    "databaseName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Database name."
+                      },
+                      "value": "[parameters('databaseName')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "keyvault",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  },
+                  "storageAccountName": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2025-04-01').outputs.name.value]"
+                  },
+                  "sqlServerFqdn": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'sql'), '2025-04-01').outputs.fullyQualifiedDomainName.value]"
+                  },
+                  "sqlDatabaseName": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'sql'), '2025-04-01').outputs.databaseName.value]"
+                  },
+                  "sqlAdminLogin": {
+                    "value": "[parameters('sqlAdminLogin')]"
+                  },
+                  "sqlAdminPassword": {
+                    "value": "[parameters('sqlAdminPassword')]"
+                  },
+                  "jwtSecret": {
+                    "value": "[parameters('jwtSecret')]"
+                  },
+                  "lokiUrl": {
+                    "value": "[variables('effectiveLokiUrl')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.40.2.10011",
+                      "templateHash": "2974243774298354887"
+                    }
+                  },
+                  "parameters": {
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure region for the Key Vault."
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Globally-unique Key Vault name (3-24 alphanumeric/hyphen)."
+                      }
+                    },
+                    "tenantId": {
+                      "type": "string",
+                      "defaultValue": "[subscription().tenantId]",
+                      "metadata": {
+                        "description": "Azure AD tenant that owns the vault."
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "metadata": {
+                        "description": "Tags applied to every resource."
+                      }
+                    },
+                    "storageAccountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Storage account name used to derive the blob connection string."
+                      }
+                    },
+                    "sqlServerFqdn": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "SQL server FQDN used to derive the database connection string."
+                      }
+                    },
+                    "sqlDatabaseName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "SQL database name."
+                      }
+                    },
+                    "sqlAdminLogin": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "SQL administrator login."
+                      }
+                    },
+                    "sqlAdminPassword": {
+                      "type": "securestring",
+                      "metadata": {
+                        "description": "SQL administrator password."
+                      }
+                    },
+                    "jwtSecret": {
+                      "type": "securestring",
+                      "metadata": {
+                        "description": "JWT signing secret (32+ chars)."
+                      }
+                    },
+                    "lokiUrl": {
+                      "type": "string",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Loki ingestion URL for monitoring."
+                      }
+                    }
+                  },
+                  "variables": {
+                    "dbConnectionString": "[format('Server=tcp:{0},1433;Initial Catalog={1};Persist Security Info=False;User ID={2};Password={3};Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;', parameters('sqlServerFqdn'), parameters('sqlDatabaseName'), parameters('sqlAdminLogin'), parameters('sqlAdminPassword'))]"
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.KeyVault/vaults",
+                      "apiVersion": "2023-07-01",
+                      "name": "[parameters('keyVaultName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "tenantId": "[parameters('tenantId')]",
+                        "sku": {
+                          "family": "A",
+                          "name": "standard"
+                        },
+                        "enableRbacAuthorization": true,
+                        "enableSoftDelete": true,
+                        "softDeleteRetentionInDays": 7,
+                        "enabledForTemplateDeployment": true
+                      }
+                    },
+                    {
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2023-07-01",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), 'JwtSecret')]",
+                      "properties": {
+                        "value": "[parameters('jwtSecret')]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2023-07-01",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), 'DbConnectionString')]",
+                      "properties": {
+                        "value": "[variables('dbConnectionString')]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2023-07-01",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), 'BlobStorageConnectionString')]",
+                      "properties": {
+                        "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').keys[0].value, environment().suffixes.storage)]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                      ]
+                    },
+                    {
+                      "condition": "[not(empty(parameters('lokiUrl')))]",
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2023-07-01",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), 'LokiUrl')]",
+                      "properties": {
+                        "value": "[parameters('lokiUrl')]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Insights/diagnosticSettings",
+                      "apiVersion": "2021-05-01-preview",
+                      "scope": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+                      "name": "kv-audit-to-storage",
+                      "properties": {
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                        "logs": [
+                          {
+                            "category": "AuditEvent",
+                            "enabled": true
+                          }
+                        ]
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the created Key Vault."
+                      },
+                      "value": "[parameters('keyVaultName')]"
+                    },
+                    "vaultUri": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Vault URI, e.g. https://kv-fosterflow-prod-swe.vault.azure.net/."
+                      },
+                      "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), '2023-07-01').vaultUri]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'sql')]",
+                "[resourceId('Microsoft.Resources/deployments', 'storage')]"
+              ]
+            },
+            {
+              "condition": "[parameters('deployMonitoring')]",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "monitoring",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  },
+                  "vmName": {
+                    "value": "[parameters('monitoringVmName')]"
+                  },
+                  "dnsNameLabel": {
+                    "value": "[parameters('monitoringDnsNameLabel')]"
+                  },
+                  "storageAccountName": {
+                    "value": "[parameters('monitoringStorageAccountName')]"
+                  },
+                  "grafanaAdminPassword": {
+                    "value": "[parameters('grafanaAdminPassword')]"
+                  },
+                  "adminPassword": {
+                    "value": "[parameters('monitoringAdminPassword')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.40.2.10011",
+                      "templateHash": "14150355614756240396"
+                    }
+                  },
+                  "parameters": {
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure region for monitoring resources."
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "metadata": {
+                        "description": "Tags applied to every resource."
+                      }
+                    },
+                    "vmName": {
+                      "type": "string",
+                      "defaultValue": "vm-fosterflow-monitoring",
+                      "metadata": {
+                        "description": "VM resource name."
+                      }
+                    },
+                    "dnsNameLabel": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "DNS name label for the public IP (<label>.<region>.cloudapp.azure.com)."
+                      }
+                    },
+                    "storageAccountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Storage account name backing the Azure Files config share (3-24 lowercase alphanumeric)."
+                      }
+                    },
+                    "configShareName": {
+                      "type": "string",
+                      "defaultValue": "monitoring-config",
+                      "metadata": {
+                        "description": "Azure Files share name holding Prometheus/Loki/Grafana config + dashboards."
+                      }
+                    },
+                    "grafanaAdminPassword": {
+                      "type": "securestring",
+                      "metadata": {
+                        "description": "Grafana admin password."
+                      }
+                    },
+                    "grafanaAdminUser": {
+                      "type": "string",
+                      "defaultValue": "admin",
+                      "metadata": {
+                        "description": "Grafana admin user name."
+                      }
+                    },
+                    "grafanaImage": {
+                      "type": "string",
+                      "defaultValue": "grafana/grafana:latest",
+                      "metadata": {
+                        "description": "Container image tags."
+                      }
+                    },
+                    "prometheusImage": {
+                      "type": "string",
+                      "defaultValue": "prom/prometheus:latest"
+                    },
+                    "lokiImage": {
+                      "type": "string",
+                      "defaultValue": "grafana/loki:3.0.0"
+                    },
+                    "adminUsername": {
+                      "type": "string",
+                      "defaultValue": "monitoringadmin",
+                      "metadata": {
+                        "description": "VM administrator username."
+                      }
+                    },
+                    "adminPassword": {
+                      "type": "securestring",
+                      "metadata": {
+                        "description": "VM administrator password. Use a strong password (12+ chars, mixed case, digits, symbols)."
+                      }
+                    },
+                    "vmSize": {
+                      "type": "string",
+                      "defaultValue": "Standard_B2s",
+                      "metadata": {
+                        "description": "VM SKU. Standard_B2s (2 vCPU / 4 GB RAM) comfortably runs all three services at ~$30/month."
+                      }
+                    }
+                  },
+                  "variables": {
+                    "monitoringEnvContent": "[format('GF_SECURITY_ADMIN_USER={0}\nGF_SECURITY_ADMIN_PASSWORD={1}\nGF_USERS_ALLOW_SIGN_UP=false\nGF_PATHS_PROVISIONING=/mnt/config/grafana/provisioning\n', parameters('grafanaAdminUser'), parameters('grafanaAdminPassword'))]",
+                    "dockerComposeContent": "[format('version: \"3.8\"\nservices:\n  grafana:\n    image: {0}\n    restart: always\n    ports:\n      - \"3000:3000\"\n    env_file: /etc/monitoring.env\n    volumes:\n      - /mnt/monitoring-config:/mnt/config:ro\n      - grafana_data:/var/lib/grafana\n  prometheus:\n    image: {1}\n    restart: always\n    command:\n      - \"--config.file=/mnt/config/prometheus/prometheus.prod.yml\"\n      - \"--storage.tsdb.path=/prometheus\"\n      - \"--storage.tsdb.retention.time=30d\"\n    volumes:\n      - /mnt/monitoring-config:/mnt/config:ro\n      - prometheus_data:/prometheus\n  loki:\n    image: {2}\n    restart: always\n    command:\n      - \"-config.file=/mnt/config/loki/loki-config.yml\"\n    ports:\n      - \"3100:3100\"\n    volumes:\n      - /mnt/monitoring-config:/mnt/config:ro\n      - loki_data:/loki\nvolumes:\n  grafana_data:\n  prometheus_data:\n  loki_data:\n', parameters('grafanaImage'), parameters('prometheusImage'), parameters('lokiImage'))]"
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Storage/storageAccounts",
+                      "apiVersion": "2023-05-01",
+                      "name": "[parameters('storageAccountName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "sku": {
+                        "name": "Standard_LRS"
+                      },
+                      "kind": "StorageV2",
+                      "properties": {
+                        "minimumTlsVersion": "TLS1_2",
+                        "allowBlobPublicAccess": false
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Storage/storageAccounts/fileServices",
+                      "apiVersion": "2023-05-01",
+                      "name": "[format('{0}/{1}', parameters('storageAccountName'), 'default')]",
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+                      "apiVersion": "2023-05-01",
+                      "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', parameters('configShareName'))]",
+                      "properties": {
+                        "shareQuota": 5
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccountName'), 'default')]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Network/networkSecurityGroups",
+                      "apiVersion": "2023-09-01",
+                      "name": "[format('nsg-{0}', parameters('vmName'))]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "securityRules": [
+                          {
+                            "name": "allow-grafana",
+                            "properties": {
+                              "priority": 100,
+                              "protocol": "Tcp",
+                              "access": "Allow",
+                              "direction": "Inbound",
+                              "sourceAddressPrefix": "Internet",
+                              "sourcePortRange": "*",
+                              "destinationAddressPrefix": "*",
+                              "destinationPortRange": "3000"
+                            }
+                          },
+                          {
+                            "name": "allow-loki",
+                            "properties": {
+                              "priority": 110,
+                              "protocol": "Tcp",
+                              "access": "Allow",
+                              "direction": "Inbound",
+                              "sourceAddressPrefix": "Internet",
+                              "sourcePortRange": "*",
+                              "destinationAddressPrefix": "*",
+                              "destinationPortRange": "3100"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Network/virtualNetworks",
+                      "apiVersion": "2023-09-01",
+                      "name": "[format('vnet-{0}', parameters('vmName'))]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "addressSpace": {
+                          "addressPrefixes": [
+                            "10.1.0.0/16"
+                          ]
+                        },
+                        "subnets": [
+                          {
+                            "name": "snet-monitoring",
+                            "properties": {
+                              "addressPrefix": "10.1.0.0/24",
+                              "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('nsg-{0}', parameters('vmName')))]"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Network/networkSecurityGroups', format('nsg-{0}', parameters('vmName')))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Network/publicIPAddresses",
+                      "apiVersion": "2023-09-01",
+                      "name": "[format('pip-{0}', parameters('vmName'))]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "sku": {
+                        "name": "Standard"
+                      },
+                      "properties": {
+                        "publicIPAllocationMethod": "Static",
+                        "dnsSettings": {
+                          "domainNameLabel": "[parameters('dnsNameLabel')]"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Network/networkInterfaces",
+                      "apiVersion": "2023-09-01",
+                      "name": "[format('nic-{0}', parameters('vmName'))]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "ipConfigurations": [
+                          {
+                            "name": "ipconfig1",
+                            "properties": {
+                              "subnet": {
+                                "id": "[format('{0}/subnets/snet-monitoring', resourceId('Microsoft.Network/virtualNetworks', format('vnet-{0}', parameters('vmName'))))]"
+                              },
+                              "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', parameters('vmName')))]"
+                              },
+                              "privateIPAllocationMethod": "Dynamic"
+                            }
+                          }
+                        ]
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', parameters('vmName')))]",
+                        "[resourceId('Microsoft.Network/virtualNetworks', format('vnet-{0}', parameters('vmName')))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Compute/virtualMachines",
+                      "apiVersion": "2024-03-01",
+                      "name": "[parameters('vmName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "hardwareProfile": {
+                          "vmSize": "[parameters('vmSize')]"
+                        },
+                        "storageProfile": {
+                          "imageReference": {
+                            "publisher": "Canonical",
+                            "offer": "0001-com-ubuntu-server-jammy",
+                            "sku": "22_04-lts-gen2",
+                            "version": "latest"
+                          },
+                          "osDisk": {
+                            "createOption": "FromImage",
+                            "managedDisk": {
+                              "storageAccountType": "Standard_LRS"
+                            },
+                            "diskSizeGB": 30
+                          }
+                        },
+                        "osProfile": {
+                          "computerName": "[parameters('vmName')]",
+                          "adminUsername": "[parameters('adminUsername')]",
+                          "adminPassword": "[parameters('adminPassword')]",
+                          "customData": "[base64(format('#cloud-config\npackage_update: true\npackages:\n  - docker.io\n  - docker-compose\n  - cifs-utils\n\nwrite_files:\n  - path: /etc/cifs-monitoring-creds\n    encoding: b64\n    permissions: \"0600\"\n    content: {0}\n  - path: /etc/monitoring.env\n    encoding: b64\n    permissions: \"0600\"\n    content: {1}\n  - path: /opt/monitoring/docker-compose.yml\n    encoding: b64\n    permissions: \"0644\"\n    content: {2}\n\nruncmd:\n  - mkdir -p /mnt/monitoring-config\n  - chmod 600 /etc/cifs-monitoring-creds /etc/monitoring.env\n  - mount -t cifs //{3}.file.core.windows.net/{4} /mnt/monitoring-config -o vers=3.0,credentials=/etc/cifs-monitoring-creds,dir_mode=0755,file_mode=0644,serverino,nofail || true\n  - echo \"//{5}.file.core.windows.net/{6} /mnt/monitoring-config cifs vers=3.0,credentials=/etc/cifs-monitoring-creds,dir_mode=0755,file_mode=0644,serverino,nofail 0 0\" >> /etc/fstab\n  - systemctl enable docker\n  - systemctl start docker\n  - sleep 15\n  - cd /opt/monitoring && docker-compose up -d\n', base64(format('username={0}\npassword={1}\n', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').keys[0].value)), base64(variables('monitoringEnvContent')), base64(variables('dockerComposeContent')), parameters('storageAccountName'), parameters('configShareName'), parameters('storageAccountName'), parameters('configShareName')))]",
+                          "linuxConfiguration": {
+                            "disablePasswordAuthentication": false
+                          }
+                        },
+                        "networkProfile": {
+                          "networkInterfaces": [
+                            {
+                              "id": "[resourceId('Microsoft.Network/networkInterfaces', format('nic-{0}', parameters('vmName')))]"
+                            }
+                          ]
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts/fileServices/shares', parameters('storageAccountName'), 'default', parameters('configShareName'))]",
+                        "[resourceId('Microsoft.Network/networkInterfaces', format('nic-{0}', parameters('vmName')))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "grafanaUrl": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Public Grafana URL."
+                      },
+                      "value": "[format('http://{0}:3000', reference(resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', parameters('vmName'))), '2023-09-01').dnsSettings.fqdn)]"
+                    },
+                    "lokiPublicUrl": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Public Loki ingestion URL the App Service pushes logs to."
+                      },
+                      "value": "[format('http://{0}:3100', reference(resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', parameters('vmName'))), '2023-09-01').dnsSettings.fqdn)]"
+                    },
+                    "storageAccountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Storage account name backing the config share."
+                      },
+                      "value": "[parameters('storageAccountName')]"
+                    },
+                    "configShareName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Config file share name to upload Prometheus/Loki/Grafana files into."
+                      },
+                      "value": "[parameters('configShareName')]"
+                    },
+                    "vmName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "VM name — pass to \"az vm run-command invoke\" or \"az vm restart\" to manage the stack."
+                      },
+                      "value": "[parameters('vmName')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "appservice",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "appServicePlanName": {
+                    "value": "[parameters('appServicePlanName')]"
+                  },
+                  "appServiceName": {
+                    "value": "[parameters('appServiceName')]"
+                  },
+                  "linuxFxVersion": {
+                    "value": "[parameters('linuxFxVersion')]"
+                  },
+                  "keyVaultName": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2025-04-01').outputs.name.value]"
+                  },
+                  "jwtIssuer": {
+                    "value": "[variables('publicUrl')]"
+                  },
+                  "jwtAudience": {
+                    "value": "[variables('publicUrl')]"
+                  },
+                  "lokiConfigured": {
+                    "value": "[not(empty(variables('effectiveLokiUrl')))]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.40.2.10011",
+                      "templateHash": "9589708135656159577"
+                    }
+                  },
+                  "parameters": {
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure region for the plan and app."
+                      }
+                    },
+                    "appServicePlanName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "App Service Plan name."
+                      }
+                    },
+                    "appServiceName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "App Service (web app) name. Also the public host: <name>.azurewebsites.net."
+                      }
+                    },
+                    "linuxFxVersion": {
+                      "type": "string",
+                      "defaultValue": "DOTNETCORE|10.0",
+                      "metadata": {
+                        "description": "Linux runtime stack. Repo targets .NET 10; override if deploying a different runtime."
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Key Vault name that holds the referenced secrets."
+                      }
+                    },
+                    "jwtIssuer": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "JWT issuer (public app URL)."
+                      }
+                    },
+                    "jwtAudience": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "JWT audience (public app URL)."
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "metadata": {
+                        "description": "Tags applied to every resource."
+                      }
+                    },
+                    "lokiConfigured": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "Whether a LokiUrl secret exists in Key Vault and should be referenced."
+                      }
+                    }
+                  },
+                  "variables": {
+                    "baseAppSettings": [
+                      {
+                        "name": "ASPNETCORE_ENVIRONMENT",
+                        "value": "Production"
+                      },
+                      {
+                        "name": "Jwt__Issuer",
+                        "value": "[parameters('jwtIssuer')]"
+                      },
+                      {
+                        "name": "Jwt__Audience",
+                        "value": "[parameters('jwtAudience')]"
+                      },
+                      {
+                        "name": "Jwt__Secret",
+                        "value": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=JwtSecret)', parameters('keyVaultName'))]"
+                      },
+                      {
+                        "name": "ConnectionStrings__Database",
+                        "value": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=DbConnectionString)', parameters('keyVaultName'))]"
+                      },
+                      {
+                        "name": "ConnectionStrings__BlobStorage",
+                        "value": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=BlobStorageConnectionString)', parameters('keyVaultName'))]"
+                      }
+                    ],
+                    "lokiAppSettings": "[if(parameters('lokiConfigured'), createArray(createObject('name', 'Loki__Url', 'value', format('@Microsoft.KeyVault(VaultName={0};SecretName=LokiUrl)', parameters('keyVaultName')))), createArray())]",
+                    "keyVaultSecretsUserRoleId": "4633458b-17de-408a-b874-0445c86b69e6"
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/serverfarms",
+                      "apiVersion": "2023-12-01",
+                      "name": "[parameters('appServicePlanName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "sku": {
+                        "name": "B1",
+                        "tier": "Basic"
+                      },
+                      "kind": "linux",
+                      "properties": {
+                        "reserved": true
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Web/sites",
+                      "apiVersion": "2023-12-01",
+                      "name": "[parameters('appServiceName')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "identity": {
+                        "type": "SystemAssigned"
+                      },
+                      "properties": {
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                        "httpsOnly": true,
+                        "siteConfig": {
+                          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                          "appCommandLine": "dotnet FosterFlow.Api.dll",
+                          "alwaysOn": true,
+                          "ftpsState": "Disabled",
+                          "minTlsVersion": "1.2",
+                          "healthCheckPath": "/health",
+                          "http20Enabled": true,
+                          "appSettings": "[concat(variables('baseAppSettings'), variables('lokiAppSettings'))]"
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "scope": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+                      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), resourceId('Microsoft.Web/sites', parameters('appServiceName')), variables('keyVaultSecretsUserRoleId'))]",
+                      "properties": {
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('keyVaultSecretsUserRoleId'))]",
+                        "principalId": "[reference(resourceId('Microsoft.Web/sites', parameters('appServiceName')), '2023-12-01', 'full').identity.principalId]",
+                        "principalType": "ServicePrincipal"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('appServiceName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "defaultHostName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Default host name, e.g. app-fosterflow-prod-swe.azurewebsites.net."
+                      },
+                      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('appServiceName')), '2023-12-01').defaultHostName]"
+                    },
+                    "principalId": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "App Service principal ID (system-assigned identity)."
+                      },
+                      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('appServiceName')), '2023-12-01', 'full').identity.principalId]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "appUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "Public application URL."
+              },
+              "value": "[variables('publicUrl')]"
+            },
+            "blobEndpoint": {
+              "type": "string",
+              "metadata": {
+                "description": "Storage blob endpoint."
+              },
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2025-04-01').outputs.blobEndpoint.value]"
+            },
+            "sqlServerFqdn": {
+              "type": "string",
+              "metadata": {
+                "description": "SQL server FQDN."
+              },
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'sql'), '2025-04-01').outputs.fullyQualifiedDomainName.value]"
+            },
+            "keyVaultUri": {
+              "type": "string",
+              "metadata": {
+                "description": "Key Vault URI."
+              },
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2025-04-01').outputs.vaultUri.value]"
+            },
+            "lokiUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "Effective Loki ingestion URL wired into the App Service (empty if logging to Loki is disabled)."
+              },
+              "value": "[variables('effectiveLokiUrl')]"
+            },
+            "grafanaUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "Public Grafana URL (empty unless deployMonitoring is true)."
+              },
+              "value": "[if(parameters('deployMonitoring'), reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), '2025-04-01').outputs.grafanaUrl.value, '')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "appUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Public application URL."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.appUrl.value]"
+    },
+    "blobEndpoint": {
+      "type": "string",
+      "metadata": {
+        "description": "Storage blob endpoint."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.blobEndpoint.value]"
+    },
+    "sqlServerFqdn": {
+      "type": "string",
+      "metadata": {
+        "description": "SQL server FQDN."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.sqlServerFqdn.value]"
+    },
+    "keyVaultUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Key Vault URI."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.keyVaultUri.value]"
+    },
+    "lokiUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Effective Loki ingestion URL wired into the App Service."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.lokiUrl.value]"
+    },
+    "grafanaUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Public Grafana URL (empty unless deployMonitoring is true)."
+      },
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'fosterflow-resources'), '2025-04-01').outputs.grafanaUrl.value]"
+    }
+  }
+}

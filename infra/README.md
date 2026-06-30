@@ -8,6 +8,7 @@ Infrastructure-as-Code for FosterFlow's Azure production environment. Covers Epi
 | #38 | US-INF-1.2 Azure SQL | `sql-fosterflow-prod-swe` + `sqldb-fosterflow-prod-swe` (Basic), firewall, 7-day backups |
 | #39 | US-INF-1.3 Blob Storage | `cat-photos` private container in the storage account |
 | #40 | US-INF-1.4 App Service | `asp-fosterflow-prod-swe` (B1 Linux) + `app-fosterflow-prod-swe` with Key Vault references |
+| #49 | US-INF-4.3 Monitoring | Grafana + Prometheus + Loki on a `Standard_B2s` Linux VM (opt-in via `deployMonitoring=true`) |
 | #52 | US-INF-5.2 Secrets Management | All secrets in Key Vault, no secrets in source/config, managed-identity + RBAC access, Key Vault **audit logging** to storage |
 
 > **Naming**: resources follow the [Microsoft Cloud Adoption Framework](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)
@@ -25,9 +26,11 @@ infra/
 │  ├─ storage.bicep           # storage account + private cat-photos container (#37/#39)
 │  ├─ sql.bicep               # SQL server + database + firewall + backups (#38)
 │  ├─ keyvault.bicep          # Key Vault + 4 secrets, builds connection strings, audit logging (#37/#52)
-│  └─ appservice.bicep        # plan + web app + KV role assignment (#40)
+│  ├─ appservice.bicep        # plan + web app + KV role assignment (#40)
+│  └─ monitoring.bicep        # Linux VM running Grafana + Prometheus + Loki via Docker Compose (#49)
 ├─ main.example.bicepparam    # copy to main.bicepparam and fill in
-└─ deploy.sh                  # what-if + deploy convenience script
+├─ deploy.sh                  # what-if + deploy convenience script
+└─ upload-monitoring-config.sh  # push Prometheus/Loki/Grafana config to Azure Files share
 ```
 
 ## What gets created
@@ -45,6 +48,11 @@ infra/
 - **App Service**: `asp-fosterflow-prod-swe` (B1 Linux) + `app-fosterflow-prod-swe` with a system-assigned identity, **Always
   On**, **HTTPS-only**, health check at `/health`, and app settings that reference Key Vault secrets. The
   identity is granted the **Key Vault Secrets User** role on the vault.
+- **Monitoring VM** *(optional, `deployMonitoring=true`)*: `vm-fosterflow-monitoring` — Ubuntu 22.04 LTS,
+  `Standard_B2s` (2 vCPU / 4 GB RAM, ~$35/month). Docker Compose starts Grafana (port 3000), Prometheus
+  (scrapes the App Service), and Loki (port 3100, receives Serilog logs from the API). Configuration is
+  served from an Azure Files share (`stfosterflowmon / monitoring-config`) populated by
+  `upload-monitoring-config.sh`. The public DNS label is `fosterflow-grafana.<region>.cloudapp.azure.com`.
 
 App settings use double-underscore names so .NET config binds them: `ConnectionStrings__Database`,
 `ConnectionStrings__BlobStorage`, `Jwt__Secret`, `Jwt__Issuer`, `Jwt__Audience`, `Loki__Url`,
@@ -104,6 +112,51 @@ dotnet ef database update \
     --settings "Loki__Url=@Microsoft.KeyVault(VaultName=kv-fosterflow-prod-swe;SecretName=LokiUrl)"
   ```
   Or just re-run the deployment with `lokiUrl` set.
+
+## Monitoring stack (#49)
+
+The Grafana + Prometheus + Loki stack is **opt-in** — pass `deployMonitoring=true` when deploying.
+
+```bash
+export GRAFANA_PASSWORD='<strong password>'
+export SSH_PUBLIC_KEY="$(cat ~/.ssh/id_rsa.pub)"   # needed to SSH into the VM
+
+az deployment sub create \
+  --location swedencentral \
+  --template-file main.bicep \
+  --parameters \
+      sqlAdminPassword=$SQL_ADMIN_PASSWORD \
+      jwtSecret=$JWT_SECRET \
+      deployMonitoring=true \
+      grafanaAdminPassword=$GRAFANA_PASSWORD \
+      monitoringAdminSshPublicKey="$SSH_PUBLIC_KEY"
+```
+
+After the VM is up (cloud-init takes ~3–5 minutes), upload the config and start the containers:
+
+```bash
+./upload-monitoring-config.sh stfosterflowmon app-fosterflow-prod-swe.azurewebsites.net
+```
+
+The `effectiveLokiUrl` is automatically wired into the App Service as `Loki__Url` — no manual step needed.
+
+**Grafana** is available at `http://fosterflow-grafana.<region>.cloudapp.azure.com:3000`.
+
+To push a config update without redeploying the VM:
+
+```bash
+# 1. Re-upload config files
+./upload-monitoring-config.sh stfosterflowmon app-fosterflow-prod-swe.azurewebsites.net
+
+# 2. Restart containers to pick up the new files
+az vm run-command invoke \
+  -g rg-fosterflow-prod-swe -n vm-fosterflow-monitoring \
+  --command-id RunShellScript \
+  --scripts "cd /opt/monitoring && docker-compose pull && docker-compose up -d"
+```
+
+**Cost note**: `Standard_B2s` (~$35/month total) replaces the previous ACI setup (~$118/month) — a ~70%
+saving for the same three services.
 - **Globally-unique names**: `storageAccountName`, `keyVaultName`, `sqlServerName`, and `appServiceName` must
   be unique across Azure. Override any that collide via parameters.
 - **Runtime version**: the repo targets **.NET 10** (`net10.0`), so `linuxFxVersion` defaults to

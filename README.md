@@ -16,7 +16,7 @@ FosterFlow is a real-time cat fostering coordination platform that connects anim
 | **AI care briefings** | Claude AI generates a personalised care guide for each matched cat (diet, routine, medical needs, red flags) |
 | **Real-time notifications** | SignalR pushes match requests and status updates instantly — no refresh required |
 | **Gamification** | Foster badge system and leaderboard reward the most active community members |
-| **Full observability** | Prometheus metrics + Loki structured logs + Grafana dashboards, running on Azure Container Instances |
+| **Full observability** | Prometheus metrics + Loki structured logs + Grafana dashboards, running on a Linux VM |
 
 ---
 
@@ -53,7 +53,7 @@ FosterFlow/
 | **Real-time** | SignalR |
 | **AI** | Anthropic Claude API (`claude-sonnet-4-20250514`) — match scoring + care briefings |
 | **Observability** | prometheus-net, Serilog → Loki, Grafana |
-| **Hosting** | Azure App Service (Free F1) + Azure Container Instances (observability stack) |
+| **Hosting** | Azure App Service (Free F1) + Azure Linux VM (observability stack) |
 | **CI/CD** | GitHub Actions |
 | **Security scan** | Aikido |
 
@@ -173,7 +173,7 @@ docker run -p 5000:8080 ghcr.io/<owner>/fosterflow:latest
 # http://localhost:5000/  -> Blazor app, http://localhost:5000/health -> API health
 ```
 
-Observability containers are deployed to Azure Container Instances — see `observability/azure-deploy-observability.sh`.
+The monitoring stack (Grafana, Prometheus, Loki) is deployed to a `Standard_B2s` Linux VM via Bicep — see `infra/`.
 
 ---
 
