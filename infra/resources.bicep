@@ -34,12 +34,16 @@ param jwtSecret string
 @description('Loki ingestion URL for monitoring (optional until ready).')
 param lokiUrl string = ''
 
-@description('Deploy the Grafana/Prometheus/Loki monitoring stack on ACI (US-INF-4.3, #49).')
+@description('Deploy the Grafana/Prometheus/Loki monitoring stack on a Linux VM (#49).')
 param deployMonitoring bool = false
 
 @description('Grafana admin password for the monitoring stack.')
 @secure()
 param grafanaAdminPassword string = ''
+
+@description('VM admin password for the monitoring VM. Required when deployMonitoring is true.')
+@secure()
+param monitoringAdminPassword string = ''
 
 @description('App Service Plan name.')
 param appServicePlanName string
@@ -50,8 +54,8 @@ param appServiceName string
 @description('Linux runtime stack for the App Service.')
 param linuxFxVersion string = 'DOTNETCORE|10.0'
 
-@description('Container group name for the monitoring stack.')
-param monitoringContainerGroupName string = 'ci-fosterflow-monitoring'
+@description('VM name for the monitoring stack.')
+param monitoringVmName string = 'vm-fosterflow-monitoring'
 
 @description('DNS name label for the monitoring public IP (Grafana).')
 param monitoringDnsNameLabel string = 'fosterflow-grafana'
@@ -100,21 +104,22 @@ module keyVault 'modules/keyvault.bicep' = {
 var publicUrl = 'https://${appServiceName}.azurewebsites.net'
 
 // When the monitoring stack is deployed but no explicit Loki URL was supplied, point the
-// App Service at the ACI Loki endpoint. The container group's public FQDN is deterministic
-// (<dnsNameLabel>.<region>.azurecontainer.io), so this needs no cross-module dependency.
+// App Service at the VM's public Loki endpoint. The public IP DNS label is deterministic
+// (<dnsNameLabel>.<region>.cloudapp.azure.com), so this needs no cross-module dependency.
 var effectiveLokiUrl = !empty(lokiUrl)
   ? lokiUrl
-  : (deployMonitoring ? 'http://${monitoringDnsNameLabel}.${location}.azurecontainer.io:3100' : '')
+  : (deployMonitoring ? 'http://${monitoringDnsNameLabel}.${location}.cloudapp.azure.com:3100' : '')
 
 module monitoring 'modules/monitoring.bicep' = if (deployMonitoring) {
   name: 'monitoring'
   params: {
     location: location
     tags: tags
-    containerGroupName: monitoringContainerGroupName
+    vmName: monitoringVmName
     dnsNameLabel: monitoringDnsNameLabel
     storageAccountName: monitoringStorageAccountName
     grafanaAdminPassword: grafanaAdminPassword
+    adminPassword: monitoringAdminPassword
   }
 }
 

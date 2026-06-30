@@ -20,3 +20,7 @@ param sqlAdminPassword = ''
 param jwtSecret = ''
 param lokiUrl = ''
 param allowedClientIp = ''
+
+// Uncomment and fill in when deploying with deployMonitoring=true:
+// param grafanaAdminPassword = ''
+// param monitoringAdminPassword = 'StrongP@ssword123!'   # 12+ chars, Azure VM complexity rules
