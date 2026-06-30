@@ -16,6 +16,7 @@ COPY FosterFlow/FosterFlow.Infrastructure/FosterFlow.Infrastructure.csproj ./Fos
 COPY FosterFlow/FosterFlow.Application/FosterFlow.Application.csproj        ./FosterFlow/FosterFlow.Application/
 COPY FosterFlow/FosterFlow.Domain/FosterFlow.Domain.csproj                 ./FosterFlow/FosterFlow.Domain/
 COPY FosterFlow/FosterFlow.Contracts/FosterFlow.Contracts.csproj           ./FosterFlow/FosterFlow.Contracts/
+COPY FosterFlow/FosterFlow.Shared/FosterFlow.Shared.csproj                 ./FosterFlow/FosterFlow.Shared/
 
 RUN dotnet restore FosterFlow/FosterFlow.Api/FosterFlow.Api.csproj
 
