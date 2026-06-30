@@ -1,9 +1,9 @@
+using System.Net;
 using System.Net.Http.Json;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Domain.Enums;
-using FosterFlow.Shared;
 using FosterFlow.Web.Authentication;
-namespace FosterFlow.Web.Services;
+namespace FosterFlow.Web.Services.HttpServices;
 
 public class AuthService
 {
@@ -28,7 +28,7 @@ public class AuthService
         var res = await Http.PostAsJsonAsync("api/auth/login", request);
         if (!res.IsSuccessStatusCode)
         {
-            var error = res.StatusCode == System.Net.HttpStatusCode.Unauthorized
+            var error = res.StatusCode == HttpStatusCode.Unauthorized
                 ? "Invalid email or password."
                 : await ApiErrorHelper.GetFirstErrorAsync(res);
             return (false, error, null);

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using FosterFlow.Api.Middleware;
 using FosterFlow.Api.Observability;
@@ -87,12 +88,17 @@ try
         })
         .AddJwtBearer(opts =>
         {
+            // Ensure JWT "role"/"nameid" claims are mapped to ClaimTypes so
+            // [Authorize(Roles=...)] and CurrentUserService continue to work.
+            opts.MapInboundClaims = true;
             opts.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                NameClaimType = ClaimTypes.NameIdentifier,
+                RoleClaimType = ClaimTypes.Role,
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(
@@ -134,6 +140,7 @@ try
     app.UseSerilogRequestLogging();                   // HTTP request logging (#48)
     app.UseHttpsRedirection();
     app.UseHsts(); // Only sends the header over HTTPS — correct behaviour
+    app.UseStaticFiles();
 
     // Serve the Blazor WASM app (hosted model). MapStaticAssets replaces
     // UseBlazorFrameworkFiles/UseStaticFiles and exposes every framework asset at a

@@ -16,22 +16,18 @@ public class CurrentUserService : ICurrentUserService
         _users = users;
     }
 
-    public Guid? UserId
+    public Guid UserId
     {
         get
         {
             var raw = _http.HttpContext?.User
                 .FindFirstValue(ClaimTypes.NameIdentifier);
-            return Guid.TryParse(raw, out var id) ? id : null;
+            return Guid.TryParse(raw, out var id) ? id : throw new InvalidOperationException("User ID is not available.");
         }
     }
 
     public async Task<User?> GetCurrentUserAsync()
     {
-        if (UserId is null)
-        {
-            return null;
-        }
-        return await _users.GetByIdAsync(UserId.Value);
+        return await _users.GetByIdAsync(UserId);
     }
 }

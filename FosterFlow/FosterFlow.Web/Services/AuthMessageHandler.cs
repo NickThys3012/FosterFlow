@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using FosterFlow.Web.Services.HttpServices;
 namespace FosterFlow.Web.Services;
 
 public class AuthMessageHandler : DelegatingHandler

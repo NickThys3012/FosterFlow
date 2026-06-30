@@ -1,3 +1,4 @@
+using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
 using FosterFlow.Application.Features.Cats.Queries.GetCats;
 using FosterFlow.Contracts.DTOs.Cats;
@@ -11,11 +12,12 @@ namespace FosterFlow.Api.Controllers;
 [Authorize]
 public class CatsController : ControllerBase
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly ISender _mediator;
-
-    public CatsController(ISender mediator)
+    public CatsController(ISender mediator, ICurrentUserService currentUserService)
     {
         _mediator = mediator;
+        _currentUserService = currentUserService;
     }
 
     [HttpGet("{id:guid}")]
@@ -25,9 +27,10 @@ public class CatsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)
     {
-        var id = await _mediator.Send(new CreateCatCommand(request), ct);
+        var id = await _mediator.Send(new CreateCatCommand(request, _currentUserService.UserId), ct);
         return CreatedAtAction(nameof(Get), new
         {
             id

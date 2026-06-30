@@ -1,10 +1,10 @@
 using System.Text.RegularExpressions;
 namespace FosterFlow.Web.Shared;
 
-public class FfDropdownOption
+public partial class FfDropdownOption
 {
 
-    public FfDropdownOption(object? value, string label)
+    private FfDropdownOption(object? value, string label)
     {
         Value = value;
         Label = label;
@@ -33,6 +33,9 @@ public class FfDropdownOption
 
     private static string ToLabel(string name)
     {
-        return Regex.Replace(name, "(?<=[a-z])([A-Z])", " $1");
+        return MyRegex().Replace(name, " $1");
     }
+
+    [GeneratedRegex("(?<=[a-z])([A-Z])")]
+    private static partial Regex MyRegex();
 }

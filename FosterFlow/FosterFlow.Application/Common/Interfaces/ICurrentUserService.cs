@@ -3,6 +3,6 @@ namespace FosterFlow.Application.Common.Interfaces;
 
 public interface ICurrentUserService
 {
-    Guid? UserId { get; }
+    Guid UserId { get; }
     Task<User?> GetCurrentUserAsync();
 }

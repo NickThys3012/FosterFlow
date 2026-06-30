@@ -21,6 +21,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(t => t.UserId);
         });
 
+
+        builder.Entity<Cat>(e =>
+        {
+            e.HasOne<ApplicationUser>()
+                .WithMany(u => u.Cats)
+                .HasForeignKey(c => c.ShelterId)
+                .HasPrincipalKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Restrict); // keep cats if shelter user is deleted
+        });
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

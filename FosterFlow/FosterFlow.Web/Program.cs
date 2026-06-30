@@ -3,6 +3,7 @@ using FosterFlow.Contracts.Validators.Auth;
 using FosterFlow.Web;
 using FosterFlow.Web.Authentication;
 using FosterFlow.Web.Services;
+using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -11,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // ── Auth services ────────────────────────────────────────────────────
-builder.Services.AddScoped<TokenStorage>();
+builder.Services.AddSingleton<TokenStorage>();
 builder.Services.AddScoped<AppAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
     sp => sp.GetRequiredService<AppAuthStateProvider>());
@@ -31,6 +32,8 @@ builder.Services.AddHttpClient("API",
     .AddHttpMessageHandler<AuthMessageHandler>();
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ImageUploadService>();
+builder.Services.AddScoped<CatService>();
 builder.Services.AddTransient<AuthMessageHandler>();
 
 // Inject the named client as the default HttpClient

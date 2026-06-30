@@ -9,5 +9,6 @@ public static class EnumUtils
             return defaultValue;
         }
 
-        return Enum.TryParse<T>(value, true, out var result) ? result : defaultValue;    }
+        return Enum.TryParse<T>(value, true, out var result) ? result : defaultValue;
+    }
 }

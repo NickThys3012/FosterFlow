@@ -1,0 +1,30 @@
+<div class="ff-photo-upload">
+    <InputFile class="ff-photo-upload__input"
+               style="position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:3;cursor:pointer;"
+               OnChange="HandleSelected"
+               accept="@Accept"
+               aria-label="Upload cat photo"/>
+
+    @if (string.IsNullOrWhiteSpace(PhotoUrl))
+    {
+        <div class="ff-photo-upload__empty">
+            <div class="ff-photo-upload__icon">📸</div>
+            <p>@Title</p>
+            <span>@Hint</span>
+        </div>
+    }
+    else
+    {
+        <img class="ff-photo-upload__preview" src="@PhotoUrl" alt="Uploaded cat photo"/>
+    }
+
+    @if (_isUploading)
+    {
+        <div class="ff-photo-upload__status">Uploading...</div>
+    }
+</div>
+
+@if (!string.IsNullOrWhiteSpace(_uploadError))
+{
+    <div class="ff-photo-upload__error">@_uploadError</div>
+}

@@ -1,0 +1,63 @@
+@page "/Shelter/CreateCatListing"
+@using FosterFlow.Domain.Enums
+@using FosterFlow.Web.Components
+@using FosterFlow.Web.Shared
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Shelter")]
+
+<div class="listing-shell">
+    <div class="listing-card">
+        <div class="listing-card__header">
+            <div class="listing-card__brand">
+                <span class="listing-card__brand-icon">🐾</span>
+                <span class="listing-card__brand-name">FosterFlow</span>
+            </div>
+            <a class="listing-card__back" href="/Shelter/Dashboard">← Back to dashboard</a>
+        </div>
+
+        <div class="listing-card__body">
+            <EditForm Model="_model" OnValidSubmit="HandleCreateCat">
+                <FluentValidationValidator/>
+                <ValidationSummary/>
+                <FosterFlowImageUpload @bind-PhotoUrl="_model.PhotoUrl"
+                                       Title="Tap to upload a photo of the cat"
+                                       Hint="JPG, PNG up to 10MB"/>
+
+                <div class="form-row">
+                    <FosterFlowInput Label="Cat's name" Placeholder="Luna" @bind-Value="_model.Name"/>
+                    <FosterFlowInput Label="Age (months)" Placeholder="6" @bind-Value="AgeInput"/>
+                </div>
+
+
+                <div class="form-row" style="grid-template-columns: 1fr 1fr">
+                    <FosterFlowSelect TValue="Sex"
+                                      @bind-Value="_model.Sex"
+                                      Label="Sex"
+                                      Icon="ti-heart"
+                                      Options="FfDropdownOption.FromEnum<Sex>()"/>
+                    <FosterFlowInput Label="Foster duration (weeks)" Placeholder="3"  @bind-Value="FosterDurationInput"/>
+                </div>
+
+                <FosterFlowTagInput @bind-Values="_model.TemperamentTags"
+                                    Label="Temperament tags"
+                                    Hint="Help fosters understand the cat's personality"/>
+
+                <FosterFlowInput Label="Medical needs" Placeholder="Daily eye drops · Neutered"
+                                 @bind-Value="_model.MedicalNeeds"/>
+                <FosterFlowToggle Label="⚡ Mark as urgent" SubLabel="This cat is at risk and needs a foster immediately"
+                                  @bind-Value="_model.IsUrgent" ShowDivider="true"
+                                  ShowWarningWhenTrue="true" Warning="This cat will be highlighted as needing immediate foster placement"/>
+                <FosterFlowToggle Label="🐶 Dog-friendly home OK" SubLabel="Foster can have dogs in the home"
+                                  @bind-Value="_model.DogFriendly"/>
+                <button class="btn btn-full" type="submit" disabled="@(_loading || !IsValid)">
+                    Post listing →
+                </button>
+                @if (_serverError is not null)
+                {
+                    <p class="error">@_serverError</p>
+                }
+
+            </EditForm>
+        </div>
+    </div>
+</div>

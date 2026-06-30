@@ -6,9 +6,9 @@ public partial class FosterFlowDateInput : ComponentBase
 {
 
     private static readonly string[] WeekdayHeaders =
-    {
+    [
         "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"
-    };
+    ];
 
     private readonly string _id = $"date-{Guid.NewGuid():N}";
     private bool _open;

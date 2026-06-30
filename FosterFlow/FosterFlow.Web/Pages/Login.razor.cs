@@ -1,7 +1,7 @@
 using FluentValidation;
 using FosterFlow.Contracts.DTOs.Auth;
 using FosterFlow.Domain.Enums;
-using FosterFlow.Web.Services;
+using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages;
 
@@ -42,7 +42,7 @@ public partial class Login : ComponentBase
         }
         _loading = false;
         _serverError = null;
-        
+
         if (role is null)
         {
             _serverError = "Something went wrong. Please try again.";

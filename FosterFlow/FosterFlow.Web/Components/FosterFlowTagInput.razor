@@ -1,0 +1,43 @@
+<div class="ff-tag-input">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="form-label">@Label</label>
+    }
+
+    <div class="ff-tag-input__field">
+        @foreach (var tag in Values)
+        {
+            <span class="ff-tag-chip">
+                <span>@tag</span>
+                <button type="button"
+                        class="ff-tag-chip__remove"
+                        aria-label="Remove @tag"
+                        @onclick="() => RemoveTag(tag)">
+                    ×
+                </button>
+            </span>
+        }
+
+        @if (_isAdding)
+        {
+            <div class="ff-tag-input__composer">
+                <input class="ff-tag-input__box"
+                       @bind="_draft"
+                       @bind:event="oninput"
+                       placeholder="@Placeholder"
+                       @onkeydown="HandleKeyDown"/>
+                <button type="button" class="ff-tag-input__action" @onclick="AddTag">Add</button>
+                <button type="button" class="ff-tag-input__action ghost" @onclick="CancelAdd">Cancel</button>
+            </div>
+        }
+        else
+        {
+            <button type="button" class="ff-tag-input__add" @onclick="BeginAdd">+ Add tag</button>
+        }
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Hint))
+    {
+        <div class="form-hint">@Hint</div>
+    }
+</div>

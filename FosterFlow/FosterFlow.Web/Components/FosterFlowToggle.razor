@@ -1,12 +1,15 @@
 @* Usage: <FosterFlowToggle @bind-Value="isUrgent" Label="Mark as urgent" SubLabel="Shown to fosters" /> *@
 
-<div class="ff-toggle-row">
-    <div>
+<div class="ff-toggle-row @(ShowDivider ? "with-divider" : "")">
+    <div class="ff-toggle-copy">
         <div class="ff-toggle-label">@Label</div>
         @if (!string.IsNullOrEmpty(SubLabel))
         {
             <div class="ff-toggle-sub">@SubLabel</div>
-        }
+        }@if (ShowWarningWhenTrue && Value)
+         {
+             <div class="ff-toggle-sub" style="color:  var(--ff-red);">@Warning</div>
+         }
     </div>
     <button type="button"
             class="ff-toggle @(Value ? "" : "off")"
