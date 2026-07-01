@@ -44,7 +44,7 @@
         }
         else
         {
-            foreach (var cat in PendingCats)
+            @foreach (var cat in PendingCats)
             {
                 <FosterFlowPendingCard FostersName="@cat.FostersName" CatName="@cat.CatName" HomeType="@cat.HomeType"
                                        HasDogs="@cat.HasDogs" IsUrgent="@cat.IsUrgent"
