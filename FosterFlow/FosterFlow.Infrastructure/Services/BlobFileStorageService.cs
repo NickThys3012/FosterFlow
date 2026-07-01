@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using FosterFlow.Application.Common.Interfaces;
 namespace FosterFlow.Infrastructure.Services;
 
@@ -17,7 +18,7 @@ public sealed class BlobFileStorageService : IFileStorageService
     {
         ArgumentNullException.ThrowIfNull(fileStream);
 
-        await _containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: ct);
+        await _containerClient.CreateIfNotExistsAsync(cancellationToken: ct);
 
         var extension = Path.GetExtension(sourceFileName);
         var blobFileName = $"{Guid.NewGuid():N}{extension}";
@@ -37,6 +38,21 @@ public sealed class BlobFileStorageService : IFileStorageService
             },
             ct);
 
-        return blobClient.Uri.ToString();
+        if (!blobClient.CanGenerateSasUri)
+        {
+            throw new InvalidOperationException(
+                "Blob storage credentials must support SAS generation to return image URLs.");
+        }
+
+        var sasBuilder = new BlobSasBuilder
+        {
+            BlobContainerName = _containerClient.Name,
+            BlobName = blobClient.Name,
+            Resource = "b",
+            ExpiresOn = DateTimeOffset.UtcNow.AddDays(7)
+        };
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        return blobClient.GenerateSasUri(sasBuilder).ToString();
     }
 }
