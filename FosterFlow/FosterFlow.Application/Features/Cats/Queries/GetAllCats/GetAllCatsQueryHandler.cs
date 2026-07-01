@@ -15,7 +15,7 @@ public class GetAllCatsQueryHandler : IRequestHandler<GetAllCatsQuery, GetAllCat
 
     public async Task<GetAllCatsResponse> Handle(GetAllCatsQuery request, CancellationToken cancellationToken)
     {
-        var cat = await _cats.GetAllAsync(cancellationToken);
+        var cat = await _cats.GetAllFromShelterAsync(request.UserId, cancellationToken);
 
         var response = new GetAllCatsResponse
         {

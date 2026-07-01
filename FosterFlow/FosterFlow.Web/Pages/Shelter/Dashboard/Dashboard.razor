@@ -6,7 +6,7 @@
 <div class="body-pad">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
         <div>
-            <div class="shelter-dashboard--title">Hello 👋</div>
+            <div class="shelter-dashboard--title">Hello @UserName 👋</div>
             <div class="shelter-dashboard--subtitle">You have @PendingCats.Count pending match requests</div>
         </div>
         <button class="btn btn-sm" @onclick="CreateListing">+ Add cat</button>
@@ -40,7 +40,7 @@
         <div class="section-title">Pending requests <small>@PendingCats.Count requests</small></div>
         @if (PendingCats.Count == 0)
         {
-            <div class="shelter-dashboard--subtitle">No pending requests</div>
+            <div class="shelter-dashboard--subtitle">No pending requests right now</div>
         }
         else
         {

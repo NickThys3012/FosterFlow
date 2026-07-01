@@ -15,11 +15,24 @@
 .shelter-dashboard--title {
     font-family: var(--ff-font-display);
     font-size: 1.15rem;
-    color: var(--brown);
+    color: var(--ff-brown);
 }
 
 .shelter-dashboard--subtitle {
     font-size: 0.75rem;
-    color: var(--brown-light);
+    color: var(--ff-brown-light);
     margin-top: 2px;
+}
+
+
+
+/* ── Cat List Row ─────────────────────────────────────────── */
+.cat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pending-section{
+    margin-bottom: 14px;
 }

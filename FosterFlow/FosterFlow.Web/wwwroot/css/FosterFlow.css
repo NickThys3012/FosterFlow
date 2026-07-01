@@ -381,36 +381,6 @@ small, .text-sm {
     width: 100%;
 }
 
-/* ── Badges ───────────────────────────────────────────────── */
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: var(--ff-radius-pill);
-}
-
-.badge-urgent {
-    background: var(--ff-red-light);
-    color: var(--ff-red);
-}
-
-.badge-available {
-    background: var(--ff-green-light);
-    color: var(--ff-green);
-}
-
-.badge-matched {
-    background: var(--ff-blue-light);
-    color: var(--ff-blue);
-}
-
-.badge-pending {
-    background: var(--ff-amber-light);
-    color: var(--ff-amber);
-}
 
 /* ── Tags ─────────────────────────────────────────────────── */
 .tag {

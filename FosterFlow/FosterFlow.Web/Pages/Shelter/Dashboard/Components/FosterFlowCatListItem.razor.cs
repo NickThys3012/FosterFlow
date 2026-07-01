@@ -16,14 +16,22 @@ public partial class FosterFlowCatListItem : ComponentBase
     private string MetaText => $"{FormatAge(Age)} · {Sex} · {WeeksNeeded} weeks needed";
 
     private string StatusBadgeClass =>
-        Status == CatStatus.UpForFostering ? "badge badge-available" :
-        Status is CatStatus.Pending or CatStatus.Matched ? "badge badge-matched" :
-        string.Empty;
+        Status switch
+        {
+            CatStatus.UpForFostering => "badge badge-available",
+            CatStatus.Pending => "badge badge-pending",
+            CatStatus.Matched => "badge badge-matched",
+            _ => string.Empty
+        };
 
     private string StatusBadgeText =>
-        Status == CatStatus.UpForFostering ? "Available" :
-        Status is CatStatus.Pending or CatStatus.Matched ? "Matched" :
-        string.Empty;
+        Status switch
+        {
+            CatStatus.UpForFostering => "Available",
+            CatStatus.Pending => "Pending",
+            CatStatus.Matched => "Matched",
+            _ => string.Empty
+        };
 
     private string ActionButtonClass =>
         Matches is > 0 ? "btn btn-sm" :

@@ -20,6 +20,10 @@ public class CatRepository : ICatRepository
     {
         return _context.Cats.ToListAsync(ct);
     }
+    public Task<List<Cat>> GetAllFromShelterAsync(Guid shelterId, CancellationToken ct = default)
+    {
+        return _context.Cats.Where(c => c.ShelterId == shelterId.ToString()).ToListAsync(ct);
+    }
     public Task AddAsync(Cat cat, CancellationToken ct = default)
     {
         _context.Cats.Add(cat);

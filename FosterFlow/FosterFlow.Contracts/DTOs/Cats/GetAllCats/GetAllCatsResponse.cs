@@ -8,11 +8,7 @@ public class GetAllCatsResponse
 
 public class GetAllCatsDto
 {
-    public string CatName
-    {
-        get;
-        set;
-    }
+    public string CatName { get; set; } = string.Empty;
     public Guid Id { get; set; }
     public int Age { get; set; }
     public string PhotoUrl { get; set; } = string.Empty;
@@ -27,7 +23,7 @@ public class GetAllCatsDto
     /// <summary>
     ///     functionality isnt there
     /// </summary>
-    public string FostersName { get; set; }
+    public string FostersName { get; set; } = string.Empty;
 
     /// <summary>
     ///     functionality isnt there

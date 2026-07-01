@@ -65,10 +65,3 @@
         padding: 16px;
     }
 }
-
-/* ── Cat List Row ─────────────────────────────────────────── */
-.cat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}

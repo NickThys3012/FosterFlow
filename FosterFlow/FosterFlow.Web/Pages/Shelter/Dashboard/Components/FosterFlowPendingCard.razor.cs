@@ -4,8 +4,8 @@ namespace FosterFlow.Web.Pages.Shelter.Dashboard.Components;
 
 public partial class FosterFlowPendingCard : ComponentBase
 {
-    [Parameter] public string FostersName { get; set; }
-    [Parameter] public string CatName { get; set; }
+    [Parameter] public string FostersName { get; set; } = string.Empty;
+    [Parameter] public string CatName { get; set; } = string.Empty;
     [Parameter] public ExperienceLevel Experience { get; set; }
     [Parameter] public HomeType HomeType { get; set; }
 

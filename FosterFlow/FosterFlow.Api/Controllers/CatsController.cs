@@ -21,10 +21,13 @@ public class CatsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        return Ok(await _mediator.Send(new GetAllCatsQuery(), ct));
+        var userId = _currentUserService.UserId;
+        return Ok(await _mediator.Send(new GetAllCatsQuery(userId), ct));
     }
+    
     [HttpPost]
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)
