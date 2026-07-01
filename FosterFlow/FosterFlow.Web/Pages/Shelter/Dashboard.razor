@@ -1,7 +1,0 @@
-@page "/Shelter/Dashboard"
-@using Microsoft.AspNetCore.Authorization
-
-@attribute [Authorize(Roles = "Shelter")]
-<h3>Shelter Dashboard</h3>
-
-<button class="btn btn-full" style="margin-top:20px;" @onclick="CreateListing">Create listing →</button>

@@ -1,0 +1,55 @@
+@page "/Shelter/Dashboard"
+@using FosterFlow.Web.Pages.Shelter.Dashboard.Components
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "Shelter")]
+<div class="body-pad">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+        <div>
+            <div class="shelter-dashboard--title">Hello @UserName 👋</div>
+            <div class="shelter-dashboard--subtitle">You have @PendingCats.Count pending match requests</div>
+        </div>
+        <button class="btn btn-sm" @onclick="CreateListing">+ Add cat</button>
+    </div>
+
+    <div class="dash-stats">
+        <FosterFlowStatCard StatNum="@_cats.Cats.Count" StatLabel="Active cats"/>
+        <FosterFlowStatCard StatNum="@PendingCats.Count" StatLabel="Pending" StatColor="#b7791f"/>
+        <FosterFlowStatCard StatNum="@MatchedCats.Count" StatLabel="Matched" StatColor="var(--ff-green)"/>
+    </div>
+
+    <div class="section-title">Your cats <small>@_cats.Cats.Count active</small></div>
+    <!-- no pagination for now -->
+    @if (_cats.Cats.Count == 0)
+    {
+        <div class="shelter-dashboard--subtitle">No cats</div>
+    }
+    else
+    {
+        <div class="cat-list">
+            @foreach (var cat in _cats.Cats)
+            {
+                <FosterFlowCatListItem Name="@cat.CatName" Age="@cat.Age" Sex="@cat.Sex" WeeksNeeded="@cat.WeeksNeeded"
+                                       IsUrgent="@cat.IsUrgent" Matches="@cat.Matches" Status="@cat.Status"
+                                       PhotoUrl="@cat.PhotoUrl"/>
+            }
+        </div>
+    }
+
+    <div class="pending-section">
+        <div class="section-title">Pending requests <small>@PendingCats.Count requests</small></div>
+        @if (PendingCats.Count == 0)
+        {
+            <div class="shelter-dashboard--subtitle">No pending requests right now</div>
+        }
+        else
+        {
+            @foreach (var cat in PendingCats)
+            {
+                <FosterFlowPendingCard FostersName="@cat.FostersName" CatName="@cat.CatName" HomeType="@cat.HomeType"
+                                       HasDogs="@cat.HasDogs" IsUrgent="@cat.IsUrgent"
+                                       Experience="@cat.ExperienceLevel"/>
+            }
+        }
+    </div>
+</div>

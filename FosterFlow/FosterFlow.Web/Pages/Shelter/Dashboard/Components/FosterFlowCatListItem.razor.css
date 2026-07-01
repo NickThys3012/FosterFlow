@@ -1,0 +1,94 @@
+
+.cat-row {
+    background: var(--ff-white);
+    border-radius: var(--ff-radius-md);
+    border: 1.5px solid var(--ff-border);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--ff-shadow);
+}
+
+.cat-row-photo {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--ff-radius);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--ff-orange-mid), var(--ff-orange-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.cat-row-photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cat-row-photo-fallback {
+    line-height: 1;
+}
+
+.cat-row-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cat-row-name {
+    font-family: var(--ff-font-display);
+    font-size: 0.92rem;
+    color: var(--ff-brown);
+    font-weight: 600;
+}
+
+.cat-row-meta {
+    font-size: 0.7rem;
+    color: var(--ff-brown-light);
+    margin-top: 2px;
+}
+
+.cat-row-badge {
+    margin-top: 4px;
+}
+
+.cat-row-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* ── Badges ───────────────────────────────────────────────── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--ff-radius-pill);
+}
+
+.badge-urgent {
+    background: var(--ff-red-light);
+    color: var(--ff-red);
+}
+
+.badge-available {
+    background: var(--ff-green-light);
+    color: var(--ff-green);
+}
+
+.badge-matched {
+    background: var(--ff-blue-light);
+    color: var(--ff-blue);
+}
+
+.badge-pending {
+    background: var(--ff-amber-light);
+    color: var(--ff-amber);
+}

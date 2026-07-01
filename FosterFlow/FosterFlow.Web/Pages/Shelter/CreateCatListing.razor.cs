@@ -29,15 +29,15 @@ public partial class CreateCatListing : ComponentBase
     {
         get => _model.Age.ToString();
         set => _model.Age = int.TryParse(value, out var n) ? n : 0;
-    }    
-    
+    }
+
     // FosterFlowInput binds string only, so bridge to the int model field.
     private string FosterDurationInput
     {
         get => _model.FosterDuration.ToString();
         set => _model.FosterDuration = int.TryParse(value, out var n) ? n : 0;
     }
-    
+
     // on create listing 
     // first upload the photo
     // then create the listing

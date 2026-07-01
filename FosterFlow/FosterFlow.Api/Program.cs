@@ -97,7 +97,7 @@ try
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                NameClaimType = ClaimTypes.NameIdentifier,
+                NameClaimType = ClaimTypes.Name,
                 RoleClaimType = ClaimTypes.Role,
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],

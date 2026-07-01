@@ -1,14 +1,12 @@
-using FosterFlow.Application.Common.Exceptions;
 using FosterFlow.Contracts.DTOs.Cats;
-using FosterFlow.Domain.Entities;
 using FosterFlow.Domain.Interfaces.Repositories;
 using MediatR;
-namespace FosterFlow.Application.Features.Cats.Queries.GetCats;
+namespace FosterFlow.Application.Features.Cats.Queries.GetCat;
 
 public class GetCatQueryHandler : IRequestHandler<GetCatQuery, CatDto>
 {
-
     private readonly ICatRepository _cats;
+
     public GetCatQueryHandler(ICatRepository cats)
     {
         _cats = cats;
@@ -16,15 +14,16 @@ public class GetCatQueryHandler : IRequestHandler<GetCatQuery, CatDto>
 
     public async Task<CatDto> Handle(GetCatQuery request, CancellationToken cancellationToken)
     {
-        var cat = await _cats.GetByIdAsync(request.Id, cancellationToken);
-        if (cat is null)
+        var cat = await _cats.GetByIdAsync(request.CatId, cancellationToken);
+        if (cat == null)
         {
-            throw new NotFoundException(nameof(Cat), request.Id);
+            throw new KeyNotFoundException($"Cat with ID {request.CatId} not found.");
         }
 
         return new CatDto
         {
-            Name = cat.Name, Status = cat.Status, Id = cat.Id
+            Id = cat.Id,
+            Name = cat.Name
         };
     }
 }

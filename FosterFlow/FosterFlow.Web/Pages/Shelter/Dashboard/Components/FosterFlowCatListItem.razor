@@ -1,0 +1,30 @@
+<div class="cat-row">
+    <div class="cat-row-photo">
+        @if (!string.IsNullOrWhiteSpace(PhotoUrl))
+        {
+            <img class="cat-row-photo-image" src="@PhotoUrl" alt="Photo of @Name"/>
+        }
+        else
+        {
+            <span class="cat-row-photo-fallback">🐱</span>
+        }
+    </div>
+    <div class="cat-row-info">
+        <div class="cat-row-name">@Name</div>
+        <div class="cat-row-meta">@MetaText</div>
+        <div class="cat-row-badge">
+            @if (IsUrgent)
+            {
+                <span class="badge badge-urgent">Urgent</span>
+            }
+            @if (!string.IsNullOrWhiteSpace(StatusBadgeText))
+            {
+                <span class="@StatusBadgeClass">@StatusBadgeText</span>
+            }
+        </div>
+    </div>
+    <div class="cat-row-actions">
+        <!-- TODO add redirect to dedicated page #83 -->
+        <button class="@ActionButtonClass">@ActionButtonText</button>
+    </div>
+</div>
