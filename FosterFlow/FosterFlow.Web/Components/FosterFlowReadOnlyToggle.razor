@@ -2,7 +2,8 @@
     <div class="ff-readonly-toggle-field"
          role="switch"
          aria-checked="@Value.ToString().ToLowerInvariant()"
-         aria-readonly="true"
+         aria-disabled="true"
+         tabindex="-1"
          aria-label="@Label">
         @if (!string.IsNullOrWhiteSpace(Label))
         {

@@ -1,4 +1,6 @@
+using FosterFlow.Application.Common.Exceptions;
 using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Domain.Entities;
 using FosterFlow.Domain.Interfaces.Repositories;
 using MediatR;
 namespace FosterFlow.Application.Features.Cats.Queries.GetCat;
@@ -18,13 +20,13 @@ public class GetCatQueryHandler : IRequestHandler<GetCatQuery, CatDto>
         var cat = await _cats.GetByIdAsync(request.CatId, cancellationToken);
         if (cat == null)
         {
-            throw new KeyNotFoundException($"Cat with ID {request.CatId} not found.");
+            throw new NotFoundException(nameof(Cat), request.CatId);
         }
 
         var shelter = await _users.GetByIdAsync(Guid.Parse(cat.ShelterId));
         if (shelter == null)
         {
-            throw new KeyNotFoundException($"Shelter with ID {cat.ShelterId} not found.");
+            throw new NotFoundException("Shelter", cat.ShelterId);
         }
         return new CatDto
         {
@@ -36,7 +38,8 @@ public class GetCatQueryHandler : IRequestHandler<GetCatQuery, CatDto>
             CatStatus = cat.Status,
             FosterDuration = cat.FosterDuration,
             DogFriendly = cat.DogFriendly,
-            TempramentTags = cat.TemperamentTags,
+            IsUrgent = cat.IsUrgent,
+            TemperamentTags = cat.TemperamentTags,
             MedicalNeeds = cat.MedicalNeeds,
             ShelterName = shelter.Name,
             ShelterLocation = shelter.City

@@ -11,10 +11,17 @@
     <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
   </div>
 }
+else if (_catNotFound)
+{
+  <div class="cat-hero">
+    <div class="cat-hero-placeholder">Cat not found</div>
+    <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
+  </div>
+}
 else
 {
   <div class="cat-hero">
-    @if (!string.IsNullOrWhiteSpace(_catDto?.CatPhotoUrl))
+    @if (!string.IsNullOrWhiteSpace(_catDto!.CatPhotoUrl))
     {
       <img class="cat-hero-image" src="@_catDto.CatPhotoUrl" alt="Photo of @_catDto.CatName"/>
     }
@@ -23,9 +30,12 @@ else
       <div class="cat-hero-placeholder">Photo coming soon</div>
     }
     <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
-    <div class="cat-hero-badge">
-      <FosterFlowBadge IsUrgent="true"></FosterFlowBadge>
-    </div>
+    @if(_catDto!.IsUrgent)
+    { 
+      <div class="cat-hero-badge">
+        <FosterFlowBadge IsUrgent="true"></FosterFlowBadge>
+      </div>
+    }
   </div>
 }
 @if (_catNotFound)
@@ -61,7 +71,7 @@ else if (_catDto is not null)
 
     <FosterFlowSection Title="Temperament">
       <div style="margin-bottom:16px;">
-        @foreach (var tag in cat.TempramentTags)
+        @foreach (var tag in cat.TemperamentTags)
         {
           <FosterFlowTag Value="@tag"/>
         }
@@ -82,6 +92,7 @@ else if (_catDto is not null)
       </div>
       <!-- By default all shelters are verified, will be changed later -->
       <span class="badge badge-available">✓ Verified</span>
+      <FosterFlowBadge CustomBadgeClass="badge-available" CustomBadgeText="✓ Verified"></FosterFlowBadge>
     </div>
 
     <button class="btn btn-full" style="margin-bottom:10px;">I'm interested in fostering @cat.CatName 🐾</button>

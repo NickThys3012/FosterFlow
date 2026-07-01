@@ -30,7 +30,7 @@ public class CatsController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "GetCatById")]
-    [Authorize(Roles = "Shelter,Admin")]
+    [Authorize]
     public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken ct)
     {
         return Ok(await _mediator.Send(new GetCatQuery(id), ct));
