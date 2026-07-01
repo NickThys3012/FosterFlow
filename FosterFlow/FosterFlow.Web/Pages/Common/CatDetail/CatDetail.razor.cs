@@ -4,7 +4,6 @@ using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-
 namespace FosterFlow.Web.Pages.Common.CatDetail;
 
 public partial class CatDetail : ComponentBase
@@ -15,14 +14,14 @@ public partial class CatDetail : ComponentBase
 
     private bool _catNotFound;
 
-    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
-    [Inject] private IJSRuntime Js { get; set; } = default!;
-
     public CatDetail(NavigationManager nav, CatService cat)
     {
         _nav = nav;
         _cat = cat;
     }
+
+    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+    [Inject] private IJSRuntime Js { get; set; } = default!;
 
     [Parameter] public Guid Id { get; set; }
     private string CatAgeText => $"{_catDto?.CatAge ?? 0} month{(_catDto?.CatAge == 1 ? "" : "s")}";

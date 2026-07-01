@@ -32,4 +32,6 @@ public class Cat
     public int Age { get; set; }
     public List<string> TemperamentTags { get; set; } = [];
     public string ShelterId { get; set; } = string.Empty;
+
+    public DateTime CreateDate { get; set; }
 }

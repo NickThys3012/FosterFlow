@@ -1,4 +1,5 @@
 @page "/Cat/{id:guid}"
+@using FosterFlow.Domain.Enums
 @using FosterFlow.Web.Components
 @using FosterFlow.Web.Pages.Common.CatDetail.Components
 @using Microsoft.AspNetCore.Authorization
@@ -30,8 +31,8 @@ else
       <div class="cat-hero-placeholder">Photo coming soon</div>
     }
     <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
-    @if(_catDto!.IsUrgent)
-    { 
+    @if (_catDto!.IsUrgent)
+    {
       <div class="cat-hero-badge">
         <FosterFlowBadge IsUrgent="true"></FosterFlowBadge>
       </div>
@@ -55,11 +56,11 @@ else if (_catDto is not null)
     <div class="cat-detail-header">
       <div>
         <div class="cat-detail-name">@cat.CatName
-          @if (cat.CatStatus is Domain.Enums.CatStatus.UpForFostering or Domain.Enums.CatStatus.Pending or Domain.Enums.CatStatus.Matched)
+          @if (cat.CatStatus is CatStatus.UpForFostering or CatStatus.Pending or CatStatus.Matched)
           {
-            <FosterFlowBadge Status="@cat.CatStatus" />
+            <FosterFlowBadge Status="@cat.CatStatus"/>
           }
-          </div>
+        </div>
         <div class="cat-detail-sub">@cat.ShelterName · @cat.ShelterLocation</div>
       </div>
       <!-- no need for this now, maybe later 
@@ -83,14 +84,14 @@ else if (_catDto is not null)
       </div>
     </FosterFlowSection>
 
-@if (!string.IsNullOrWhiteSpace(cat.MedicalNeeds))
-{
-  <FosterFlowSection Title="Medical needs">
-    <div class="medical-info">
-      @cat.MedicalNeeds
-    </div>
-  </FosterFlowSection>
-}
+    @if (!string.IsNullOrWhiteSpace(cat.MedicalNeeds))
+    {
+      <FosterFlowSection Title="Medical needs">
+        <div class="medical-info">
+          @cat.MedicalNeeds
+        </div>
+      </FosterFlowSection>
+    }
 
     <div class="shelter-row">
       <div class="shelter-avatar">🏠</div>

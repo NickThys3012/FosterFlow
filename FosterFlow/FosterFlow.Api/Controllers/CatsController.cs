@@ -1,8 +1,10 @@
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
+using FosterFlow.Application.Features.Cats.Commands.UpdateCat;
 using FosterFlow.Application.Features.Cats.Queries.GetAllCats;
 using FosterFlow.Application.Features.Cats.Queries.GetCat;
 using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.UpdateCat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,5 +50,13 @@ public class CatsController : ControllerBase
         {
             Id = id
         });
+    }
+
+    [HttpPost("{catId:guid}", Name = "UpdateCatForShelter")]
+    [Authorize(Roles = "Shelter,Admin")]
+    public async Task<IActionResult> Update([FromRoute] Guid catId, UpdateCatRequest request, CancellationToken ct)
+    {
+        await _mediator.Send(new UpdateCatCommand(request, _currentUserService.UserId), ct);
+        return NoContent();
     }
 }

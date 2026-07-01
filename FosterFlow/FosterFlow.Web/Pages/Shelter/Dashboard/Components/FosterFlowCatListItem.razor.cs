@@ -45,4 +45,8 @@ public partial class FosterFlowCatListItem : ComponentBase
     {
         _nav.NavigateTo($"/Cat/{Id}");
     }
+    private void RedirectToCatUpdate()
+    {
+        _nav.NavigateTo($"/Shelter/Cat/{Id}/Update");
+    }
 }
