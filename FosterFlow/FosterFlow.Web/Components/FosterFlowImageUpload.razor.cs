@@ -25,10 +25,6 @@ public partial class FosterFlowImageUpload : ComponentBase
     private async Task HandleSelected(InputFileChangeEventArgs args)
     {
         var file = args.File;
-        if (file is null)
-        {
-            return;
-        }
 
         _uploadError = null;
         _isUploading = true;

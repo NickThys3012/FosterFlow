@@ -28,14 +28,14 @@ public class CatsController : ControllerBase
         var userId = _currentUserService.UserId;
         return Ok(await _mediator.Send(new GetAllCatsQuery(userId), ct));
     }
-    
+
     [HttpGet("{id:guid}", Name = "GetCatById")]
     [Authorize(Roles = "Shelter,Admin")]
-    public async Task<IActionResult> Get([FromRoute]Guid id,CancellationToken ct)
+    public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken ct)
     {
         return Ok(await _mediator.Send(new GetCatQuery(id), ct));
     }
-    
+
     [HttpPost]
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)

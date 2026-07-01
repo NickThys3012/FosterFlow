@@ -31,6 +31,5 @@ public class Cat
     public string PhotoUrl { get; set; } = string.Empty;
     public int Age { get; set; }
     public List<string> TemperamentTags { get; set; } = [];
-
     public string ShelterId { get; set; } = string.Empty;
 }

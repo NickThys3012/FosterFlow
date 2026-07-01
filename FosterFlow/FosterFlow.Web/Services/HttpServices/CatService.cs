@@ -15,6 +15,18 @@ public class CatService
     }
     private HttpClient Http => _httpFactory.CreateClient("API");
 
+    public async Task<CatDto?> GetCatByIdAsync(Guid id)
+    {
+        var res = await Http.GetAsync($"api/cats/{id}");
+        if (!res.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var data = await res.Content.ReadFromJsonAsync<CatDto>();
+        return data;
+    }
+
     public async Task<GetAllCatsResponse?> GetAllCatsAsync()
     {
         var res = await Http.GetAsync("api/cats");

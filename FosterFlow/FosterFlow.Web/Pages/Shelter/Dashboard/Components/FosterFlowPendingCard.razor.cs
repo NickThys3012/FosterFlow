@@ -12,6 +12,6 @@ public partial class FosterFlowPendingCard : ComponentBase
     [Parameter] public bool HasDogs { get; set; }
 
     [Parameter] public bool IsUrgent { get; set; }
-    public string DogField => HasDogs ? "Has dogs" : "No dogs";
-    public string UrgentField => IsUrgent ? "Urgent" : "Not urgent";
+    private string DogField => HasDogs ? "Has dogs" : "No dogs";
+    private string UrgentField => IsUrgent ? "Urgent" : "Not urgent";
 }

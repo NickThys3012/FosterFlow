@@ -1,0 +1,92 @@
+@page "/Cat/{id:guid}"
+@using FosterFlow.Web.Components
+@using FosterFlow.Web.Pages.Common.CatDetail.Components
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@if (_catDto is null && !_catNotFound)
+{
+  <div class="cat-hero">
+    <div class="cat-hero-placeholder">Loading cat details...</div>
+    <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
+  </div>
+}
+else
+{
+  <div class="cat-hero">
+    @if (!string.IsNullOrWhiteSpace(_catDto?.CatPhotoUrl))
+    {
+      <img class="cat-hero-image" src="@_catDto.CatPhotoUrl" alt="Photo of @_catDto.CatName"/>
+    }
+    else
+    {
+      <div class="cat-hero-placeholder">Photo coming soon</div>
+    }
+    <button class="cat-hero-back" @onclick="ReturnToCats">←</button>
+    <div class="cat-hero-badge">
+      <FosterFlowBadge IsUrgent="true"></FosterFlowBadge>
+    </div>
+  </div>
+}
+@if (_catNotFound)
+{
+  <div class="cat-detail-body">
+    <div class="cat-detail-header">
+      <div>
+        <div class="cat-detail-name">Cat not found</div>
+      </div>
+    </div>
+  </div>
+}
+else if (_catDto is not null)
+{
+  var cat = _catDto;
+  <div class="cat-detail-body">
+    <div class="cat-detail-header">
+      <div>
+        <div class="cat-detail-name">@cat.CatName</div>
+        <div class="cat-detail-sub">@cat.ShelterName · @cat.ShelterLocation</div>
+      </div>
+      <!-- no need for this now, maybe later 
+      <button class="btn btn-sm">❤️ Save</button>
+      -->
+    </div>
+
+    <div class="info-grid">
+      <FosterFlowInfoBox Label="Age" Value="@CatAgeText"/>
+      <FosterFlowInfoBox Label="Sex" Value="@cat.CatSex.ToString()"/>
+      <FosterFlowInfoBox Label="Foster duration" Value="@FosterDurationText"/>
+      <FosterFlowReadOnlyToggle Label="Dog-friendly" Value="@cat.DogFriendly" TrueText="Yes" FalseText="No"/>
+    </div>
+
+    <FosterFlowSection Title="Temperament">
+      <div style="margin-bottom:16px;">
+        @foreach (var tag in cat.TempramentTags)
+        {
+          <FosterFlowTag Value="@tag"/>
+        }
+      </div>
+    </FosterFlowSection>
+
+    <FosterFlowSection Title="Medical needs">
+      <div class="medical-info">
+        @cat.MedicalNeeds
+      </div>
+    </FosterFlowSection>
+
+    <div class="shelter-row">
+      <div class="shelter-avatar">🏠</div>
+      <div style="flex:1;">
+        <div class="shelter-name">@cat.ShelterName</div>
+        <div class="shelter-sub">@cat.ShelterLocation · Verified shelter</div>
+      </div>
+      <!-- By default all shelters are verified, will be changed later -->
+      <span class="badge badge-available">✓ Verified</span>
+    </div>
+
+    <button class="btn btn-full" style="margin-bottom:10px;">I'm interested in fostering @cat.CatName 🐾</button>
+    <!-- will be implemented later with the email communication feature
+    <button class="btn btn-full btn-ghost">Ask the shelter a question</button>
+    -->
+  </div>
+}

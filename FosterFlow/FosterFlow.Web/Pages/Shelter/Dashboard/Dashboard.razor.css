@@ -25,7 +25,6 @@
 }
 
 
-
 /* ── Cat List Row ─────────────────────────────────────────── */
 .cat-list {
     display: flex;
@@ -33,6 +32,6 @@
     gap: 10px;
 }
 
-.pending-section{
+.pending-section {
     margin-bottom: 14px;
 }

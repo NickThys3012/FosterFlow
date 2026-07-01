@@ -2,16 +2,26 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using FosterFlow.Application.Common.Interfaces;
+using Microsoft.Extensions.Options;
 namespace FosterFlow.Infrastructure.Services;
 
 public sealed class BlobFileStorageService : IFileStorageService
 {
     private const string ContainerName = "cat-photos";
     private readonly BlobContainerClient _containerClient;
+    private readonly Uri? _publicBlobBaseUri;
 
-    public BlobFileStorageService(BlobServiceClient blobServiceClient)
+    public BlobFileStorageService(
+        BlobServiceClient blobServiceClient,
+        IOptions<BlobStorageOptions> options)
     {
         _containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+        var configuredPublicBaseUrl = options.Value.PublicBaseUrl;
+        _publicBlobBaseUri = string.IsNullOrWhiteSpace(configuredPublicBaseUrl)
+            ? null
+            : Uri.TryCreate(configuredPublicBaseUrl, UriKind.Absolute, out var parsedUri)
+                ? parsedUri
+                : throw new InvalidOperationException("BlobStorage:PublicBaseUrl must be a valid absolute URI.");
     }
 
     public async Task<string> SaveFileAsync(Stream fileStream, string sourceFileName, string contentType, string folder, CancellationToken ct)
@@ -46,13 +56,21 @@ public sealed class BlobFileStorageService : IFileStorageService
 
         var sasBuilder = new BlobSasBuilder
         {
-            BlobContainerName = _containerClient.Name,
-            BlobName = blobClient.Name,
-            Resource = "b",
-            ExpiresOn = DateTimeOffset.UtcNow.AddDays(7)
+            BlobContainerName = _containerClient.Name, BlobName = blobClient.Name, Resource = "b", ExpiresOn = DateTimeOffset.UtcNow.AddDays(7)
         };
         sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
-        return blobClient.GenerateSasUri(sasBuilder).ToString();
+        var sasUri = blobClient.GenerateSasUri(sasBuilder);
+        if (_publicBlobBaseUri is null)
+        {
+            return sasUri.ToString();
+        }
+
+        var publicUriBuilder = new UriBuilder(sasUri)
+        {
+            Scheme = _publicBlobBaseUri.Scheme, Host = _publicBlobBaseUri.Host, Port = _publicBlobBaseUri.IsDefaultPort ? -1 : _publicBlobBaseUri.Port
+        };
+
+        return publicUriBuilder.Uri.ToString();
     }
 }

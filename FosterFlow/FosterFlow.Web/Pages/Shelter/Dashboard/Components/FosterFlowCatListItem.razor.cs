@@ -4,6 +4,12 @@ namespace FosterFlow.Web.Pages.Shelter.Dashboard.Components;
 
 public partial class FosterFlowCatListItem : ComponentBase
 {
+    private readonly NavigationManager _nav;
+    public FosterFlowCatListItem(NavigationManager nav)
+    {
+        _nav = nav;
+    }
+    [Parameter] public Guid Id { get; set; }
     [Parameter] public string Name { get; set; } = string.Empty;
     [Parameter] public int Age { get; set; }
     [Parameter] public Sex Sex { get; set; }
@@ -14,24 +20,6 @@ public partial class FosterFlowCatListItem : ComponentBase
     [Parameter] public string? PhotoUrl { get; set; }
 
     private string MetaText => $"{FormatAge(Age)} · {Sex} · {WeeksNeeded} weeks needed";
-
-    private string StatusBadgeClass =>
-        Status switch
-        {
-            CatStatus.UpForFostering => "badge badge-available",
-            CatStatus.Pending => "badge badge-pending",
-            CatStatus.Matched => "badge badge-matched",
-            _ => string.Empty
-        };
-
-    private string StatusBadgeText =>
-        Status switch
-        {
-            CatStatus.UpForFostering => "Available",
-            CatStatus.Pending => "Pending",
-            CatStatus.Matched => "Matched",
-            _ => string.Empty
-        };
 
     private string ActionButtonClass =>
         Matches is > 0 ? "btn btn-sm" :
@@ -52,5 +40,9 @@ public partial class FosterFlowCatListItem : ComponentBase
 
         var years = ageInMonths / 12;
         return $"{years} {(years == 1 ? "year" : "years")}";
+    }
+    private void RedirectToCatDetail()
+    {
+        _nav.NavigateTo($"/Cat/{Id}");
     }
 }
