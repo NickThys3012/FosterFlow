@@ -1,3 +1,5 @@
+@using FosterFlow.Domain.Enums
+@using FosterFlow.Web.Components
 <div class="cat-row">
     <div class="cat-row-photo">
         @if (!string.IsNullOrWhiteSpace(PhotoUrl))
@@ -15,16 +17,16 @@
         <div class="cat-row-badge">
             @if (IsUrgent)
             {
-                <span class="badge badge-urgent">Urgent</span>
+                <FosterFlowBadge IsUrgent="true"/>
             }
-            @if (!string.IsNullOrWhiteSpace(StatusBadgeText))
+            @if (Status is CatStatus.UpForFostering or CatStatus.Matched or CatStatus.Pending)
             {
-                <span class="@StatusBadgeClass">@StatusBadgeText</span>
+                <FosterFlowBadge Status="Status"/>
             }
         </div>
     </div>
     <div class="cat-row-actions">
         <!-- TODO add redirect to dedicated page #83 -->
-        <button class="@ActionButtonClass">@ActionButtonText</button>
+        <button class="@ActionButtonClass" @onclick="RedirectToCatDetail">@ActionButtonText</button>
     </div>
 </div>

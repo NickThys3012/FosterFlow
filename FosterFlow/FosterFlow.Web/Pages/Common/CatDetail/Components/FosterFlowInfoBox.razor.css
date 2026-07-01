@@ -1,0 +1,26 @@
+
+.info-box {
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-border);
+    border-radius: var(--ff-radius);
+    height: 66px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.info-box-label {
+    font-size: 0.65rem;
+    color: var(--ff-brown-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-box-val {
+    font-size: 0.88rem;
+    color: var(--ff-brown);
+    font-weight: 600;
+    margin-top: 0;
+}

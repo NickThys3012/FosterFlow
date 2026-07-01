@@ -11,16 +11,18 @@ public partial class Dashboard : ComponentBase
     private readonly CatService _catService;
     private readonly NavigationManager _nav;
     private GetAllCatsResponse _cats = new();
-    protected string? UserName { get; private set; }
 
     public Dashboard(NavigationManager nav, CatService catService)
     {
         _nav = nav;
         _catService = catService;
     }
+    private string? UserName { get; set; }
 
-    public List<GetAllCatsDto> PendingCats => _cats.Cats.Where(c => c.Status == CatStatus.Pending).ToList();
-    public List<GetAllCatsDto> MatchedCats => _cats.Cats.Where(c => c.Status == CatStatus.Matched ).ToList();
+    private List<GetAllCatsDto> PendingCats => _cats.Cats.Where(c => c.Status == CatStatus.Pending).ToList();
+    private List<GetAllCatsDto> MatchedCats => _cats.Cats.Where(c => c.Status == CatStatus.Matched).ToList();
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private void CreateListing()
     {
         _nav.NavigateTo("/Shelter/CreateCatListing");
@@ -39,7 +41,4 @@ public partial class Dashboard : ComponentBase
             _cats = result;
         }
     }
-
-    [Inject]
-    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 }

@@ -2,6 +2,7 @@ using FosterFlow.Api.Controllers;
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
 using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -21,7 +22,7 @@ public class CatsControllerTests
             Name = "Mochi",
             DogFriendly = true,
             IsUrgent = false,
-            Sex = Domain.Enums.Sex.Female,
+            Sex = Sex.Female,
             FosterDuration = 4,
             Age = 12,
             MedicalNeeds = string.Empty,

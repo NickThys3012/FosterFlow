@@ -32,6 +32,7 @@ public static class DependencyInjection
             throw new InvalidOperationException("Could not find a connection string named 'BlobStorage'.");
         }
 
+        services.Configure<BlobStorageOptions>(config.GetSection("BlobStorage"));
         services.AddSingleton(new BlobServiceClient(blobConnectionString));
         services.AddScoped<IFileStorageService, BlobFileStorageService>();
     }

@@ -12,5 +12,5 @@ public partial class FosterFlowStatCard : ComponentBase
     [Parameter]
     public string? StatColor { get; set; }
 
-    protected string? StatNumStyle => string.IsNullOrWhiteSpace(StatColor) ? null : $"color: {StatColor};";
+    private string? StatNumStyle => string.IsNullOrWhiteSpace(StatColor) ? null : $"color: {StatColor};";
 }

@@ -1,5 +1,6 @@
 @page "/signin"
 @using FosterFlow.Domain.Enums
+@using FosterFlow.Web.Components
 @using FosterFlow.Web.Pages.Signin.Components
 
 <div class="onboard-hero">
@@ -13,9 +14,8 @@
     </p>
 </div>
 <div class="onboard-body">
-    <div class="section-title">
-        I'm joining as a ...
-    </div>
+    <FosterFlowSection Title="I'm joining as a ..."></FosterFlowSection>
+
     <div class="role-cards">
         <RoleCard Icon="🏠" Name="Shelter" Description="Post cats and find foster families"
                   Selected="_role == UserRole.Shelter"
@@ -36,7 +36,6 @@
         case null:
             <div>Make a selection between Shelter or Foster.</div>
             break;
-        case UserRole.Admin:
         default:
             <div>You're not allowed in here</div>
             break;

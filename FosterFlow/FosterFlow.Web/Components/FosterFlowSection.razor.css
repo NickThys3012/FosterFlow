@@ -1,0 +1,15 @@
+
+.section-title {
+    font-family: var(--ff-font-display);
+    font-size: 1rem;
+    color: var(--ff-brown);
+    margin-bottom: 14px;
+}
+
+.section-title small {
+    font-family: var(--ff-font-body);
+    font-size: 0.72rem;
+    color: var(--ff-brown-light);
+    font-weight: 400;
+    margin-left: 6px;
+}

@@ -1,0 +1,24 @@
+<div class="form-group">
+    <div class="ff-readonly-toggle-field"
+         role="switch"
+         aria-checked="@Value.ToString().ToLowerInvariant()"
+         aria-disabled="true"
+         tabindex="-1"
+         aria-label="@Label">
+        @if (!string.IsNullOrWhiteSpace(Label))
+        {
+            <div class="ff-readonly-toggle-label">
+                @Label
+                @if (Required)
+                {
+                    <span class="ff-readonly-toggle-required" aria-hidden="true">*</span>
+                }
+            </div>
+        }
+
+        <div class="ff-readonly-toggle-row">
+            <span class="ff-readonly-toggle-value">@DisplayValue</span>
+            <span class="ff-readonly-toggle @(Value ? "" : "off")" aria-hidden="true"></span>
+        </div>
+    </div>
+</div>

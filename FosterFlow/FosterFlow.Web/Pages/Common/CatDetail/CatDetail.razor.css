@@ -1,0 +1,148 @@
+/* ── Info Grid ────────────────────────────────────────────── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.medical-info {
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-border);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.8rem;
+    color: var(--ff-brown-mid);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.medical-info strong {
+    color: var(--ff-brown);
+}
+
+/* ── Shelter Row ──────────────────────────────────────────── */
+.shelter-row {
+    background: var(--ff-white);
+    border: 1.5px solid var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.shelter-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--ff-radius);
+    background: linear-gradient(135deg, var(--ff-orange-mid), var(--ff-orange));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.shelter-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ff-brown);
+}
+
+.shelter-sub {
+    font-size: 0.72rem;
+    color: var(--ff-brown-light);
+    margin-top: 2px;
+}
+
+
+/* ── Cat Hero / Detail ────────────────────────────────────── */
+.cat-hero {
+    height: 200px;
+    background: linear-gradient(160deg, var(--ff-orange-mid) 100%, var(--ff-cream) 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    color: var(--ff-brown-light);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+}
+
+.cat-hero-back {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.22);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #fff;
+    backdrop-filter: blur(4px);
+    transition: background var(--ff-transition);
+    z-index: 2;
+}
+
+.cat-hero-back:hover {
+    background: rgba(255, 255, 255, 0.38);
+}
+
+.cat-hero-badge {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+}
+
+.cat-detail-body {
+    padding: 22px;
+    background: var(--ff-cream);
+}
+
+.cat-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.cat-detail-name {
+    font-family: var(--ff-font-display);
+    font-size: 1.6rem;
+    color: var(--ff-brown);
+    line-height: 1;
+    font-weight: 600;
+}
+
+.cat-detail-sub {
+    font-size: 0.78rem;
+    color: var(--ff-brown-light);
+    margin-top: 4px;
+}
+
+.cat-hero-image {
+    width: 100%;
+    height: 100%;
+    min-height: 164px;
+    object-fit: contain;
+    object-position: center;
+    filter: saturate(0.9) contrast(0.96);
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.cat-hero-placeholder {
+    font-size: 0.82rem;
+    color: var(--ff-brown-light);
+    opacity: 0.85;
+}
