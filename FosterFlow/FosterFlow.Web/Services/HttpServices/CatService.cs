@@ -18,13 +18,13 @@ public class CatService
     public async Task<CatDto?> GetCatByIdAsync(Guid id)
     {
         var res = await Http.GetAsync($"api/cats/{id}");
-        if (!res.IsSuccessStatusCode)
+        if (res.StatusCode == HttpStatusCode.NotFound)
         {
             return null;
         }
 
-        var data = await res.Content.ReadFromJsonAsync<CatDto>();
-        return data;
+        res.EnsureSuccessStatusCode();
+        return await res.Content.ReadFromJsonAsync<CatDto>();
     }
 
     public async Task<GetAllCatsResponse?> GetAllCatsAsync()

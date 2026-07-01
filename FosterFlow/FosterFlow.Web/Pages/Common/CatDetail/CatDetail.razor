@@ -54,7 +54,12 @@ else if (_catDto is not null)
   <div class="cat-detail-body">
     <div class="cat-detail-header">
       <div>
-        <div class="cat-detail-name">@cat.CatName</div>
+        <div class="cat-detail-name">@cat.CatName
+          @if (cat.CatStatus is Domain.Enums.CatStatus.UpForFostering or Domain.Enums.CatStatus.Pending or Domain.Enums.CatStatus.Matched)
+          {
+            <FosterFlowBadge Status="@cat.CatStatus" />
+          }
+          </div>
         <div class="cat-detail-sub">@cat.ShelterName · @cat.ShelterLocation</div>
       </div>
       <!-- no need for this now, maybe later 
@@ -78,11 +83,14 @@ else if (_catDto is not null)
       </div>
     </FosterFlowSection>
 
-    <FosterFlowSection Title="Medical needs">
-      <div class="medical-info">
-        @cat.MedicalNeeds
-      </div>
-    </FosterFlowSection>
+@if (!string.IsNullOrWhiteSpace(cat.MedicalNeeds))
+{
+  <FosterFlowSection Title="Medical needs">
+    <div class="medical-info">
+      @cat.MedicalNeeds
+    </div>
+  </FosterFlowSection>
+}
 
     <div class="shelter-row">
       <div class="shelter-avatar">🏠</div>
@@ -91,13 +99,15 @@ else if (_catDto is not null)
         <div class="shelter-sub">@cat.ShelterLocation · Verified shelter</div>
       </div>
       <!-- By default all shelters are verified, will be changed later -->
-      <span class="badge badge-available">✓ Verified</span>
       <FosterFlowBadge CustomBadgeClass="badge-available" CustomBadgeText="✓ Verified"></FosterFlowBadge>
     </div>
 
     <button class="btn btn-full" style="margin-bottom:10px;">I'm interested in fostering @cat.CatName 🐾</button>
-    <!-- will be implemented later with the email communication feature
-    <button class="btn btn-full btn-ghost">Ask the shelter a question</button>
-    -->
+    <!-- will be implemented later with the email communication feature-->
+    <FosterFlowSection Title="Medical needs">
+      <div class="medical-info">
+        @cat.MedicalNeeds
+      </div>
+    </FosterFlowSection>
   </div>
 }
