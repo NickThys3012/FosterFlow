@@ -29,11 +29,11 @@ public class CatsController : ControllerBase
         return Ok(await _mediator.Send(new GetAllCatsQuery(userId), ct));
     }
     
-    [HttpGet("{catId:guid}")]
+    [HttpGet("{id:guid}")]
     [Authorize(Roles = "Shelter,Admin")]
-    public async Task<IActionResult> Get([FromRoute]Guid catId,CancellationToken ct)
+    public async Task<IActionResult> Get([FromRoute]Guid id,CancellationToken ct)
     {
-        return Ok(await _mediator.Send(new GetCatQuery(catId), ct));
+        return Ok(await _mediator.Send(new GetCatQuery(id), ct));
     }
     
     [HttpPost]
