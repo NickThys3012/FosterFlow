@@ -29,7 +29,7 @@ public class CatsController : ControllerBase
         return Ok(await _mediator.Send(new GetAllCatsQuery(userId), ct));
     }
     
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:guid}", Name = "GetCatById")]
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Get([FromRoute]Guid id,CancellationToken ct)
     {
@@ -41,12 +41,12 @@ public class CatsController : ControllerBase
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)
     {
         var id = await _mediator.Send(new CreateCatCommand(request, _currentUserService.UserId), ct);
-        return CreatedAtAction("Get", new
+        return CreatedAtRoute("GetCatById", new
         {
             id
-        }, new
+        }, new CreateCatResponse
         {
-            id
+            Id = id
         });
     }
 }
