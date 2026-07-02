@@ -9,6 +9,7 @@ namespace FosterFlow.Infrastructure.Persistence;
 ///     migrations are applied (e.g. via the migration bundle's --connection arg or
 ///     the ConnectionStrings__Database environment variable).
 /// </summary>
+// ReSharper disable once UnusedType.Global
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     // A syntactically valid SQL Server connection string that points nowhere.

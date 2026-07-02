@@ -81,7 +81,7 @@ public class RegisterShelterCommandHandlerTests
         }
 
         await _identityService.DidNotReceiveWithAnyArgs().RegisterShelterAsync(
-            default!, default!, default!, default!, default!, default!, default!, default!);
+            null!, null!, null!, null!, null!, null!, null!, null!);
     }
 
     [Test]

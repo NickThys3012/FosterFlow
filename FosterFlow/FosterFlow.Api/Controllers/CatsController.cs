@@ -3,7 +3,7 @@ using FosterFlow.Application.Features.Cats.Commands.CreateCat;
 using FosterFlow.Application.Features.Cats.Commands.UpdateCat;
 using FosterFlow.Application.Features.Cats.Queries.GetAllCats;
 using FosterFlow.Application.Features.Cats.Queries.GetCat;
-using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 using FosterFlow.Contracts.DTOs.Cats.UpdateCat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -25,6 +25,8 @@ public partial class FosterFlowBadge : ComponentBase
             CatStatus.UpForFostering => "badge-available",
             CatStatus.Pending => "badge-pending",
             CatStatus.Matched => "badge-matched",
+            CatStatus.Initial => "badge-initial",
+            CatStatus.Deceased => "badge-deceased",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -44,7 +46,8 @@ public partial class FosterFlowBadge : ComponentBase
             CatStatus.UpForFostering => "Available",
             CatStatus.Pending => "Pending",
             CatStatus.Matched => "Matched",
-
+            CatStatus.Initial => "Initial",
+            CatStatus.Deceased => "Deceased",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

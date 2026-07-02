@@ -1,5 +1,6 @@
 using FluentValidation;
 using FosterFlow.Contracts.DTOs.Cats.UpdateCat;
+using FosterFlow.Domain.Enums;
 using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages.Shelter;
@@ -59,8 +60,8 @@ public partial class UpdateCatListing : ComponentBase
             _model.FosterDuration = cat.FosterDuration;
             _model.MedicalNeeds = cat.MedicalNeeds;
             _model.TemperamentTags = cat.TemperamentTags;
-            
-            HasPendingMatches = cat.CatStatus == Domain.Enums.CatStatus.Pending;
+
+            HasPendingMatches = cat.CatStatus == CatStatus.Pending;
         }
     }
 

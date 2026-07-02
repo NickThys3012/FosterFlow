@@ -37,8 +37,8 @@ public class AuthControllerRegisterShelterTests
     [TearDown]
     public void TearDown()
     {
-        _users?.Dispose();
-        _dbContext?.Dispose();
+        _users.Dispose();
+        _dbContext.Dispose();
     }
 
     private ISender _mediator = null!;

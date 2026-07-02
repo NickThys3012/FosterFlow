@@ -20,8 +20,8 @@ public partial class CatDetail : ComponentBase
         _cat = cat;
     }
 
-    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
-    [Inject] private IJSRuntime Js { get; set; } = default!;
+    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = null!;
+    [Inject] private IJSRuntime Js { get; set; } = null!;
 
     [Parameter] public Guid Id { get; set; }
     private string CatAgeText => $"{_catDto?.CatAge ?? 0} month{(_catDto?.CatAge == 1 ? "" : "s")}";

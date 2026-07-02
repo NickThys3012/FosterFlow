@@ -110,7 +110,7 @@ public class AuthService
 
     public async Task LogoutAsync()
     {
-        await Http.PostAsync(new Uri("api/auth/logout"), null);
+        await Http.PostAsync("api/auth/logout", null);
         _storage.ClearAccessToken();
         _authState.NotifyLogout();
     }

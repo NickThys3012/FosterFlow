@@ -1,5 +1,5 @@
 using FluentValidation;
-using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 namespace FosterFlow.Contracts.Validators.Cats;
 
 public class CreateCatRequestValidator : AbstractValidator<CreateCatRequest>

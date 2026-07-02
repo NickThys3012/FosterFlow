@@ -9,8 +9,8 @@ public partial class FfDropdownOption
         Value = value;
         Label = label;
     }
-    public object? Value { get; init; }
-    public string Label { get; init; }
+    public object? Value { get; }
+    public string Label { get; }
 
     /// <summary>
     ///     Build options from an enum, using the enum member name as value

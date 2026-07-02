@@ -1,9 +1,9 @@
 using FosterFlow.Domain.Enums;
-namespace FosterFlow.Contracts.DTOs.Cats;
+namespace FosterFlow.Contracts.DTOs.Cats.CreateCat;
 
 public class CreateCatRequest
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public bool DogFriendly { get; set; }
     public bool IsUrgent { get; set; }
     public Sex Sex { get; set; }

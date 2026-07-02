@@ -21,17 +21,19 @@ public class AttachmentsControllerTests
         var result = await controller.UploadPhoto(file, CancellationToken.None) as OkObjectResult;
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result!.Value, Is.Not.Null);
-        Assert.That(result.Value.GetType().GetProperty("url")?.GetValue(result.Value), Is.EqualTo("https://storage.example/cat-photos/cats/photo.png"));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(result!.Value, Is.Not.Null);
+            Assert.That(result.Value.GetType().GetProperty("url")?.GetValue(result.Value), Is.EqualTo("https://storage.example/cat-photos/cats/photo.png"));
+        }
         await storage.Received(1).SaveFileAsync(Arg.Any<Stream>(), "photo.png", "image/png", "cats", Arg.Any<CancellationToken>());
     }
 
     private static FormFile CreatePhotoFile(string fileName, string contentType)
     {
-        var stream = new MemoryStream(new byte[]
-        {
+        var stream = new MemoryStream([
             1, 2, 3, 4
-        });
+        ]);
         return new FormFile(stream, 0, stream.Length, "file", fileName)
         {
             Headers = new HeaderDictionary(), ContentType = contentType
