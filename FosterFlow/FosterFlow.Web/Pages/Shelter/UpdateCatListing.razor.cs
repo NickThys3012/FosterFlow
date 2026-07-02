@@ -42,8 +42,7 @@ public partial class UpdateCatListing : ComponentBase
         set => _model.FosterDuration = int.TryParse(value, out var n) ? n : 0;
     }
 
-    // todo: add a property to the model to indicate if there are pending matches, and display a message if so
-    public bool HasPendingMatches { get; set; }
+    private bool HasPendingMatches { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +59,8 @@ public partial class UpdateCatListing : ComponentBase
             _model.FosterDuration = cat.FosterDuration;
             _model.MedicalNeeds = cat.MedicalNeeds;
             _model.TemperamentTags = cat.TemperamentTags;
+            
+            HasPendingMatches = cat.CatStatus == Domain.Enums.CatStatus.Pending;
         }
     }
 

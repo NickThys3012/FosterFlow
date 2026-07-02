@@ -65,7 +65,7 @@ public class CatService
         if (!res.IsSuccessStatusCode)
         {
             var error = res.StatusCode == HttpStatusCode.Unauthorized
-                ? "You are not authorized to create cat listings."
+                ? "You are not authorized to update cat listings."
                 : await ApiErrorHelper.GetFirstErrorAsync(res);
             return (false, error);
         }

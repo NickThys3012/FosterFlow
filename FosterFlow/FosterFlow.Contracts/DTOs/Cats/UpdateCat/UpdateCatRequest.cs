@@ -4,7 +4,7 @@ namespace FosterFlow.Contracts.DTOs.Cats.UpdateCat;
 public class UpdateCatRequest
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public bool DogFriendly { get; set; }
     public bool IsUrgent { get; set; }
     public Sex Sex { get; set; }

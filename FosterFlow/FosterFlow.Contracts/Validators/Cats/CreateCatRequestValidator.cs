@@ -11,14 +11,12 @@ public class CreateCatRequestValidator : AbstractValidator<CreateCatRequest>
             .MaximumLength(100).WithMessage("Name must be 100 characters or fewer.");
 
         RuleFor(x => x.Age)
-            .NotEmpty().WithMessage("Age is required.")
             .GreaterThanOrEqualTo(0).WithMessage("Age must be greater than or equal to 0 months.");
 
         RuleFor(x => x.Sex)
             .IsInEnum().WithMessage("Sex is required.");
 
         RuleFor(x => x.FosterDuration)
-            .NotEmpty().WithMessage("Foster duration is required.")
             .GreaterThanOrEqualTo(0).WithMessage("Foster duration must be greater than or equal to 0 weeks.");
 
         RuleFor(x => x.PhotoUrl)

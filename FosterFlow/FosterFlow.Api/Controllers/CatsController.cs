@@ -56,7 +56,8 @@ public class CatsController : ControllerBase
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Update([FromRoute] Guid catId, UpdateCatRequest request, CancellationToken ct)
     {
-        await _mediator.Send(new UpdateCatCommand(request, _currentUserService.UserId), ct);
+        request.Id = catId;
+        await _mediator.Send(new UpdateCatCommand(request), ct);
         return NoContent();
     }
 }
