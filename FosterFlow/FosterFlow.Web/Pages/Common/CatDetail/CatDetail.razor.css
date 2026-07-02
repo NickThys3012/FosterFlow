@@ -61,7 +61,7 @@
 /* ── Cat Hero / Detail ────────────────────────────────────── */
 .cat-hero {
     height: 200px;
-    background: linear-gradient(160deg, var(--ff-orange-mid) 100%, var(--ff-cream) 0%);
+    background: linear-gradient(160deg, var(--ff-orange-dark) 1%, var(--ff-cream) 100%);
     display: flex;
     align-items: center;
     justify-content: center;

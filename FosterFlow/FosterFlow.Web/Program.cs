@@ -1,5 +1,5 @@
 using FluentValidation;
-using FosterFlow.Contracts.Validators.Auth;
+using FosterFlow.Contracts;
 using FosterFlow.Web;
 using FosterFlow.Web.Authentication;
 using FosterFlow.Web.Services;
@@ -19,7 +19,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(
 builder.Services.AddAuthorizationCore();
 
 // ── Validators ────────────────────────────────────────────────────
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterShelterRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ContractsMarker>();
 
 // ── HttpClient with auth handler ─────────────────────────────────────
 // IMPORTANT: Register AuthService before AuthMessageHandler

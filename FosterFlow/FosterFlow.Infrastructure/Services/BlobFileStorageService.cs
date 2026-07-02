@@ -24,13 +24,13 @@ public sealed class BlobFileStorageService : IFileStorageService
                 : throw new InvalidOperationException("BlobStorage:PublicBaseUrl must be a valid absolute URI.");
     }
 
-    public async Task<string> SaveFileAsync(Stream fileStream, string sourceFileName, string contentType, string folder, CancellationToken ct)
+    public async Task<string> SaveFileAsync(Stream fileStream, string fileName, string contentType, string folder, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(fileStream);
 
         await _containerClient.CreateIfNotExistsAsync(cancellationToken: ct);
 
-        var extension = Path.GetExtension(sourceFileName);
+        var extension = Path.GetExtension(fileName);
         var blobFileName = $"{Guid.NewGuid():N}{extension}";
         var blobName = string.IsNullOrWhiteSpace(folder)
             ? blobFileName

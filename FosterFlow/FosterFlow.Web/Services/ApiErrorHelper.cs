@@ -17,8 +17,7 @@ public static class ApiErrorHelper
 
             if (problem?.Errors is {} errors)
             {
-                foreach (var messages in errors.Values)
-                foreach (var msg in messages)
+                foreach (var msg in errors.Values.SelectMany(messages => messages))
                 {
                     return msg;
                 }

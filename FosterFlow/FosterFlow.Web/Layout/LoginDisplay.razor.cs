@@ -1,17 +1,18 @@
+using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 namespace FosterFlow.Web.Layout;
 
 public partial class LoginDisplay : ComponentBase
 {
-    private readonly NavigationManager _navigation;
-    public LoginDisplay(NavigationManager navigation)
-    {
-        _navigation = navigation;
-    }
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
 
-    private void BeginLogOut()
+    [Inject]
+    private AuthService AuthService { get; set; } = null!;
+
+    private async Task BeginLogOut()
     {
-        _navigation.NavigateToLogout("authentication/logout");
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/");
     }
 }

@@ -22,7 +22,7 @@ public class Cat
 
     public CatStatus Status { get; set; }
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public bool DogFriendly { get; set; }
     public bool IsUrgent { get; set; }
     public Sex Sex { get; set; }
@@ -32,4 +32,6 @@ public class Cat
     public int Age { get; set; }
     public List<string> TemperamentTags { get; set; } = [];
     public string ShelterId { get; set; } = string.Empty;
+
+    public DateTime CreateDate { get; set; }
 }

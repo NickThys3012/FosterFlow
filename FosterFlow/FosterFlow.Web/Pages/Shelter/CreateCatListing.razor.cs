@@ -1,5 +1,5 @@
 using FluentValidation;
-using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 namespace FosterFlow.Web.Pages.Shelter;

@@ -1,7 +1,7 @@
 using FosterFlow.Api.Controllers;
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
-using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 using FosterFlow.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +37,11 @@ public class CatsControllerTests
         var result = await controller.Create(request, CancellationToken.None) as CreatedAtRouteResult;
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result!.RouteName, Is.EqualTo("GetCatById"));
-        Assert.That(result.Value, Is.InstanceOf<CreateCatResponse>());
-        Assert.That(((CreateCatResponse)result.Value!).Id, Is.EqualTo(catId));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(result!.RouteName, Is.EqualTo("GetCatById"));
+            Assert.That(result.Value, Is.InstanceOf<CreateCatResponse>());
+            Assert.That(((CreateCatResponse)result.Value!).Id, Is.EqualTo(catId));
+        }
     }
 }

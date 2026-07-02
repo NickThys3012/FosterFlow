@@ -1,0 +1,34 @@
+.warning-box {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    background-color: #fff9e6;
+    border: 1px solid #ffd700;
+    border-radius: 8px;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.warning-content {
+    flex: 1;
+}
+
+.warning-title {
+    font-family: var(--ff-font-display);
+    font-size: 0.95rem;
+    color: #b8860b;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.warning-message {
+    font-family: var(--ff-font-body);
+    font-size: 0.9rem;
+    color: #8b6914;
+    line-height: 1.4;
+}

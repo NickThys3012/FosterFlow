@@ -506,6 +506,9 @@ resharper_loop_can_be_converted_to_query_highlighting = none
 # Public types here are intentionally public (API / Domain surface).
 dotnet_diagnostic.CA1515.severity = none
 
+
+resharper_entity_framework_model_validation_unlimited_string_length_highlighting = none
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Path-based overrides
 # ─────────────────────────────────────────────────────────────────────────────
@@ -514,3 +517,14 @@ dotnet_diagnostic.CA1515.severity = none
 
 [FosterFlow.Domain/Enums/*.cs]
 resharper_unused_member_global_highlighting = none
+
+[FosterFlow.Web/**/*.razor.cs]
+resharper_class_never_instantiated_global_highlighting = none
+resharper_unused_type_global_highlighting = none
+dotnet_diagnostic.CA1305.severity = none # no globalization in Razor code
+
+[FosterFlow.Contracts/Validators/**/*.cs]
+resharper_unused_type_global_highlighting = none
+
+[FosterFlow.Domain/Entities/**/*.cs]
+resharper_unused_auto_property_accessor_global_highlighting = none

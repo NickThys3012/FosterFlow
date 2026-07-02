@@ -1,0 +1,36 @@
+<div class="warning-box">
+    <div class="warning-icon">⚠️</div>
+    <div class="warning-content">
+        @if (TitleContent is not null)
+        {
+            <div class="warning-title">@TitleContent</div>
+        }
+        else if (Title is not null)
+        {
+            <div class="warning-title">@Title</div>
+        }
+
+        @if (ChildContent is not null)
+        {
+            <div class="warning-message">@ChildContent</div>
+        }
+        else if (Message is not null)
+        {
+            <div class="warning-message">@Message</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+    public RenderFragment? TitleContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

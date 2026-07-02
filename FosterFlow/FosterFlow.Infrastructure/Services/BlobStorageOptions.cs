@@ -2,5 +2,6 @@ namespace FosterFlow.Infrastructure.Services;
 
 public sealed class BlobStorageOptions
 {
-    public string? PublicBaseUrl { get; init; }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public string? PublicBaseUrl { get; set; }
 }

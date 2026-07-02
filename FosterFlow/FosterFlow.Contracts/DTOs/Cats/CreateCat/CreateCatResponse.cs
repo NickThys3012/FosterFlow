@@ -1,4 +1,4 @@
-namespace FosterFlow.Contracts.DTOs.Cats;
+namespace FosterFlow.Contracts.DTOs.Cats.CreateCat;
 
 public class CreateCatResponse
 {
