@@ -22,11 +22,13 @@ public partial class FosterFlowBadge : ComponentBase
 
         return Status switch
         {
-            CatStatus.UpForFostering => "badge-available",
+            CatStatus.Available => "badge-available",
             CatStatus.Pending => "badge-pending",
             CatStatus.Matched => "badge-matched",
-            CatStatus.Initial => "badge-initial",
             CatStatus.Deceased => "badge-deceased",
+            CatStatus.InFoster => "badge-in-foster",
+            CatStatus.Returned => "badge-returned",
+            CatStatus.Adopted => "badge-adopted",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -43,11 +45,13 @@ public partial class FosterFlowBadge : ComponentBase
         }
         return Status switch
         {
-            CatStatus.UpForFostering => "Available",
+            CatStatus.Available => "Available",
             CatStatus.Pending => "Pending",
             CatStatus.Matched => "Matched",
-            CatStatus.Initial => "Initial",
             CatStatus.Deceased => "Deceased",
+            CatStatus.InFoster => "In Foster",
+            CatStatus.Returned => "Returned",
+            CatStatus.Adopted => "Adopted",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

@@ -1,0 +1,69 @@
+@* FosterFlow.Web/Shared/FfCatStatusControl.razor
+   Implements US-2.3: Update Cat Status
+   - Dropdown of the 5 CatStatus values with badge colours matching the mockups
+   - Confirmation step before switching to Adopted / Returned (irreversible)
+   - Fires OnStatusChanged so the parent can call the API; shows a saving state meanwhile
+*@
+
+<div class="ff-status-control">
+
+    <button type="button"
+            class="ff-status-trigger @GetBadgeClass(CurrentStatus)"
+            disabled="@(Disabled || _saving)"
+            @onclick="ToggleMenu">
+        <span class="ff-status-dot"></span>
+        <span>@(_saving ? "Saving…" : GetLabel(CurrentStatus))</span>
+        @if (!_saving)
+        {
+            <svg class="ff-status-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        }
+    </button>
+
+    @if (_menuOpen)
+    {
+        <div class="ff-status-overlay" @onclick="CloseMenu"></div>
+
+        <div class="ff-status-menu">
+            @foreach (var status in AllStatuses)
+            {
+                <button type="button"
+                        class="ff-status-option @(status == CurrentStatus ? "is-current" : "")"
+                        @onclick="() => SelectStatus(status)">
+                    <span class="ff-status-dot @GetBadgeClass(status)"></span>
+                    <span>@GetLabel(status)</span>
+                    @if (status == CurrentStatus)
+                    {
+                        <svg class="ff-status-check" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M2.5 6.5L5 9L9.5 3.5" stroke="currentColor" stroke-width="1.8"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    }
+                </button>
+            }
+        </div>
+    }
+
+    @if (_pendingStatus is not null)
+    {
+        <div class="ff-confirm-overlay" @onclick="CancelConfirm"></div>
+        <div class="ff-confirm-card" role="alertdialog" aria-modal="true">
+            <div class="ff-confirm-title">
+                Mark @(string.IsNullOrWhiteSpace(CatName) ? "this cat" : CatName) as @GetLabel(_pendingStatus.Value)?
+            </div>
+            <div class="ff-confirm-body">
+                This action is irreversible@(string.IsNullOrWhiteSpace(CatName) ? "" : $" — {CatName}")
+                will be archived and removed from active listings.
+            </div>
+            <div class="ff-confirm-actions">
+                <button type="button" class="ff-confirm-btn ff-confirm-cancel" @onclick="CancelConfirm">Cancel</button>
+                <button type="button" class="ff-confirm-btn ff-confirm-danger" @onclick="ConfirmPendingStatus">
+                    Yes, mark as @GetLabel(_pendingStatus.Value)
+                </button>
+            </div>
+        </div>
+    }
+
+</div>

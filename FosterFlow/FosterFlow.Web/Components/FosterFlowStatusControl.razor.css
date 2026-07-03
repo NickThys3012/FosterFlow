@@ -1,0 +1,217 @@
+/* FosterFlow.Web/Shared/FfCatStatusControl.razor.css
+   Colours pulled from the mockup design tokens (fosterflow.css):
+   --green / --blue already exist; --purple and --gold are added here with
+   safe fallbacks in case they're not yet defined globally.
+*/
+
+.ff-status-control {
+    position: relative;
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Trigger badge/button ── */
+.ff-status-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.12s, opacity 0.12s;
+    height: 40px;
+}
+
+.ff-status-trigger:hover:not(:disabled) {
+    filter: brightness(0.96);
+}
+
+.ff-status-trigger:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.ff-status-chevron {
+    opacity: 0.7;
+}
+
+/* ── Status colour variants ── */
+.ff-status--available {
+    background: var(--ff-green-light, #e8f5ee);
+    color: var(--ff-green, #38a169);
+}
+
+.ff-status--matched {
+    background: var(--ff-blue-light, #eff6ff);
+    color: var(--ff-blue, #3b82f6);
+}
+
+.ff-status--infoster {
+    background: #f2e8fb;
+    color: var(--ff-purple, #805ad5);
+}
+
+.ff-status--returned {
+    background: var(--ff-yellow, #ffd710);
+    color: var(--ff-brown, #3d2a1e);
+}
+
+.ff-status--adopted {
+    background: #eef0f2;
+    color: #5a6472;
+}
+
+.ff-status--pending {
+    background: var(--ff-amber-light, #fff8e8);
+    color: var(--ff-amber, #b7791f);
+}
+
+.ff-status--deceased {
+    background: var(--ff-red-light, #ffe8e8);
+    color: var(--ff-red, #e53e3e);
+}
+/* Small dot used inside the menu rows */
+.ff-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+.ff-status-trigger .ff-status-dot {
+    background: currentColor;
+    width: 6px;
+    height: 6px;
+}
+
+/* ── Dropdown menu ── */
+.ff-status-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(61, 42, 30, 0.25);
+}
+
+.ff-status-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 50;
+    min-width: 168px;
+    background: var(--ff-white, #ffffff);
+    border: 1.5px solid var(--ff-border, #f0dfd0);
+    border-radius: 14px;
+    box-shadow: var(--ff-shadow-lg, 0 8px 32px rgba(255, 140, 90, 0.18));
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ff-status-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ff-brown, #3d2a1e);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    min-height: 32px;
+}
+
+.ff-status-option:hover {
+    background: var(--ff-orange-light, #fff0e8);
+}
+
+.ff-status-option.is-current {
+    background: var(--ff-orange-light, #fff0e8);
+}
+
+.ff-status-check {
+    margin-left: auto;
+    color: var(--ff-orange, #ff8c5a);
+    flex-shrink: 0;
+}
+
+/* ── Confirmation dialog (Adopted / Returned) ── */
+.ff-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(61, 42, 30, 0.35);
+}
+
+.ff-confirm-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 70;
+    width: min(320px, 90vw);
+    background: var(--ff-white, #ffffff);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow-lg, 0 8px 32px rgba(255, 140, 90, 0.18));
+}
+
+.ff-confirm-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.02rem;
+    color: var(--ff-brown, #3d2a1e);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.ff-confirm-body {
+    font-size: 0.8rem;
+    color: var(--ff-brown-mid, #7a5c4a);
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.ff-confirm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.ff-confirm-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 24px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.ff-confirm-cancel {
+    background: transparent;
+    color: var(--ff-brown-mid, #7a5c4a);
+    border: 1.5px solid var(--ff-border, #f0dfd0);
+}
+
+.ff-confirm-cancel:hover {
+    background: var(--ff-border, #f0dfd0);
+}
+
+.ff-confirm-danger {
+    background: var(--ff-red, #e53e3e);
+    color: #fff;
+}
+
+.ff-confirm-danger:hover {
+    background: #c53030;
+}

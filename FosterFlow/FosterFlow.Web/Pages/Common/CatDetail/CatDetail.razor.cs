@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using FosterFlow.Contracts.DTOs.Cats;
+using FosterFlow.Contracts.DTOs.Cats.UpdateCatStatus;
+using FosterFlow.Domain.Enums;
 using FosterFlow.Web.Services.HttpServices;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,6 +15,7 @@ public partial class CatDetail : ComponentBase
     private CatDto? _catDto;
 
     private bool _catNotFound;
+    private bool _isAdminOrShelter;
 
     public CatDetail(NavigationManager nav, CatService cat)
     {
@@ -33,9 +36,13 @@ public partial class CatDetail : ComponentBase
         if (cat != null)
         {
             _catDto = cat;
-            return;
         }
-        _catNotFound = true;
+        else
+        {
+            _catNotFound = true;
+        }
+
+        _isAdminOrShelter = await IsAdminOrShelterAsync();
     }
 
     private async Task ReturnToCats()
@@ -68,5 +75,39 @@ public partial class CatDetail : ComponentBase
         };
 
         _nav.NavigateTo(destination);
+    }
+
+    private async Task<bool> IsAdminOrShelterAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var role = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+        return role is "Admin" or "Shelter";
+    }
+
+    private async Task HandleStatusChanged(CatStatus newStatus)
+    {
+        var previousStatus = _catDto!.CatStatus;
+
+        var model = new UpdateCatStatusRequest
+        {
+            CatStatus = newStatus
+        };
+
+        var (success, error) = await _cat.UpdateCatStatusAsync(model, Id);
+        if (!success)
+        {
+            _catDto.CatStatus = previousStatus;
+            // Handle error (e.g., show a notification) Todo add popup
+            Console.WriteLine($"Error updating cat status: {error}");
+            return;
+        }
+
+        _catDto.CatStatus = newStatus;
+
+        // Optionally, you can trigger a UI update or notify the parent component Todo add popup
+        Console.WriteLine($"Cat status updated successfully: {newStatus}.");
+
+        StateHasChanged();
     }
 }

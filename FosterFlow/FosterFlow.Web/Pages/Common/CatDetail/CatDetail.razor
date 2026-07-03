@@ -1,5 +1,4 @@
 @page "/Cat/{id:guid}"
-@using FosterFlow.Domain.Enums
 @using FosterFlow.Web.Components
 @using FosterFlow.Web.Pages.Common.CatDetail.Components
 @using Microsoft.AspNetCore.Authorization
@@ -55,13 +54,19 @@ else if (_catDto is not null)
   <div class="cat-detail-body">
     <div class="cat-detail-header">
       <div>
-        <div class="cat-detail-name">@cat.CatName
-          @if (cat.CatStatus is CatStatus.UpForFostering or CatStatus.Pending or CatStatus.Matched)
-          {
-            <FosterFlowBadge Status="@cat.CatStatus"/>
-          }
-        </div>
+        <div class="cat-detail-name">@cat.CatName</div>
         <div class="cat-detail-sub">@cat.ShelterName · @cat.ShelterLocation</div>
+      </div>
+      <div style="position: relative;">
+        @if (_isAdminOrShelter)
+        {
+          <FosterFlowStatusControl CurrentStatus="@cat.CatStatus" CatName="@cat.CatName"
+                                   OnStatusChanged="@HandleStatusChanged"/>
+        }
+        else
+        {
+          <FosterFlowBadge Status="@cat.CatStatus"/>
+        }
       </div>
       <!-- no need for this now, maybe later 
       <button class="btn btn-sm">❤️ Save</button>

@@ -4,6 +4,7 @@ using FosterFlow.Contracts.DTOs.Cats;
 using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 using FosterFlow.Contracts.DTOs.Cats.GetAllCats;
 using FosterFlow.Contracts.DTOs.Cats.UpdateCat;
+using FosterFlow.Contracts.DTOs.Cats.UpdateCatStatus;
 namespace FosterFlow.Web.Services.HttpServices;
 
 public class CatService
@@ -69,6 +70,19 @@ public class CatService
         }
         var error = res.StatusCode == HttpStatusCode.Unauthorized
             ? "You are not authorized to update cat listings."
+            : await ApiErrorHelper.GetFirstErrorAsync(res);
+        return (false, error);
+    }
+
+    public async Task<(bool Success, string? Error)> UpdateCatStatusAsync(UpdateCatStatusRequest model, Guid catId)
+    {
+        var res = await Http.PutAsJsonAsync($"api/cats/{catId}/status", model);
+        if (res.IsSuccessStatusCode)
+        {
+            return (true, null);
+        }
+        var error = res.StatusCode == HttpStatusCode.Unauthorized
+            ? "You are not authorized to update the cat's status."
             : await ApiErrorHelper.GetFirstErrorAsync(res);
         return (false, error);
     }

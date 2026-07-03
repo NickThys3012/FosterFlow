@@ -21,7 +21,7 @@
 
     <FosterFlowSection>
         <TitleContent>
-            Your cats <small>@_cats.Cats.Count active</small>
+            Your cats <small>@AllCats.Count active</small>
         </TitleContent>
     </FosterFlowSection>
 
@@ -33,7 +33,7 @@
     else
     {
         <div class="cat-list">
-            @foreach (var cat in _cats.Cats)
+            @foreach (var cat in AllCats)
             {
                 <FosterFlowCatListItem Id="@cat.Id" Name="@cat.CatName" Age="@cat.Age" Sex="@cat.Sex"
                                        WeeksNeeded="@cat.WeeksNeeded"

@@ -19,14 +19,12 @@
             {
                 <FosterFlowBadge IsUrgent="true"/>
             }
-            @if (Status is CatStatus.UpForFostering or CatStatus.Matched or CatStatus.Pending)
-            {
-                <FosterFlowBadge Status="Status"/>
-            }
+            <FosterFlowBadge Status="Status"/>
         </div>
     </div>
     <div class="cat-row-actions">
-        <!-- TODO add redirect to dedicated page #83 -->
+        <FosterFlowStatusControl CurrentStatus="Status" CatName="@Name"
+                                 OnStatusChanged="UpdateCatStatusAsync"></FosterFlowStatusControl>
         <button class="btn btn-outline" @onclick="RedirectToCatUpdate">Update</button>
         <button class="@ActionButtonClass" @onclick="RedirectToCatDetail">@ActionButtonText</button>
     </div>

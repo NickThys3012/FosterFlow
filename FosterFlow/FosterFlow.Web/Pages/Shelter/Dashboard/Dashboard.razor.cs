@@ -19,6 +19,7 @@ public partial class Dashboard : ComponentBase
     }
     private string? UserName { get; set; }
 
+    private List<GetAllCatsDto> AllCats => _cats.Cats.Where(c => c.Status != CatStatus.Deceased && c.Status != CatStatus.Adopted).ToList();
     private List<GetAllCatsDto> PendingCats => _cats.Cats.Where(c => c.Status == CatStatus.Pending).ToList();
     private List<GetAllCatsDto> MatchedCats => _cats.Cats.Where(c => c.Status == CatStatus.Matched).ToList();
     [Inject]
