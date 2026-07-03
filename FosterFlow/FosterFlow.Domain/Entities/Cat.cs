@@ -1,8 +1,8 @@
+using FosterFlow.Domain.Entities.Base;
 using FosterFlow.Domain.Enums;
 namespace FosterFlow.Domain.Entities;
 
-//TODO: this is boilerplate code for the proj setup and will be changed throughout the development
-public class Cat
+public class Cat : BaseEntity
 {
     public Cat() {}
     public Cat(string name, bool dogFriendly, bool isUrgent, Sex sex, Guid shelterId, int age, List<string> temperamentTags, string photoUrl, int fosterDuration, string medicalNeeds)
@@ -17,7 +17,7 @@ public class Cat
         PhotoUrl = photoUrl;
         FosterDuration = fosterDuration;
         MedicalNeeds = medicalNeeds;
-        Status = CatStatus.UpForFostering;
+        Status = CatStatus.Available;
     }
 
     public CatStatus Status { get; set; }
@@ -33,5 +33,6 @@ public class Cat
     public List<string> TemperamentTags { get; set; } = [];
     public string ShelterId { get; set; } = string.Empty;
 
-    public DateTime CreateDate { get; set; }
+    public bool IsArchived { get; set; }
+    public bool IsDeleted { get; set; }
 }

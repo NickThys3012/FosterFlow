@@ -28,3 +28,23 @@
     background: var(--ff-amber-light);
     color: var(--ff-amber);
 }
+
+.badge-returned {
+    background: var(--ff-amber-light);
+    color: var(--ff-yellow);
+}
+
+.badge-in-foster {
+    background: var(--ff-white);
+    color: var(--ff-purple);
+}
+
+.badge-adopted {
+    background: var(--ff-brown);
+    color: var(--ff-gray);
+}
+
+.badge-deceased {
+    background: var(--ff-brown);
+    color: var(--ff-gray);
+}

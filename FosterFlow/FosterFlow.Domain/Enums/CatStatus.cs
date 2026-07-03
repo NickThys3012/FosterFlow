@@ -2,9 +2,13 @@ namespace FosterFlow.Domain.Enums;
 
 public enum CatStatus
 {
-    Initial,
-    UpForFostering,
+    Available,
     Pending,
     Matched,
+    InFoster,
+    Returned,
+
+    //both of these are archiving the cat
+    Adopted,
     Deceased
 }

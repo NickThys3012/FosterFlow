@@ -35,7 +35,9 @@
     --ff-blue-light: #eff6ff;
     --ff-amber: #b7791f;
     --ff-amber-light: #fff8e8;
-
+    --ff-yellow: #ffd710;
+    --ff-purple: #8a00fb;
+    --ff-gray: #6b7280;
     /* Shadows */
     --ff-shadow: 0 2px 12px rgba(255, 140, 90, 0.12);
     --ff-shadow-lg: 0 8px 32px rgba(255, 140, 90, 0.18);

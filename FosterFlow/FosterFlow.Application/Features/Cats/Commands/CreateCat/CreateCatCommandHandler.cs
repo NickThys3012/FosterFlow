@@ -20,7 +20,7 @@ public class CreateCatCommandHandler : IRequestHandler<CreateCatCommand, Guid>
         var cat = new Cat(cmd.Request.Name, cmd.Request.DogFriendly, cmd.Request.IsUrgent, cmd.Request.Sex, cmd.ShelterId, cmd.Request.Age, cmd.Request.TemperamentTags, cmd.Request.PhotoUrl,
             cmd.Request.FosterDuration, cmd.Request.MedicalNeeds)
         {
-            CreateDate = DateTime.UtcNow
+            CreatedDate = DateTime.UtcNow
         };
         await _cats.AddAsync(cat, cancellationToken);
         _metrics.CatListingCreated();

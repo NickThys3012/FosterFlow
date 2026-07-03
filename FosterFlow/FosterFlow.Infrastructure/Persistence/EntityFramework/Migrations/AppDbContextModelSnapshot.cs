@@ -31,7 +31,7 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("DogFriendly")
@@ -39,6 +39,12 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
 
                     b.Property<int>("FosterDuration")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsUrgent")
                         .HasColumnType("bit");
@@ -68,6 +74,9 @@ namespace FosterFlow.Infrastructure.Persistence.EntityFramework.Migrations
                     b.PrimitiveCollection<string>("TemperamentTags")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

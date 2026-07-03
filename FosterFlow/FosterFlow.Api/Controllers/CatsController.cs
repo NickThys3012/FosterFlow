@@ -1,10 +1,12 @@
 using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
 using FosterFlow.Application.Features.Cats.Commands.UpdateCat;
+using FosterFlow.Application.Features.Cats.Commands.UpdateCatStatus;
 using FosterFlow.Application.Features.Cats.Queries.GetAllCats;
 using FosterFlow.Application.Features.Cats.Queries.GetCat;
 using FosterFlow.Contracts.DTOs.Cats.CreateCat;
 using FosterFlow.Contracts.DTOs.Cats.UpdateCat;
+using FosterFlow.Contracts.DTOs.Cats.UpdateCatStatus;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +60,14 @@ public class CatsController : ControllerBase
     {
         request.Id = catId;
         await _mediator.Send(new UpdateCatCommand(request), ct);
+        return NoContent();
+    }
+
+    [HttpPut("{catId:guid}/status")]
+    [Authorize(Roles = "Shelter,Admin")]
+    public async Task<IActionResult> UpdateStatus([FromRoute] Guid catId, UpdateCatStatusRequest request, CancellationToken ct)
+    {
+        await _mediator.Send(new UpdateCatStatusCommand(request, catId, _currentUserService.UserId), ct);
         return NoContent();
     }
 }
