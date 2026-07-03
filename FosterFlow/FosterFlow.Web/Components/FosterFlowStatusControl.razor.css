@@ -56,8 +56,8 @@
 }
 
 .ff-status--returned {
-    background: #fff8e8;
-    color: #b7791f;
+    background: var(--ff-yellow, #ffd710);
+    color: var(--ff-brown, #3d2a1e);
 }
 
 .ff-status--adopted {
@@ -65,6 +65,15 @@
     color: #5a6472;
 }
 
+.ff-status--pending {
+    background: var(--ff-amber-light, #fff8e8);
+    color: var(--ff-amber, #b7791f);
+}
+
+.ff-status--deceased {
+    background: var(--ff-red-light, #ffe8e8);
+    color: var(--ff-red, #e53e3e);
+}
 /* Small dot used inside the menu rows */
 .ff-status-dot {
     width: 8px;
@@ -97,7 +106,7 @@
     background: var(--ff-white, #ffffff);
     border: 1.5px solid var(--ff-border, #f0dfd0);
     border-radius: 14px;
-    box-shadow: var(--shadow-lg, 0 8px 32px rgba(255, 140, 90, 0.18));
+    box-shadow: var(--ff-shadow-lg, 0 8px 32px rgba(255, 140, 90, 0.18));
     padding: 6px;
     display: flex;
     flex-direction: column;

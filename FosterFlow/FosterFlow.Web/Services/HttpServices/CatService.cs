@@ -82,7 +82,7 @@ public class CatService
             return (true, null);
         }
         var error = res.StatusCode == HttpStatusCode.Unauthorized
-            ? "You are not authorized to update the cats status."
+            ? "You are not authorized to update the cat's status."
             : await ApiErrorHelper.GetFirstErrorAsync(res);
         return (false, error);
     }

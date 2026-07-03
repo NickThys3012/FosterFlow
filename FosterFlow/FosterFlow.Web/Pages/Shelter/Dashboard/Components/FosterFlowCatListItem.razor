@@ -19,10 +19,7 @@
             {
                 <FosterFlowBadge IsUrgent="true"/>
             }
-            @if (Status is CatStatus.Available or CatStatus.Matched or CatStatus.Pending)
-            {
-                <FosterFlowBadge Status="Status"/>
-            }
+            <FosterFlowBadge Status="Status"/>
         </div>
     </div>
     <div class="cat-row-actions">

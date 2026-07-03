@@ -87,7 +87,8 @@ public partial class CatDetail : ComponentBase
 
     private async Task HandleStatusChanged(CatStatus newStatus)
     {
-        _catDto!.CatStatus = newStatus;
+        var previousStatus = _catDto!.CatStatus;
+
         var model = new UpdateCatStatusRequest
         {
             CatStatus = newStatus
@@ -96,13 +97,16 @@ public partial class CatDetail : ComponentBase
         var (success, error) = await _cat.UpdateCatStatusAsync(model, Id);
         if (!success)
         {
+            _catDto.CatStatus = previousStatus;
             // Handle error (e.g., show a notification) Todo add popup
             Console.WriteLine($"Error updating cat status: {error}");
             return;
         }
 
+        _catDto.CatStatus = newStatus;
+
         // Optionally, you can trigger a UI update or notify the parent component Todo add popup
-        Console.WriteLine($"Cat {nameof(newStatus)} updated successfully.");
+        Console.WriteLine($"Cat status updated successfully: {newStatus}.");
 
         StateHasChanged();
     }

@@ -30,8 +30,8 @@
 }
 
 .badge-returned {
-    background: var(--ff-amber-light);
-    color: var(--ff-yellow);
+    background: var(--ff-yellow);
+    color: var(--ff-brown);
 }
 
 .badge-in-foster {
@@ -40,7 +40,7 @@
 }
 
 .badge-adopted {
-    background: var(--ff-brown);
+    background: #eef0f2;
     color: var(--ff-gray);
 }
 
