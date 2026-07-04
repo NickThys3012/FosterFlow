@@ -1,3 +1,4 @@
+using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Contracts.DTOs.Cats.GetAllCats;
 using FosterFlow.Domain.Enums;
 using FosterFlow.Domain.Interfaces.Repositories;
@@ -6,16 +7,17 @@ namespace FosterFlow.Application.Features.Cats.Queries.GetAllCats;
 
 public class GetAllCatsQueryHandler : IRequestHandler<GetAllCatsQuery, GetAllCatsResponse>
 {
-
     private readonly ICatRepository _cats;
-    public GetAllCatsQueryHandler(ICatRepository cats)
+    private readonly ICurrentUserService _currentUserService;
+    public GetAllCatsQueryHandler(ICatRepository cats, ICurrentUserService currentUserService)
     {
         _cats = cats;
+        _currentUserService = currentUserService;
     }
 
     public async Task<GetAllCatsResponse> Handle(GetAllCatsQuery request, CancellationToken cancellationToken)
     {
-        var cat = await _cats.GetAllFromShelterAsync(request.UserId, cancellationToken);
+        var cat = await _cats.GetAllFromShelterAsync(_currentUserService.UserId, cancellationToken);
 
         var response = new GetAllCatsResponse
         {

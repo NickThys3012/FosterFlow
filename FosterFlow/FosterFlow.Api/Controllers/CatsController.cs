@@ -1,5 +1,5 @@
-using FosterFlow.Application.Common.Interfaces;
 using FosterFlow.Application.Features.Cats.Commands.CreateCat;
+using FosterFlow.Application.Features.Cats.Commands.DeleteCat;
 using FosterFlow.Application.Features.Cats.Commands.UpdateCat;
 using FosterFlow.Application.Features.Cats.Commands.UpdateCatStatus;
 using FosterFlow.Application.Features.Cats.Queries.GetAllCats;
@@ -17,20 +17,17 @@ namespace FosterFlow.Api.Controllers;
 [Authorize]
 public class CatsController : ControllerBase
 {
-    private readonly ICurrentUserService _currentUserService;
     private readonly ISender _mediator;
-    public CatsController(ISender mediator, ICurrentUserService currentUserService)
+    public CatsController(ISender mediator)
     {
         _mediator = mediator;
-        _currentUserService = currentUserService;
     }
 
     [HttpGet]
     [Authorize(Roles = "Shelter")]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        var userId = _currentUserService.UserId;
-        return Ok(await _mediator.Send(new GetAllCatsQuery(userId), ct));
+        return Ok(await _mediator.Send(new GetAllCatsQuery(), ct));
     }
 
     [HttpGet("{id:guid}", Name = "GetCatById")]
@@ -44,7 +41,7 @@ public class CatsController : ControllerBase
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> Create(CreateCatRequest request, CancellationToken ct)
     {
-        var id = await _mediator.Send(new CreateCatCommand(request, _currentUserService.UserId), ct);
+        var id = await _mediator.Send(new CreateCatCommand(request), ct);
         return CreatedAtRoute("GetCatById", new
         {
             id
@@ -67,7 +64,15 @@ public class CatsController : ControllerBase
     [Authorize(Roles = "Shelter,Admin")]
     public async Task<IActionResult> UpdateStatus([FromRoute] Guid catId, UpdateCatStatusRequest request, CancellationToken ct)
     {
-        await _mediator.Send(new UpdateCatStatusCommand(request, catId, _currentUserService.UserId), ct);
+        await _mediator.Send(new UpdateCatStatusCommand(request, catId), ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{catId:guid}")]
+    [Authorize(Roles = "Shelter,Admin")]
+    public async Task<IActionResult> Delete([FromRoute] Guid catId, CancellationToken ct)
+    {
+        await _mediator.Send(new DeleteCatCommand(catId), ct);
         return NoContent();
     }
 }

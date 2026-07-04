@@ -16,6 +16,7 @@ public partial class CatDetail : ComponentBase
 
     private bool _catNotFound;
     private bool _isAdminOrShelter;
+    private bool _showModal;
 
     public CatDetail(NavigationManager nav, CatService cat)
     {
@@ -29,6 +30,9 @@ public partial class CatDetail : ComponentBase
     [Parameter] public Guid Id { get; set; }
     private string CatAgeText => $"{_catDto?.CatAge ?? 0} month{(_catDto?.CatAge == 1 ? "" : "s")}";
     private string FosterDurationText => $"{_catDto?.FosterDuration ?? 0} week{(_catDto?.FosterDuration == 1 ? "" : "s")}";
+
+    private string ModalTitle => $"Are you sure you want to delete {(string.IsNullOrWhiteSpace(_catDto?.CatName) ? "this cat" : _catDto.CatName)}?";
+    private string ModalConfirmText => $"Delete {(string.IsNullOrWhiteSpace(_catDto?.CatName) ? "this cat" : _catDto.CatName)}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,5 +113,27 @@ public partial class CatDetail : ComponentBase
         Console.WriteLine($"Cat status updated successfully: {newStatus}.");
 
         StateHasChanged();
+    }
+    private void ShowDeleteModal()
+    {
+        _showModal = true;
+    }
+
+    private async Task DeleteCat(bool confirmed)
+    {
+        if (confirmed)
+        {
+            // Call the service to delete the cat
+            var (success, error) = await _cat.DeleteCatAsync(Id);
+            if (!success)
+            {
+                // Handle error (e.g., show a notification) Todo add popup
+                Console.WriteLine($"Error deleting cat: {error}");
+                return;
+            }
+            // Navigate back to the cat list or another appropriate page
+            await ReturnToCats();
+        }
+        _showModal = false;
     }
 }
