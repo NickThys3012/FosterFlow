@@ -43,6 +43,21 @@ public partial class FosterFlowStatusControl : ComponentBase
     [Parameter]
     public EventCallback<CatStatus> OnStatusChanged { get; set; }
 
+    private string ModalTitle
+    {
+        get
+        {
+            return _pendingStatus != null ? $"Mark {(string.IsNullOrWhiteSpace(CatName) ? "this cat" : CatName)} as {GetLabel(_pendingStatus.Value)}?" : string.Empty;
+        }
+    }
+    private string ModalConfirmText
+    {
+        get
+        {
+            return _pendingStatus != null ? $"Yes, mark {(string.IsNullOrWhiteSpace(CatName) ? "this cat" : CatName)} as {GetLabel(_pendingStatus.Value)}?" : string.Empty;
+        }
+    }
+
     private void ToggleMenu()
     {
         if (Disabled || _saving)
@@ -79,7 +94,17 @@ public partial class FosterFlowStatusControl : ComponentBase
     {
         _pendingStatus = null;
     }
-
+    private async Task ModalCallback(bool confirmed)
+    {
+        if (confirmed)
+        {
+            await ConfirmPendingStatus();
+        }
+        else
+        {
+            CancelConfirm();
+        }
+    }
     private async Task ConfirmPendingStatus()
     {
         if (_pendingStatus is null)

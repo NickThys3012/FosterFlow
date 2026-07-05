@@ -86,4 +86,17 @@ public class CatService
             : await ApiErrorHelper.GetFirstErrorAsync(res);
         return (false, error);
     }
+
+    public async Task<(bool Success, string? Error)> DeleteCatAsync(Guid catId)
+    {
+        var res = await Http.DeleteAsync($"api/cats/{catId}");
+        if (res.IsSuccessStatusCode)
+        {
+            return (true, null);
+        }
+        var error = res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden
+            ? "You are not authorized to delete this cat listing."
+            : await ApiErrorHelper.GetFirstErrorAsync(res);
+        return (false, error);
+    }
 }

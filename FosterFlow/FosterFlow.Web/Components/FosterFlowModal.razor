@@ -1,0 +1,15 @@
+<div class="ff-confirm-overlay" @onclick="CancelConfirm"></div>
+<div class="ff-confirm-card" role="alertdialog" aria-modal="true">
+    <div class="ff-confirm-title">
+        @Title
+    </div>
+    <div class="ff-confirm-body">
+        @ChildContent
+    </div>
+    <div class="ff-confirm-actions">
+        <button type="button" class="ff-confirm-btn ff-confirm-cancel" @onclick="CancelConfirm">Cancel</button>
+        <button type="button" class="ff-confirm-btn ff-confirm-danger" @onclick="ConfirmModal">
+            @ConfirmText
+        </button>
+    </div>
+</div>

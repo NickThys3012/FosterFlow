@@ -1,4 +1,6 @@
 using FosterFlow.Application.Common.Exceptions;
+using FosterFlow.Application.Common.Interfaces;
+using FosterFlow.Domain.Enums;
 using FosterFlow.Domain.Interfaces.Repositories;
 using MediatR;
 namespace FosterFlow.Application.Features.Cats.Commands.UpdateCatStatus;
@@ -6,11 +8,11 @@ namespace FosterFlow.Application.Features.Cats.Commands.UpdateCatStatus;
 public class UpdateCatStatusCommandHandler : IRequestHandler<UpdateCatStatusCommand>
 {
     private readonly ICatRepository _cats;
-    private readonly IUserRepository _users;
-    public UpdateCatStatusCommandHandler(ICatRepository cats, IUserRepository users)
+    private readonly ICurrentUserService _currentUserService;
+    public UpdateCatStatusCommandHandler(ICatRepository cats, ICurrentUserService currentUserService)
     {
         _cats = cats;
-        _users = users;
+        _currentUserService = currentUserService;
     }
 
     public async Task Handle(UpdateCatStatusCommand request, CancellationToken cancellationToken)
@@ -21,17 +23,17 @@ public class UpdateCatStatusCommandHandler : IRequestHandler<UpdateCatStatusComm
             throw new NotFoundException(nameof(cat), request.CatId);
         }
 
-        if (cat.ShelterId != request.UserId.ToString())
+        if (cat.ShelterId != _currentUserService.UserId.ToString())
         {
-            var user = await _users.GetByIdAsync(request.UserId);
-            if (user is null || user.Role != FosterFlow.Domain.Enums.UserRole.Admin)
+            var user = await _currentUserService.GetCurrentUserAsync();
+            if (user is null || user.Role != UserRole.Admin)
             {
                 throw new UnauthorizedAccessException("User is not authorized to update this cat's status.");
             }
         }
 
         cat.Status = request.Request.CatStatus;
-        cat.IsArchived = request.Request.CatStatus is FosterFlow.Domain.Enums.CatStatus.Adopted or FosterFlow.Domain.Enums.CatStatus.Returned;
+        cat.IsArchived = request.Request.CatStatus is CatStatus.Adopted or CatStatus.Returned;
 
         await _cats.UpdateAsync(cat, cancellationToken);
     }

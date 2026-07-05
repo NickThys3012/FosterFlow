@@ -1,7 +1,9 @@
 @page "/Cat/{id:guid}"
+@using FosterFlow.Domain.Enums
 @using FosterFlow.Web.Components
 @using FosterFlow.Web.Pages.Common.CatDetail.Components
 @using Microsoft.AspNetCore.Authorization
+
 @attribute [Authorize]
 
 @if (_catDto is null && !_catNotFound)
@@ -58,10 +60,12 @@ else if (_catDto is not null)
         <div class="cat-detail-sub">@cat.ShelterName · @cat.ShelterLocation</div>
       </div>
       <div style="position: relative;">
+
         @if (_isAdminOrShelter)
         {
           <FosterFlowStatusControl CurrentStatus="@cat.CatStatus" CatName="@cat.CatName"
                                    OnStatusChanged="@HandleStatusChanged"/>
+          <button class="btn btn-danger" @onclick="ShowDeleteModal">Delete</button>
         }
         else
         {
@@ -112,4 +116,19 @@ else if (_catDto is not null)
     <!-- will be implemented later with the email communication feature-->
     <button class="btn btn-full btn-ghost" style="margin-bottom:10px;" disabled>Ask the shelter a question</button>
   </div>
+  @if (_showModal)
+  {
+    <FosterFlowModal
+      Title="@ModalTitle"
+      ConfirmText="@ModalConfirmText"
+      ConfirmEvent="DeleteCat">
+      @if (cat.CatStatus is CatStatus.Matched or CatStatus.InFoster)
+      {
+        <p>This cat is currently matched. Contact the foster before deleting.</p>
+      }
+      <p>
+        This action is irreversible@(string.IsNullOrWhiteSpace(cat.CatName) ? "" : $" — {cat.CatName}") will be deleted.
+      </p>
+    </FosterFlowModal>
+  }
 }

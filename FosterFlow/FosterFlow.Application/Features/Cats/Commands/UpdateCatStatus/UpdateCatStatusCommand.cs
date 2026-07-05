@@ -2,4 +2,4 @@ using FosterFlow.Contracts.DTOs.Cats.UpdateCatStatus;
 using MediatR;
 namespace FosterFlow.Application.Features.Cats.Commands.UpdateCatStatus;
 
-public record UpdateCatStatusCommand(UpdateCatStatusRequest Request, Guid CatId, Guid UserId) : IRequest;
+public record UpdateCatStatusCommand(UpdateCatStatusRequest Request, Guid CatId) : IRequest;

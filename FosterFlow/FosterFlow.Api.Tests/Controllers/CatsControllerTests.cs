@@ -16,7 +16,7 @@ public class CatsControllerTests
     {
         var mediator = Substitute.For<ISender>();
         var currentUserService = Substitute.For<ICurrentUserService>();
-        var controller = new CatsController(mediator, currentUserService);
+        var controller = new CatsController(mediator);
         var request = new CreateCatRequest
         {
             Name = "Mochi",

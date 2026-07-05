@@ -1,0 +1,70 @@
+/* ── Confirmation dialog (Adopted / Returned) ── */
+.ff-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(61, 42, 30, 0.35);
+}
+
+.ff-confirm-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 70;
+    width: min(320px, 90vw);
+    background: var(--ff-white, #ffffff);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow-lg, 0 8px 32px rgba(255, 140, 90, 0.18));
+}
+
+.ff-confirm-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.02rem;
+    color: var(--ff-brown, #3d2a1e);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.ff-confirm-body {
+    font-size: 0.8rem;
+    color: var(--ff-brown-mid, #7a5c4a);
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.ff-confirm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.ff-confirm-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 24px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.ff-confirm-cancel {
+    background: transparent;
+    color: var(--ff-brown-mid, #7a5c4a);
+    border: 1.5px solid var(--ff-border, #f0dfd0);
+}
+
+.ff-confirm-cancel:hover {
+    background: var(--ff-border, #f0dfd0);
+}
+
+.ff-confirm-danger {
+    background: var(--ff-red, #e53e3e);
+    color: #fff;
+}
+
+.ff-confirm-danger:hover {
+    background: #c53030;
+}
