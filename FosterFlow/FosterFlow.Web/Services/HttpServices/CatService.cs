@@ -94,9 +94,8 @@ public class CatService
         {
             return (true, null);
         }
-        var error = res.StatusCode == HttpStatusCode.Unauthorized
+        var error = res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden
             ? "You are not authorized to delete this cat listing."
             : await ApiErrorHelper.GetFirstErrorAsync(res);
-        return (false, error);
     }
 }

@@ -9,12 +9,13 @@ public partial class FosterFlowModal : ComponentBase
     [Parameter] public string? ConfirmText { get; set; } = "Confirm";
     [Parameter] public EventCallback<bool> ConfirmEvent { get; set; }
 
-    private void CancelConfirm()
+    private async Task CancelConfirm()
     {
-        ConfirmEvent.InvokeAsync(false);
+        await ConfirmEvent.InvokeAsync(false);
     }
-    private void ConfirmModal()
+
+    private async Task ConfirmModal()
     {
-        ConfirmEvent.InvokeAsync(true);
+        await ConfirmEvent.InvokeAsync(true);
     }
 }

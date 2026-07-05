@@ -21,10 +21,16 @@ public class DeleteCatCommandHandler : IRequestHandler<DeleteCatCommand>
         {
             throw new NotFoundException(nameof(cat), request.CatId);
         }
-        if (Guid.Parse(cat.ShelterId) != _currentUserService.UserId)
+        if (cat.ShelterId != _currentUserService.UserId.ToString())
         {
-            throw new UnauthorizedAccessException("You are not authorized to delete this cat");
+            var user = await _currentUserService.GetCurrentUserAsync();
+            if (user is null || user.Role != FosterFlow.Domain.Enums.UserRole.Admin)
+            {
+                throw new UnauthorizedAccessException("User is not authorized to delete this cat.");
+            }
         }
-        await _cats.DeleteAsync(request.CatId, cancellationToken);
+
+        cat.IsDeleted = true;
+        await _cats.UpdateAsync(cat, cancellationToken);
     }
 }

@@ -122,9 +122,13 @@ else if (_catDto is not null)
       Title="@ModalTitle"
       ConfirmText="@ModalConfirmText"
       ConfirmEvent="DeleteCat">
-      @(cat.CatStatus is CatStatus.Matched or CatStatus.InFoster ? "This cat is currently matched. Contact the foster before deleting." : "")
-      This action is irreversible @(string.IsNullOrWhiteSpace(cat.CatName) ? "" : $" — {cat.CatName}")
-      will be deleted.
+      @if (cat.CatStatus is CatStatus.Matched or CatStatus.InFoster)
+      {
+        <p>This cat is currently matched. Contact the foster before deleting.</p>
+      }
+      <p>
+        This action is irreversible@(string.IsNullOrWhiteSpace(cat.CatName) ? "" : $" — {cat.CatName}") will be deleted.
+      </p>
     </FosterFlowModal>
   }
 }
